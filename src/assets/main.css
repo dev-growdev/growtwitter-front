@@ -1,0 +1,19 @@
+@import './base.css';
+
+#app {
+  margin: 0 auto;
+  padding: 0px;
+  font-weight: normal;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
