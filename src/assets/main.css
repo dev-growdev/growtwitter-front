@@ -3,6 +3,8 @@
 
 body {
   font-family: 'Poppins', sans-serif;
+  color: #333333;
+  margin: 0 2rem;
 }
 
 #app {
