@@ -1,17 +1,17 @@
 <script setup lang="ts">
-// import { login } from '@/services/api'
+import { login } from '@/services/api'
 import { ref } from 'vue';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const email = ref<string>('');
 const password = ref<string>('');
-// const router = useRouter();
+const router = useRouter();
 
 const handleLogin = async () => {
-  // const response = await login(email.value, password.value)
-  // if (response) {
-  //   router.push('/')
-  // }
+  const response = await login(email.value, password.value)
+  if (response) {
+    router.push('/')
+  }
 };
 </script>
 

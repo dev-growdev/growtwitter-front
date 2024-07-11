@@ -7,6 +7,24 @@ const client = axios.create({
   }
 });
 
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await client.post('/login', {
+      email,
+      password
+    });
+
+    if (response.status == 200) {
+      sessionStorage.setItem('token', response.data.data.token);
+    }
+    
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
 export async function doGet(url: string) {
   try {
     const response = await client.get(url);
