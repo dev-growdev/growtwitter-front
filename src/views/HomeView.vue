@@ -4,14 +4,22 @@
   <div>
     <div class="home-container">
       <div class="home-nav">
-        <div class="home-nav-component"></div>
+        <div class="home-nav-component">Aqui vai os components nav</div>
       </div>
       <div class="home-content">
         <span class="home-content-title">
           <span> Página Inicial </span>
         </span>
 
-        <div class="home-content-card"></div>
+        <div class="home-content-card">Tweet 1</div>
+        <div class="home-content-card">Tweet 2</div>
+        <div class="home-content-card">Tweet 3</div>
+        <div class="home-content-card">Tweet 4</div>
+        <div class="home-content-card">Tweet 5</div>
+        <div class="home-content-card">Tweet 6</div>
+        <div class="home-content-card">Tweet 7</div>
+        <div class="home-content-card">Tweet 8</div>
+        <div class="home-content-card">Tweet 9</div>
       </div>
       <div class="home-whats">
         <div class="home-whats-card">
@@ -56,29 +64,35 @@
   display: flex;
 
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: #ffffff;
 }
 
 .home-nav {
   display: flex;
   justify-content: center;
+  align-items: center;
+  
   width: 20%;
-  height: 100%;
+  height: 100vh;
   background: #ffffff;
+  position: sticky;
+  top: 0;
+  color: white;
 }
 
 .home-nav-component {
-  width: 80%;
+  width: 90%;
   height: 100%;
+  padding: 1em 0 0 1em;
   background-color: black;
 }
 
 .home-content {
   width: 55%;
   height: 100%;
-  border-right: 2px solid #b4b4b4;
-  border-left: 2px solid #b4b4b4;
+  border-right: 2px solid #e9e9e9;
+  border-left: 2px solid #e9e9e9;
 }
 
 .home-content-title {
@@ -86,8 +100,8 @@
   align-items: center;
   padding: 2%;
   width: 100%;
-  height: 8%;
-  border-bottom: 2px solid #b4b4b4;
+  height: 5rem;
+  border-bottom: 2px solid #e9e9e9;
 
   font-weight: 600;
   font-size: 2rem;
@@ -96,28 +110,33 @@
 
 .home-content-card {
   width: 100%;
-  height: 20%;
-  background-color: black;
+  height: 200px;
+  margin-bottom: 10px;
+  padding: 2rem;
+  border-bottom: 2px solid #e9e9e9;
 }
 
 .home-whats {
   display: flex;
-  justify-content: center;
-  padding-top: 3%;
-  width: 25%;
-  height: 100%;
-}
+    min-width: 25%;
+    height: 100dvh;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+  }
 
-.home-whats-card {
-  display: flex;
-  flex-direction: column;
-  padding: 5%;
-  gap: 6%;
-  width: 90%;
-  height: fit-content;
-  border-radius: 3%;
-  background-color: #e9e9e9;
-}
+  .home-whats-card {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 5%;
+    gap: 6%;
+    width: 90%;
+    margin-top: 10%;
+    height: fit-content;
+    border-radius: 3%;
+    background-color:#E9E9E9;
+  }
 
 .home-whats-card > a {
   text-decoration: none;
