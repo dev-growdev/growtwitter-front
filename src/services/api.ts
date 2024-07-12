@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'https://65089a2a56db83a34d9c8c86.mockapi.io/api/v1',
+  baseURL: 'http://127.0.0.1:8000/api',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -15,5 +15,17 @@ export async function doGet(url: string) {
   } catch (error) {
     console.log(error);
     return [];
+  }
+}
+
+export async function showPostsUser() {
+  const config = {
+    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+  };
+  try {
+    const response = await client.get(`/users/`, config);
+    return response;
+  } catch (error) {
+    return false;
   }
 }
