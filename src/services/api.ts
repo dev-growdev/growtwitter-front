@@ -19,11 +19,19 @@ export async function doGet(url: string) {
 }
 
 export async function showPostsUser() {
+<<<<<<< HEAD
+=======
+  const id = 1; //aqui no lugar de 1, preciso acessar o id do usuario que está logado
+>>>>>>> d633638ebd29555dad0816260f488bc00a265719
   const config = {
     headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
   };
   try {
+<<<<<<< HEAD
     const response = await client.get(`/users/`, config);
+=======
+    const response = await client.get(`/posts/${id}`, config);
+>>>>>>> d633638ebd29555dad0816260f488bc00a265719
     return response;
   } catch (error) {
     return false;
