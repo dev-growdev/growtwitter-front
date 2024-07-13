@@ -50,11 +50,10 @@ const handleRegister = async () => {
   formData.append('username', account.username);
   formData.append('avatar', account.avatar ?? '');
 
-  console.log(formData);
-
   const response = await register(formData);
 
-  if (response.status === 200) {
+  if (response.status === 201) {
+    localStorage.setItem('token', response.data.token);
     router.push('/');
   } else if (response.status === 422) {
     const errors = response.data.errors;
