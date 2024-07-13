@@ -1,11 +1,19 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'https://65089a2a56db83a34d9c8c86.mockapi.io/api/v1',
+  baseURL: 'http://localhost:8000/api',
   headers: {
-    'Content-Type': 'application/json'
+    Accept: 'application/json'
   }
 });
+
+export async function register(formData: FormData) {
+  try {
+    return await client.post('/users', formData);
+  } catch (error) {
+    return error?.response;
+  }
+}
 
 export async function doGet(url: string) {
   try {
