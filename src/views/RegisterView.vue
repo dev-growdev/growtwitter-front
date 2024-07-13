@@ -48,7 +48,9 @@ const handleRegister = async () => {
   formData.append('email', account.email);
   formData.append('password', account.password);
   formData.append('username', account.username);
-  formData.append('avatar', account.avatar);
+  formData.append('avatar', account.avatar ?? '');
+
+  console.log(formData);
 
   const response = await register(formData);
 
