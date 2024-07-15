@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: 'http://127.0.0.1:8000/api',
   headers: {
     Accept: 'application/json'
   }
@@ -41,5 +41,17 @@ export async function doGet(url: string) {
   } catch (error) {
     console.log(error);
     return [];
+  }
+}
+
+export async function showPosts(endpoint: string) {
+  const config = {
+    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+  };
+  try {
+    const response = await client.get(endpoint, config);
+    return response;
+  } catch (error) {
+    return false;
   }
 }

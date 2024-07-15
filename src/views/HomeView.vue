@@ -1,45 +1,57 @@
 <script setup lang="ts">
-import type { TweetType } from '@/types';
+import ListCard from '@/components/ListCard.vue';
+import { showPosts } from '@/services/api';
+import type { TweetType } from '@/types/TweetType';
+import { ref } from 'vue';
 
-const tweets: TweetType[] = [
-  {
-    id: '1',
-    content: 'TWEET TESTE 1',
-    user_id: 1
-  },
-  {
-    id: '2',
-    content: 'TWEET TESTE 2',
-    user_id: 1
-  },
-  {
-    id: '3',
-    content: 'TWEET TESTE 3',
-    user_id: 1
-  },
-  {
-    id: '4',
-    content: 'TWEET TESTE 4',
-    user_id: 1
-  },
-  {
-    id: '5',
-    content: 'TWEET TESTE 5',
-    user_id: 1
-  },
-  {
-    id: '6',
-    content: 'TWEET TESTE 6',
-    user_id: 1
-  },
-  {
-    id: '7',
-    content: 'TWEET TESTE 7',
-    user_id: 1
-  }
-];
+const tweets = ref<TweetType[]>([]);
+const endpoint = '/posts';
+
+async function fetchTweets() {
+  const response = await showPosts(endpoint);
+  tweets.value = response.data.data;
+}
+
+fetchTweets();
+
+// const tweets: TweetType[] = [
+//   {
+//     id: '1',
+//     content: 'TWEET TESTE 1',
+//     user_id: 1
+//   },
+//   {
+//     id: '2',
+//     content: 'TWEET TESTE 2',
+//     user_id: 1
+//   },
+//   {
+//     id: '3',
+//     content: 'TWEET TESTE 3',
+//     user_id: 1
+//   },
+//   {
+//     id: '4',
+//     content: 'TWEET TESTE 4',
+//     user_id: 1
+//   },
+//   {
+//     id: '5',
+//     content: 'TWEET TESTE 5',
+//     user_id: 1
+//   },
+//   {
+//     id: '6',
+//     content: 'TWEET TESTE 6',
+//     user_id: 1
+//   },
+//   {
+//     id: '7',
+//     content: 'TWEET TESTE 7',
+//     user_id: 1
+//   }
+// ];
 </script>
-
 <template>
   <div>
     <div class="home-container">
@@ -51,12 +63,7 @@ const tweets: TweetType[] = [
           <span> Página Inicial </span>
         </span>
 
-        <div class="home-content-card" v-for="tweet in tweets" :key="tweet.id">
-          <div>
-            <p>{{ tweet.user_id }}</p>
-            <span>{{ tweet.content }}</span>
-          </div>
-        </div>
+        <ListCard :tweets="tweets" />
       </div>
       <div class="home-whats">
         <div class="home-whats-card">
@@ -143,14 +150,6 @@ const tweets: TweetType[] = [
   font-weight: 600;
   font-size: 2rem;
   font-style: normal;
-}
-
-.home-content-card {
-  width: 100%;
-  height: 200px;
-  margin-bottom: 10px;
-  padding: 2rem;
-  border-bottom: 2px solid #e9e9e9;
 }
 
 .home-whats {
