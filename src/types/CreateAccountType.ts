@@ -1,4 +1,4 @@
-interface CreateAccountType {
+export interface CreateAccountType {
   username: string;
   name: string;
   surname: string;
@@ -6,5 +6,3 @@ interface CreateAccountType {
   password: string;
   avatar?: File;
 }
-
-export type { CreateAccountType };
