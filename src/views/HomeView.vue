@@ -61,26 +61,26 @@ const tweets: TweetType[] = [
       <div class="home-whats">
         <div class="home-whats-card">
           <div>
-            <h1>O que está acontecendo?</h1>
+            <h2>O que está acontecendo?</h2>
           </div>
           <div>
             <span>Esportes - Há 45 min</span>
-            <h2>Assunto sobre esportes</h2>
+            <h3>Assunto sobre esportes</h3>
           </div>
 
           <div>
             <span>Assunto do Momento em Brasil</span>
-            <h2>Assunto do Momento</h2>
+            <h3>Assunto do Momento</h3>
           </div>
 
           <div>
             <span>Música - Assunto do Momento</span>
-            <h2>Assunto sobre Música</h2>
+            <h3>Assunto sobre Música</h3>
           </div>
 
           <div>
             <span>Cinema - Assunto do Momento</span>
-            <h2>Assunto sobre Filmes e Cinema</h2>
+            <h3>Assunto sobre Filmes e Cinema</h3>
           </div>
 
           <a href="">Mostrar mais</a>
