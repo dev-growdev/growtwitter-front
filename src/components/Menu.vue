@@ -10,6 +10,7 @@
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/notes">Notes</RouterLink>
         <RouterLink to="/products">Products</RouterLink>
+        <RouterLink to="/login">Login</RouterLink>
       </nav>
     </div>
   </header>
