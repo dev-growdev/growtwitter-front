@@ -185,12 +185,12 @@ const tweets: TweetType[] = [
   height: 90px;
 }
 
-.home-whats-card > div > h1 {
+.home-whats-card > div > h2 {
   font-size: 1.8rem;
   font-weight: 600;
 }
 
-.home-whats-card > div > h2 {
+.home-whats-card > div > h3 {
   font-size: 1.3rem;
   font-weight: 600;
 }
