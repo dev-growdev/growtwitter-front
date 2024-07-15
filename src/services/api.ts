@@ -26,12 +26,12 @@ export async function doGet(url: string) {
   }
 }
 
-export async function showPostsUser() {
+export async function showPosts(endpoint: string) {
   const config = {
     headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
   };
   try {
-    const response = await client.get(`/users/`, config);
+    const response = await client.get(endpoint, config);
     return response;
   } catch (error) {
     return false;

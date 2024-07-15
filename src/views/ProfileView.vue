@@ -1,33 +1,21 @@
 <script setup lang="ts">
-import MenuApp from '@/components/Menu.vue';
-import FooterApp from '@/components/Footer.vue';
-import { onMounted, ref } from 'vue';
-import { showPostsUser } from '@/services/api';
-// import PabloCard from '@/components/PabloCard.vue';
+import ListCard from '@/components/ListCard.vue';
+import { showPosts } from '@/services/api';
+import { ref } from 'vue';
 
-const tweets = ref<TweetType[]>([]);
-const user = ref<string>('');
+const tweets = ref([]);
+const endpoint = '/users/';
 
-async function show() {
-  const response = await showPostsUser();
-  console.log(response);
-
+async function fetchTweets() {
+  const response = await showPosts(endpoint);
   tweets.value = response.data.data.posts;
-  user.value = response.data.data.name;
 }
 
-onMounted(() => show());
+fetchTweets();
 </script>
 
 <template>
-  <MenuApp />
-  <main>
-    <h1>Tweets de @{{ user }}</h1>
-    <div v-for="item in tweets" :key="item.id">
-      {{ item.content }}
-      <!-- a linha acima é um teste quando possuirmos o PabloCard podemos removê-la! -->
-      <!-- <PabloCard :data="item" /> -->
-    </div>
-  </main>
-  <FooterApp />
+  <div>
+    <ListCard :tweets="tweets" />
+  </div>
 </template>
