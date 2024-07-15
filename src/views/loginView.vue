@@ -15,7 +15,7 @@ const handleLogin = async () => {
       return;
     }
     if (response) {
-      router.push('/register');
+      router.push('/home');
     }
   } catch (error) {
     alert('Erro ao tentar fazer login. Por favor, tente novamente.');
