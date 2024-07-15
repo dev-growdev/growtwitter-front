@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TweetType } from '@/types';
-
+import SideBar from '@/components/SideBar.vue';
 const tweets: TweetType[] = [
   {
     id: '1',
@@ -38,13 +38,19 @@ const tweets: TweetType[] = [
     user_id: 1
   }
 ];
-</script>
+
+const user = {
+  name: 'Spike',
+  hashName: '@Spiegel_Spike',
+  urlImg:'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
+}
+  </script>
 
 <template>
   <div>
     <div class="home-container">
       <div class="home-nav">
-        <div class="home-nav-component">Aqui vai os components nav</div>
+        <SideBar :item="user"/>
       </div>
       <div class="home-content">
         <span class="home-content-title">
@@ -105,7 +111,7 @@ const tweets: TweetType[] = [
   background: #ffffff;
 }
 
-.home-nav {
+/* .home-nav {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,14 +122,14 @@ const tweets: TweetType[] = [
   position: sticky;
   top: 0;
   color: white;
-}
+} */
 
-.home-nav-component {
+/* .home-nav-component {
   width: 90%;
   height: 100%;
   padding: 1em 0 0 1em;
   background-color: black;
-}
+} */
 
 .home-content {
   width: 55%;

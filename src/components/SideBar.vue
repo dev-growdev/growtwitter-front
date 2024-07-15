@@ -3,7 +3,19 @@ import growtwitterLogo from '@/components/icons/growtwitterLogo.vue';
 import homePageLogo from '@/components/icons/homePageLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue'
+interface sideType{
+    name:string
+    hashName:string
+    urlImg:string
+}
+
+interface SidebarProps {
+  item: sideType;
+}
+
+defineProps<SidebarProps>()
 </script>
+
 
 <template>
  <div class="sideBar">
@@ -18,10 +30,10 @@ import HashTag from '@/components/icons/hashTagLogo.vue'
         </div>
         <div class="botton">
             <div class="picAndName">
-                <img class="pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt="">
+                <img class="pic" :src="item.urlImg" alt="">
                 <div class="name">
-                    <span> Spike Siegel</span>
-                    <span class="username"> @Siegel__spike</span>
+                    <span>{{ item.name }} </span>
+                    <span class="username"> {{item.hashName}}</span>
                 </div>
             </div>
             <RouterLink style="color: black; font-size: 10px;" to="/">Sair</RouterLink>
@@ -63,6 +75,8 @@ ul{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100%;
+    padding: 10PX
 }
 .username{
     font-size: 0.375rem;
