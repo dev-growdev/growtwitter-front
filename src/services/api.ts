@@ -7,6 +7,24 @@ const client = axios.create({
   }
 });
 
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await client.post('/login', {
+      email,
+      password
+    });
+
+    if (response.status == 200) {
+      sessionStorage.setItem('token', response.data.data.token);
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return { error: true, message: 'Usuário ou senha incorretos.' };
+  }
+};
+
 export async function register(formData: FormData) {
   try {
     return await client.post('/users', formData);
