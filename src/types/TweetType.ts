@@ -1,5 +1,5 @@
-interface TweetType {
-  id: string
-  content: string
+export interface TweetType {
+  id: string;
+  content: string;
+  user_id: number;
 }
-export type { TweetType }
