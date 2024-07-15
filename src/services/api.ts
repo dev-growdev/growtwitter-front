@@ -18,10 +18,10 @@ export const login = async (email: string, password: string) => {
       sessionStorage.setItem('token', response.data.data.token);
     }
 
-    return true;
+    return response.data;
   } catch (error) {
     console.log(error);
-    return false;
+    return { error: true, message: 'Usuário ou senha incorretos.' };
   }
 };
 

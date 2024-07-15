@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { login } from '@/services/api'
+import { login } from '@/services/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -8,9 +8,17 @@ const password = ref<string>('');
 const router = useRouter();
 
 const handleLogin = async () => {
-  const response = await login(email.value, password.value)
-  if (response) {
-    router.push('/')
+  try {
+    const response = await login(email.value, password.value);
+    if (response.error) {
+      alert(response.message);
+      return;
+    }
+    if (response) {
+      router.push('/register');
+    }
+  } catch (error) {
+    alert('Erro ao tentar fazer login. Por favor, tente novamente.');
   }
 };
 </script>
