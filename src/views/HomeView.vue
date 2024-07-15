@@ -1,4 +1,44 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { TweetType } from '@/types';
+
+const tweets: TweetType[] = [
+  {
+    id: '1',
+    content: 'TWEET TESTE 1',
+    user_id: 1
+  },
+  {
+    id: '2',
+    content: 'TWEET TESTE 2',
+    user_id: 1
+  },
+  {
+    id: '3',
+    content: 'TWEET TESTE 3',
+    user_id: 1
+  },
+  {
+    id: '4',
+    content: 'TWEET TESTE 4',
+    user_id: 1
+  },
+  {
+    id: '5',
+    content: 'TWEET TESTE 5',
+    user_id: 1
+  },
+  {
+    id: '6',
+    content: 'TWEET TESTE 6',
+    user_id: 1
+  },
+  {
+    id: '7',
+    content: 'TWEET TESTE 7',
+    user_id: 1
+  }
+];
+</script>
 
 <template>
   <div>
@@ -11,15 +51,12 @@
           <span> Página Inicial </span>
         </span>
 
-        <div class="home-content-card">Tweet 1</div>
-        <div class="home-content-card">Tweet 2</div>
-        <div class="home-content-card">Tweet 3</div>
-        <div class="home-content-card">Tweet 4</div>
-        <div class="home-content-card">Tweet 5</div>
-        <div class="home-content-card">Tweet 6</div>
-        <div class="home-content-card">Tweet 7</div>
-        <div class="home-content-card">Tweet 8</div>
-        <div class="home-content-card">Tweet 9</div>
+        <div class="home-content-card" v-for="tweet in tweets" :key="tweet.id">
+          <div>
+            <p>{{ tweet.user_id }}</p>
+            <span>{{ tweet.content }}</span>
+          </div>
+        </div>
       </div>
       <div class="home-whats">
         <div class="home-whats-card">
@@ -72,7 +109,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   width: 20%;
   height: 100vh;
   background: #ffffff;
@@ -118,25 +155,25 @@
 
 .home-whats {
   display: flex;
-    min-width: 25%;
-    height: 100dvh;
-    justify-content: center;
-    position: sticky;
-    top: 0;
-  }
+  min-width: 25%;
+  height: 100dvh;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+}
 
-  .home-whats-card {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    padding: 5%;
-    gap: 6%;
-    width: 90%;
-    margin-top: 10%;
-    height: fit-content;
-    border-radius: 3%;
-    background-color:#E9E9E9;
-  }
+.home-whats-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 5%;
+  gap: 6%;
+  width: 90%;
+  margin-top: 10%;
+  height: fit-content;
+  border-radius: 3%;
+  background-color: #e9e9e9;
+}
 
 .home-whats-card > a {
   text-decoration: none;
