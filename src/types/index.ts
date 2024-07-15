@@ -1,4 +1,6 @@
-import NoteType from './NoteType';
-import ProductType from './ProductType';
+import type { NoteType } from './NoteType';
+import type { ProductType } from './ProductType';
+import type { CreateAccountType } from './CreateAccountType';
+import type { TweetType } from './TweetType';
 
-export { NoteType, ProductType };
+export type { TweetType, NoteType, ProductType, CreateAccountType };
