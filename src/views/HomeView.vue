@@ -44,7 +44,7 @@ const user = {
   hashName: '@Spiegel_Spike',
   urlImg:'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
 }
-  </script>
+  // </script>
 
 import ListCard from '@/components/ListCard.vue';
 import { showPosts } from '@/services/api';
