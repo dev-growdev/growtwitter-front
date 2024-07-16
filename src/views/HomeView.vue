@@ -158,7 +158,7 @@ fetchTweets();
   background: #ffffff;
 }
 
-/* .home-nav {
+.home-nav {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -169,14 +169,14 @@ fetchTweets();
   position: sticky;
   top: 0;
   color: white;
-} */
+}
 
-/* .home-nav-component {
+.home-nav-component {
   width: 90%;
   height: 100%;
   padding: 1em 0 0 1em;
   background-color: black;
-} */
+}
 
 .home-content {
   width: 55%;
