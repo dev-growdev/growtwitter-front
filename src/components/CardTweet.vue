@@ -12,20 +12,20 @@ defineProps<TweetTypeProps>();
   <div class="container1">
     <div>
       <h1></h1>
-      <!-- <img class="img-avatar" :src="data.imgAvatar" alt="Avatar" /> -->
+      <img class="img-avatar" :src="data.user.avatar_url" alt="Avatar" />
     </div>
     <div>
       <div class="tweet-identity">
-        <!-- <p class="nick-name">{{ data.nickname }}</p> -->
-        <!-- <p>{{ data.userName }}</p> -->
+        <p class="nick-name">{{ data.user.username }}</p>
+        <p>{{ data.user.name }}</p>
         <!-- <p>{{ data.posted_since }}</p> -->
       </div>
       <div>
         <p>{{ data.content }}</p>
       </div>
       <div class="tweet-pop">
-        <!-- <p>💬{{ data.coments }}</p> -->
-        <!-- <p>🤍{{ data.likes }}</p> -->
+        <p>💬</p>
+        <p>🤍{{ data.likes }}</p>
       </div>
     </div>
   </div>
