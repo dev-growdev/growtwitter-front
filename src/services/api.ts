@@ -1,3 +1,4 @@
+import type { TweetType } from '@/types';
 import axios from 'axios';
 
 const client = axios.create({
@@ -53,5 +54,14 @@ export async function showPosts(endpoint: string) {
     return response;
   } catch (error) {
     return false;
+  }
+}
+
+
+export async function postTweet(tweet:TweetType) {
+  try {
+    return await client.post('/posts', tweet);
+  } catch (error) {
+    return error;
   }
 }

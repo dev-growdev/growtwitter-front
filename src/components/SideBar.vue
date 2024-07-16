@@ -2,7 +2,9 @@
 import growtwitterLogo from '@/components/icons/growtwitterLogo.vue';
 import homePageLogo from '@/components/icons/homePageLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
-import HashTag from '@/components/icons/hashTagLogo.vue'
+import HashTag from '@/components/icons/hashTagLogo.vue';
+import TweetModal from '@/components/TweetModal.vue';
+
 interface sideType{
     name:string
     hashName:string
@@ -13,7 +15,16 @@ interface SidebarProps {
   item: sideType;
 }
 
-defineProps<SidebarProps>()
+defineProps<SidebarProps>();
+
+function showModal(){
+  const modal = document.getElementById("modal-tweet");
+  if(modal){
+    modal.style.display = "flex";
+  }
+}
+
+
 </script>
 
 
@@ -26,7 +37,11 @@ defineProps<SidebarProps>()
             <li><HashTag/><span class="li-span">Explorar</span></li>
             <li><ProfileLogo/><span class="li-span">Perfil</span></li>
           </ul>
-          <button class="sideBtn">Twettar</button>
+          <div>
+            <button class="sideBtn" @click="showModal" >Tweetar</button>
+            <TweetModal/>
+          </div>
+
         </div>
         <div class="botton">
             <div class="picAndName">
