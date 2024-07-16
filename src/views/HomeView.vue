@@ -45,10 +45,9 @@ import { ref } from 'vue';
 const user = {
   name: 'Spike',
   hashName: '@Spiegel_Spike',
-  urlImg:'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
-}
-
-
+  urlImg:
+    'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
+};
 
 const tweets = ref<TweetType[]>([]);
 const endpoint = '/posts';
@@ -102,7 +101,7 @@ fetchTweets();
   <div>
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="user"/>
+        <SideBar :item="user" />
       </div>
       <div class="home-content">
         <span class="home-content-title">
@@ -141,6 +140,7 @@ fetchTweets();
       </div>
     </div>
   </div>
+  >>>>>>> develop
 </template>
 
 <style scoped>

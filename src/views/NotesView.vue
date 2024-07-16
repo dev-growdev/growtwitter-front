@@ -4,7 +4,6 @@ import FooterApp from '@/components/Footer.vue';
 import { onMounted, ref } from 'vue';
 import { doGet } from '@/services/api';
 import { type NoteType } from '@/types';
-import CardItem from '@/components/CardItem.vue';
 
 const notes = ref<NoteType[]>([]);
 
@@ -23,10 +22,6 @@ onMounted(getData);
   <MenuApp />
   <main>
     <h1>Notes</h1>
-
-    <div class="wrapper-cards">
-      <CardItem v-for="item in notes" :key="item.id" :item="item" />
-    </div>
   </main>
   <FooterApp />
 </template>

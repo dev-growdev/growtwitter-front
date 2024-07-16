@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import { TweetType } from '@/types';
+import type { TweetType } from '@/types';
+import CardTweet from './CardTweet.vue';
 
 interface Props {
   tweets: TweetType[];
@@ -10,15 +11,11 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h1>LITAGEM:</h1>
+  <h1>LIsTAGEM:</h1>
   <div>
     <div class="home-content-card" v-for="tweet in tweets" :key="tweet.id">
-      <div>
-        <p>{{ tweet.user_id }}</p>
-        <span>{{ tweet.content }}</span>
-      </div>
+      <CardTweet :data="tweet" />
     </div>
-    <!-- <PabloCard :data="tweet" /> -->
   </div>
 </template>
 
