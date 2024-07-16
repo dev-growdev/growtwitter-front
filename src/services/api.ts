@@ -1,11 +1,37 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'https://65089a2a56db83a34d9c8c86.mockapi.io/api/v1',
+  baseURL: 'http://127.0.0.1:8000/api',
   headers: {
-    'Content-Type': 'application/json'
+    Accept: 'application/json'
   }
 });
+
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await client.post('/login', {
+      email,
+      password
+    });
+
+    if (response.status == 200) {
+      sessionStorage.setItem('token', response.data.data.token);
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return { error: true, message: 'Usuário ou senha incorretos.' };
+  }
+};
+
+export async function register(formData: FormData) {
+  try {
+    return await client.post('/users', formData);
+  } catch (error) {
+    return error?.response;
+  }
+}
 
 export async function doGet(url: string) {
   try {
@@ -15,5 +41,17 @@ export async function doGet(url: string) {
   } catch (error) {
     console.log(error);
     return [];
+  }
+}
+
+export async function showPosts(endpoint: string) {
+  const config = {
+    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+  };
+  try {
+    const response = await client.get(endpoint, config);
+    return response;
+  } catch (error) {
+    return false;
   }
 }
