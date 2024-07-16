@@ -56,6 +56,7 @@ const handleRegister = async () => {
   const response = await register(formData);
 
   if (response.status === 201) {
+    sessionStorage.setItem('token', response.data.token);
     router.push('/');
   } else if (response.status === 422) {
     const errors = response.data.errors;
