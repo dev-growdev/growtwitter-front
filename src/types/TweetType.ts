@@ -4,4 +4,5 @@ export interface TweetType {
   id: string;
   content: string;
   user: UserType;
+  likes: string;
 }
