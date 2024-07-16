@@ -106,7 +106,7 @@ ul {
   cursor: pointer;
 }
 
-.sideBtn:hover {
+.sideBtn > button:hover {
   background-color: gray;
 }
 
