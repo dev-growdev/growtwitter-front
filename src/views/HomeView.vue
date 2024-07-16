@@ -1,55 +1,54 @@
 <script setup lang="ts">
-import type { TweetType } from '@/types';
 import SideBar from '@/components/SideBar.vue';
-const tweets: TweetType[] = [
-  {
-    id: '1',
-    content: 'TWEET TESTE 1',
-    user_id: 1
-  },
-  {
-    id: '2',
-    content: 'TWEET TESTE 2',
-    user_id: 1
-  },
-  {
-    id: '3',
-    content: 'TWEET TESTE 3',
-    user_id: 1
-  },
-  {
-    id: '4',
-    content: 'TWEET TESTE 4',
-    user_id: 1
-  },
-  {
-    id: '5',
-    content: 'TWEET TESTE 5',
-    user_id: 1
-  },
-  {
-    id: '6',
-    content: 'TWEET TESTE 6',
-    user_id: 1
-  },
-  {
-    id: '7',
-    content: 'TWEET TESTE 7',
-    user_id: 1
-  }
-];
+import ListCard from '@/components/ListCard.vue';
+import { showPosts } from '@/services/api';
+import type { TweetType } from '@/types/TweetType';
+import { ref } from 'vue';
+// const tweets: TweetType[] = [
+//   {
+//     id: '1',
+//     content: 'TWEET TESTE 1',
+//     user_id: 1
+//   },
+//   {
+//     id: '2',
+//     content: 'TWEET TESTE 2',
+//     user_id: 1
+//   },
+//   {
+//     id: '3',
+//     content: 'TWEET TESTE 3',
+//     user_id: 1
+//   },
+//   {
+//     id: '4',
+//     content: 'TWEET TESTE 4',
+//     user_id: 1
+//   },
+//   {
+//     id: '5',
+//     content: 'TWEET TESTE 5',
+//     user_id: 1
+//   },
+//   {
+//     id: '6',
+//     content: 'TWEET TESTE 6',
+//     user_id: 1
+//   },
+//   {
+//     id: '7',
+//     content: 'TWEET TESTE 7',
+//     user_id: 1
+//   }
+// ];
 
 const user = {
   name: 'Spike',
   hashName: '@Spiegel_Spike',
   urlImg:'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
 }
-  // </script>
 
-import ListCard from '@/components/ListCard.vue';
-import { showPosts } from '@/services/api';
-import type { TweetType } from '@/types/TweetType';
-import { ref } from 'vue';
+
 
 const tweets = ref<TweetType[]>([]);
 const endpoint = '/posts';
