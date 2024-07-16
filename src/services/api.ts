@@ -1,10 +1,7 @@
 import axios from 'axios';
 
-const client = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
-  headers: {
-    Accept: 'application/json'
-  }
+export const client = axios.create({
+  baseURL: import.meta.env.VITE_API_URL
 });
 
 export const login = async (email: string, password: string) => {
