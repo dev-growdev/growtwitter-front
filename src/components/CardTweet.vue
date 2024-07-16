@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TweetType } from '@/types';
+import default_avatar from '@/assets/default-avatar.png';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -12,7 +13,7 @@ defineProps<TweetTypeProps>();
   <div class="container1">
     <div>
       <h1></h1>
-      <img class="img-avatar" :src="data.user.avatar_url" alt="Avatar" />
+      <img class="img-avatar" :src="data.user.avatar_url ?? default_avatar" alt="Avatar" />
     </div>
     <div>
       <div class="tweet-identity">
@@ -25,7 +26,7 @@ defineProps<TweetTypeProps>();
       </div>
       <div class="tweet-pop">
         <p>💬</p>
-        <p>🤍{{ data.likes }}</p>
+        <p>🤍{{ data.likes.length > 0 ? data.likes.length : '' }}</p>
       </div>
     </div>
   </div>
@@ -42,6 +43,7 @@ p {
 }
 
 .img-avatar {
+  width: 3rem;
   height: 3rem;
   border-radius: 50%;
   margin: 10px;
