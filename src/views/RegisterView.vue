@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { register } from '@/services/api';
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 import defaultAvatar from '@/assets/default-avatar.png';
-import type { CreateAccountType } from '@/types';
+import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
+
 import router from '@/router';
+import useAvatar from '@/services/avatar';
 
 const account = reactive<CreateAccountType>({
   username: '',
@@ -14,7 +16,7 @@ const account = reactive<CreateAccountType>({
   avatar: undefined
 });
 
-const validationErrors = reactive({
+const validationErrors = reactive<RegisterAccountValidationType>({
   username: [],
   name: [],
   surname: [],
@@ -29,14 +31,15 @@ const clearValidationErrors = () => {
   }
 };
 
-const previewAvatar = ref(null);
+const { previewAvatar, loadFileToPreview } = useAvatar();
 
-const bindCustomAvatar = async (event: any) => {
-  const file = event.target.files[0];
-  const fileReader = new FileReader();
-  fileReader.onload = (e) => (previewAvatar.value = e.target.result);
-  fileReader.readAsDataURL(file);
-  account.avatar = file;
+const bindCustomAvatar = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+  const file = input.files[0];
+  account.avatar = loadFileToPreview(file);
 };
 
 const handleRegister = async () => {
@@ -53,7 +56,6 @@ const handleRegister = async () => {
   const response = await register(formData);
 
   if (response.status === 201) {
-    localStorage.setItem('token', response.data.token);
     router.push('/');
   } else if (response.status === 422) {
     const errors = response.data.errors;
