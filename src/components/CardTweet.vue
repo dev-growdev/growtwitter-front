@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TweetType } from '@/types';
+import type { TweetType } from '@/types';
 
 interface TweetTypeProps {
   data: TweetType;
