@@ -5,21 +5,23 @@ import { useRouter } from 'vue-router';
 
 const email = ref<string>('');
 const password = ref<string>('');
+const keepConnected = ref<boolean>(false);
+const error = ref<string>('');
 const router = useRouter();
 
 const handleLogin = async () => {
-  try {
-    const response = await login(email.value, password.value);
-    if (response.error) {
-      alert(response.message);
-      return;
-    }
-    if (response) {
-      router.push('/');
-    }
-  } catch (error) {
-    alert('Erro ao tentar fazer login. Por favor, tente novamente.');
+  error.value = '';
+  const response = await login(email.value, password.value);
+
+  if (response.status === 200 && keepConnected.value) {
+    localStorage.setItem('token', response.data.data.token);
+    router.push('/');
+  } else if (response.status === 200 && !keepConnected.value) {
+    sessionStorage.setItem('token', response.data.data.token);
+    router.push('/');
   }
+
+  error.value = response.data.msg;
 };
 </script>
 
@@ -45,9 +47,14 @@ const handleLogin = async () => {
           <label>Password:</label>
           <input class="form-input" v-model="password" type="password" />
 
-          <button class="btn" v-on:click="handleLogin">Entrar</button>
+          <div class="keep-connected-container">
+            <label for="keep-connected">Permanecer conectado:</label>
+            <input type="checkbox" id="keep-connected" v-model="keepConnected" />
+          </div>
 
+          <button class="btn" v-on:click="handleLogin">Entrar</button>
           <p>Nao tem uma conta? <RouterLink to="/register">Clique aqui</RouterLink></p>
+          <span class="error-message" v-if="error">{{ error }}</span>
         </div>
       </div>
     </div>
@@ -66,7 +73,7 @@ const handleLogin = async () => {
 .container {
   display: flex;
   width: 800px;
-  height: 400px;
+  height: 450px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
@@ -133,5 +140,17 @@ const handleLogin = async () => {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.keep-connected-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+span.error-message {
+  text-align: center;
+  color: red;
+  margin: 0;
 }
 </style>
