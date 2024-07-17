@@ -6,7 +6,9 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const content = ref<string>('');
+const visible = ref<boolean>(true);
 
+visible.value = false;
 
 function closeModal(){
   const modal = document.getElementById("modal-tweet");
@@ -34,7 +36,7 @@ async function handlePostTweet(){
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <button class="delete" @click="closeModal">X</button>
+          <button class="delete" @click="closeModal">x</button>
         </header>
         <section class="modal-card-body">
           <textarea type="content" class="text" placeholder="O que está acontecendo?" v-model="content"></textarea>
@@ -51,8 +53,8 @@ async function handlePostTweet(){
   <style>
   .text {
   font-size:20px;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
 }
 .modal {
     display: none;
