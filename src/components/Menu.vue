@@ -6,6 +6,7 @@
       <HelloWorld msg="You did it!" />
 
       <nav>
+        <!-- teste de comitte -->
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/profile">Profile</RouterLink>
         <RouterLink to="/about">About</RouterLink>

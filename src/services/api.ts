@@ -25,7 +25,7 @@ export const login = async (email: string, password: string) => {
 export async function register(formData: FormData) {
   try {
     return await client.post('/users', formData);
-  } catch (error) {
+  } catch (error: any) {
     return error?.response;
   }
 }
