@@ -4,51 +4,13 @@ import ListCard from '@/components/ListCard.vue';
 import { showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { ref } from 'vue';
-// const tweets: TweetType[] = [
-//   {
-//     id: '1',
-//     content: 'TWEET TESTE 1',
-//     user_id: 1
-//   },
-//   {
-//     id: '2',
-//     content: 'TWEET TESTE 2',
-//     user_id: 1
-//   },
-//   {
-//     id: '3',
-//     content: 'TWEET TESTE 3',
-//     user_id: 1
-//   },
-//   {
-//     id: '4',
-//     content: 'TWEET TESTE 4',
-//     user_id: 1
-//   },
-//   {
-//     id: '5',
-//     content: 'TWEET TESTE 5',
-//     user_id: 1
-//   },
-//   {
-//     id: '6',
-//     content: 'TWEET TESTE 6',
-//     user_id: 1
-//   },
-//   {
-//     id: '7',
-//     content: 'TWEET TESTE 7',
-//     user_id: 1
-//   }
-// ];
 
 const user = {
   name: 'Spike',
   hashName: '@Spiegel_Spike',
-  urlImg:'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
-}
-
-
+  urlImg:
+    'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
+};
 
 const tweets = ref<TweetType[]>([]);
 const endpoint = '/posts';
@@ -59,50 +21,12 @@ async function fetchTweets() {
 }
 
 fetchTweets();
-
-// const tweets: TweetType[] = [
-//   {
-//     id: '1',
-//     content: 'TWEET TESTE 1',
-//     user_id: 1
-//   },
-//   {
-//     id: '2',
-//     content: 'TWEET TESTE 2',
-//     user_id: 1
-//   },
-//   {
-//     id: '3',
-//     content: 'TWEET TESTE 3',
-//     user_id: 1
-//   },
-//   {
-//     id: '4',
-//     content: 'TWEET TESTE 4',
-//     user_id: 1
-//   },
-//   {
-//     id: '5',
-//     content: 'TWEET TESTE 5',
-//     user_id: 1
-//   },
-//   {
-//     id: '6',
-//     content: 'TWEET TESTE 6',
-//     user_id: 1
-//   },
-//   {
-//     id: '7',
-//     content: 'TWEET TESTE 7',
-//     user_id: 1
-//   }
-// ];
 </script>
 <template>
   <div>
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="user"/>
+        <SideBar :item="user" />
       </div>
       <div class="home-content">
         <span class="home-content-title">
@@ -158,7 +82,7 @@ fetchTweets();
   background: #ffffff;
 }
 
-/* .home-nav {
+.home-nav {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -169,14 +93,14 @@ fetchTweets();
   position: sticky;
   top: 0;
   color: white;
-} */
+}
 
-/* .home-nav-component {
+.home-nav-component {
   width: 90%;
   height: 100%;
   padding: 1em 0 0 1em;
   background-color: black;
-} */
+}
 
 .home-content {
   width: 55%;

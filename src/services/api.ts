@@ -2,7 +2,7 @@ import type { TweetType } from '@/types';
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     Accept: 'application/json'
   }
@@ -29,7 +29,7 @@ export const login = async (email: string, password: string) => {
 export async function register(formData: FormData) {
   try {
     return await client.post('/users', formData);
-  } catch (error) {
+  } catch (error: any) {
     return error?.response;
   }
 }
