@@ -4,6 +4,7 @@ import homePageLogo from '@/components/icons/homePageLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue';
 import TweetModal from '@/components/TweetModal.vue';
+import { ref } from 'vue';
 
 interface sideType{
     name:string
@@ -17,11 +18,14 @@ interface SidebarProps {
 
 defineProps<SidebarProps>();
 
+const visible = ref<boolean>(false);
+
 function showModal(){
-  const modal = document.getElementById("modal-tweet");
-  if(modal){
-    modal.style.display = "flex";
-  }
+  visible.value = true;
+}
+
+function closeModal() {
+  visible.value = false;
 }
 
 
@@ -39,7 +43,7 @@ function showModal(){
           </ul>
           <div>
             <button class="sideBtn" @click="showModal" >Tweetar</button>
-            <TweetModal/>
+            <TweetModal v-if="visible" @close="closeModal"/>
           </div>
 
         </div>

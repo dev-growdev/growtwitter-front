@@ -1,38 +1,31 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
-
-const router = useRouter();
 const content = ref<string>('');
 const visible = ref<boolean>(true);
 
-visible.value = false;
+//
+const emit = defineEmits(['close']);
 
-function closeModal(){
-  const modal = document.getElementById("modal-tweet");
-  if(modal){
-    modal.style.display = "none";
-  }
+function closeModal() {
+  emit('close');
 }
 
 async function handlePostTweet(){
   await postTweet({
-    id: "",
+  id: "",
   content: content.value,
   user_id: 0
   });
 
-
   closeModal();
-
 }
 </script>
 
 
 <template>
-    <div class="modal" id="modal-tweet">
+    <div v-if="visible" class="modal" id="modal-tweet">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
@@ -57,7 +50,7 @@ async function handlePostTweet(){
   height: 90%;
 }
 .modal {
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     position: fixed;
