@@ -3,10 +3,13 @@ import growtwitterLogo from '@/components/icons/growtwitterLogo.vue';
 import homePageLogo from '@/components/icons/homePageLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue';
-interface sideType {
-  name: string;
-  hashName: string;
-  urlImg: string;
+import TweetModal from '@/components/TweetModal.vue';
+import { ref } from 'vue';
+
+interface sideType{
+    name:string
+    hashName:string
+    urlImg:string
 }
 
 interface SidebarProps {
@@ -14,6 +17,18 @@ interface SidebarProps {
 }
 
 defineProps<SidebarProps>();
+
+const visible = ref<boolean>(false);
+
+function showModal(){
+  visible.value = true;
+}
+
+function closeModal() {
+  visible.value = false;
+}
+
+
 </script>
 
 <template>
@@ -32,7 +47,10 @@ defineProps<SidebarProps>();
             <div><ProfileLogo class="icon-img" /><span>Perfil</span></div>
           </div>
         </div>
-        <div class="sideBtn"><button>Twettar</button></div>
+        <div class="sideBtn">
+            <button @click="showModal" >Tweetar</button>
+            <TweetModal v-if="visible" @close="closeModal"/>
+          </div>
       </div>
 
       <div class="perfil-container">
