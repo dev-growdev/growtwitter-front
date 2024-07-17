@@ -35,15 +35,15 @@ defineProps<SidebarProps>();
         <div class="sideBtn"><button>Twettar</button></div>
       </div>
 
-      <div class="perfil">
-        <div class="picAndName">
-          <img class="pic" :src="item.urlImg" alt="" />
-          <div class="name">
-            <span>{{ item.name }} </span>
-            <span class="username"> {{ item.hashName }}</span>
+      <div class="perfil-container">
+        <div class="perfil-content">
+          <div class="perfil-img"><img :src="item.urlImg" alt="profile-img" /></div>
+          <div class="perfil-text">
+            <div class="name">{{ item.name }}</div>
+            <div class="name-hash">{{ item.hashName }}</div>
           </div>
+          <RouterLink class="perfil-button" to="/">Sair</RouterLink>
         </div>
-        <RouterLink style="color: black; font-size: 10px" to="/">Sair</RouterLink>
       </div>
     </div>
   </div>
@@ -57,7 +57,7 @@ ul {
   padding: 0;
 }
 .container-nav {
-  margin-top: 10%;
+  padding-top: 10%;
   padding-left: 20%;
   width: 100%;
   height: 100%;
@@ -110,25 +110,51 @@ ul {
   background-color: gray;
 }
 
-.pic {
-  width: 50px;
-  border-radius: 100%;
-  margin-right: 5px;
+.perfil-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 10%;
 }
 
-.username {
-  font-size: 0.375rem;
-  color: gray;
-  margin-top: 0;
-}
-.name {
+.perfil-content {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 4%;
 }
-.picAndName {
+
+.perfil-img {
+  width: 20%;
+}
+.perfil-img > img {
+  width: 100%;
+  border-radius: 100%;
+}
+
+.perfil-text {
+  width: 40%;
+  color: black;
+}
+
+.name-hash {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.884);
+}
+
+.perfil-button {
+  width: 20%;
+  color: white;
+  font-size: 100%;
   display: flex;
-  flex-direction: row;
-  margin-bottom: 10px;
+  justify-content: center;
+
+  background-color: #1c9bf0;
+  border-radius: 1.375rem;
+}
+
+.perfil-button:hover {
+  background-color: gray;
 }
 </style>
