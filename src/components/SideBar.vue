@@ -42,7 +42,9 @@ defineProps<SidebarProps>();
             <div class="name">{{ item.name }}</div>
             <div class="name-hash">{{ item.hashName }}</div>
           </div>
-          <RouterLink class="perfil-button" to="/">Sair</RouterLink>
+          <div class="perfil-button-container">
+            <RouterLink class="perfil-button" to="/">Sair</RouterLink>
+          </div>
         </div>
       </div>
     </div>
@@ -111,8 +113,6 @@ ul {
 }
 
 .perfil-container {
-  display: flex;
-  align-items: center;
   width: 100%;
   padding-bottom: 10%;
 }
@@ -142,9 +142,11 @@ ul {
   font-size: 1rem;
   color: rgba(0, 0, 0, 0.884);
 }
-
-.perfil-button {
+.perfil-button-container {
+  display: block;
   width: 20%;
+}
+.perfil-button {
   color: white;
   font-size: 100%;
   display: flex;
@@ -156,5 +158,31 @@ ul {
 
 .perfil-button:hover {
   background-color: gray;
+}
+
+@media screen and (max-width: 1500px) {
+  .name-hash {
+    font-size: 0.5rem;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .name-hash {
+    font-size: 0.5rem;
+  }
+
+  .perfil-content {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .perfil-img {
+    width: 60%;
+  }
+  .perfil-text {
+    width: 70%;
+  }
+  .perfil-button-container {
+    width: 70%;
+  }
 }
 </style>
