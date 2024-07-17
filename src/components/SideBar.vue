@@ -36,14 +36,14 @@ defineProps<SidebarProps>();
       </div>
 
       <div class="perfil">
-        <div class="picAndName">
+        <div>
           <img class="pic" :src="item.urlImg" alt="" />
-          <div class="name">
-            <span>{{ item.name }} </span>
-            <span class="username"> {{ item.hashName }}</span>
-          </div>
+          <span>{{ item.name }} </span>
+          <span class="username"> {{ item.hashName }}</span>
         </div>
-        <RouterLink style="color: black; font-size: 10px" to="/">Sair</RouterLink>
+        <div>
+          <RouterLink style="color: black; font-size: 10px" to="/">Sair</RouterLink>
+        </div>
       </div>
     </div>
   </div>
@@ -110,25 +110,26 @@ ul {
   background-color: gray;
 }
 
+.perfil {
+  display: flex;
+  align-items: center;
+}
+
 .pic {
-  width: 50px;
+  width: 25%;
   border-radius: 100%;
   margin-right: 5px;
 }
 
 .username {
-  font-size: 0.375rem;
+  font-size: 100%;
   color: gray;
-  margin-top: 0;
 }
-.name {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
+
 .picAndName {
   display: flex;
   flex-direction: row;
+  align-items: center;
   margin-bottom: 10px;
 }
 </style>
