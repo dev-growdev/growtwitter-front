@@ -63,7 +63,7 @@ export async function postTweet(content:string) {
     headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
   }
   try {
-    return await client.post('/posts', content, config);
+    return await client.post('/posts', {content}, config);
   } catch (error) {
     return error;
   }

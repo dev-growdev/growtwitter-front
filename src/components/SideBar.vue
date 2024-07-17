@@ -47,8 +47,8 @@ function closeModal() {
             <div><ProfileLogo class="icon-img" /><span>Perfil</span></div>
           </div>
         </div>
-        <div>
-            <button class="sideBtn" @click="showModal" >Tweetar</button>
+        <div class="sideBtn">
+            <button @click="showModal" >Tweetar</button>
             <TweetModal v-if="visible" @close="closeModal"/>
           </div>
       </div>
