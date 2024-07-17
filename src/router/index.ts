@@ -31,4 +31,19 @@ const router = createRouter({
   ]
 });
 
+// Structure to use checklogged
+
+// router.beforeEach(async (to) => {
+//   if (
+//     (getToken() && to.name === "login") ||
+//     (getToken() && to.name === "register")
+//   ) {
+//     return { name: "home" };
+//   }
+
+//   if (!getToken() && to.name === "home") {
+//     return { name: "login" };
+//   }
+// });
+
 export default router;
