@@ -140,7 +140,6 @@ fetchTweets();
       </div>
     </div>
   </div>
-  >>>>>>> develop
 </template>
 
 <style scoped>
