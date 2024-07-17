@@ -5,7 +5,6 @@ import { ref } from 'vue';
 const content = ref<string>('');
 const visible = ref<boolean>(true);
 
-//
 const emit = defineEmits(['close']);
 
 function closeModal() {
@@ -13,11 +12,7 @@ function closeModal() {
 }
 
 async function handlePostTweet(){
-  await postTweet({
-  id: "",
-  content: content.value,
-  user_id: 0
-  });
+  await postTweet(content.value);
 
   closeModal();
 }
@@ -40,14 +35,17 @@ async function handlePostTweet(){
       </div>
     </div>
 
-  </template>
+</template>
   
   
-  <style>
-  .text {
+<style>
+.text {
   font-size:20px;
   width: 90%;
   height: 90%;
+}
+.text:focus {
+  outline: none;
 }
 .modal {
     display: flex;
@@ -61,7 +59,21 @@ async function handlePostTweet(){
     z-index: 2;
     background-color: rgba(0, 0, 0, 0.5);
   }
+
+  @keyframes scale-in {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  }
+
   .modal-card {
+    -webkit-animation: scale-in 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+	  animation: scale-in 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
     width: 600px;
     background-color: white;
     border-radius: 8px;

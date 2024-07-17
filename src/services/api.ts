@@ -58,9 +58,12 @@ export async function showPosts(endpoint: string) {
 }
 
 
-export async function postTweet(tweet:TweetType) {
+export async function postTweet(content:string) {
+  const config = {
+    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+  }
   try {
-    return await client.post('/posts', tweet);
+    return await client.post('/posts', content, config);
   } catch (error) {
     return error;
   }
