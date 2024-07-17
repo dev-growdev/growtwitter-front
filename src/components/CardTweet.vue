@@ -17,8 +17,8 @@ defineProps<TweetTypeProps>();
     </div>
     <div>
       <div class="tweet-identity">
-        <p class="nick-name">{{ data.user.username }}</p>
-        <p>{{ data.user.name }}</p>
+        <p class="nick-name">{{ data.user.name }}</p>
+        <p>@{{ data.user.username }}</p>
         <!-- <p>{{ data.posted_since }}</p> -->
       </div>
       <div>
