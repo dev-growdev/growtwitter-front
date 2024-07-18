@@ -69,7 +69,7 @@ async function handleLogout() {
           <div class="perfil-img"><img :src="item.avatar_url" alt="profile-img" /></div>
           <div class="perfil-text">
             <div class="name">{{ item.name }}</div>
-            <div class="name-hash">{{ item.username }}</div>
+            <div class="name-hash">@{{ item.username }}</div>
           </div>
           <div class="perfil-button-container">
             <button class="perfil-button" @click="handleLogout">Sair</button>
