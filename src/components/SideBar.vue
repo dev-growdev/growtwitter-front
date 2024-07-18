@@ -52,13 +52,15 @@ async function handleLogout() {
         <div><growtwitterLogo /></div>
         <div class="icon-container">
           <div class="icon">
-            <div><homePageLogo class="icon-img" /><span>Pagina Inicial</span></div>
+            <div>
+              <homePageLogo class="icon-img" /> <RouterLink to="/">Página inicial</RouterLink>
+            </div>
           </div>
           <div class="icon">
-            <div><HashTag class="icon-img" /><span>Explorar</span></div>
+            <div><HashTag class="icon-img" /><RouterLink to="/explore">Explorar</RouterLink></div>
           </div>
           <div class="icon">
-            <div><ProfileLogo class="icon-img" /><span>Perfil</span></div>
+            <div><ProfileLogo class="icon-img" /><RouterLink to="/profile">Perfil</RouterLink></div>
           </div>
         </div>
         <div class="sideBtn">
