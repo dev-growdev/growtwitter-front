@@ -30,7 +30,18 @@ fetchTweets();
       </div>
       <div class="home-content">
         <span class="home-content-title">
-          <span> Meu Perfil 🚀</span>
+            <div class="profile-top">
+              <img class="arrow-profile" src="../assets/icone_seta.svg" alt="">
+              <div class="profile-header">
+                <span class="title"> Perfil de @user </span>
+                <p class="tweet-count">x tweets</p>
+              <img class="profile-pic" src="../assets/default-avatar.png" alt="">
+              <div class="name-username">
+                <h3>Nome Sobrenome</h3>
+                <h6><strong>@username</strong></h6>
+              </div>
+            </div>
+        </div>
         </span>
 
         <ListCard :tweets="tweets" />
@@ -74,6 +85,51 @@ fetchTweets();
   margin: 0;
 }
 
+.name-username{
+  margin-top: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1rem;
+}
+h6 {
+  font-size: 0.8rem
+}
+
+.profile-top {
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.5rem;
+
+}
+
+.profile-pic {
+  width: 7rem;
+  height: 7rem;
+  border: 3px solid black;
+  border-radius: 50%;
+  margin-top: 1rem;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.title{
+  font-size: 1.1rem;
+}
+
+.tweet-count {
+  font-size: 0.8rem;
+}
+
+.arrow-profile {
+  margin: 1rem;
+  height: 0.7rem;
+}
+
 .home-container {
   display: flex;
 
@@ -114,7 +170,7 @@ fetchTweets();
   align-items: center;
   padding: 2%;
   width: 100%;
-  height: 5rem;
+  height: 16rem;
   border-bottom: 2px solid #e9e9e9;
 
   font-weight: 600;
