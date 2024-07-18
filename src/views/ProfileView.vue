@@ -35,13 +35,14 @@ fetchTweets();
               <div class="profile-header">
                 <span class="title"> Perfil de @user </span>
                 <p class="tweet-count">x tweets</p>
-              <img class="profile-pic" src="../assets/default-avatar.png" alt="">
+              <img class="profile-pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt="">
               <div class="name-username">
                 <h3>Nome Sobrenome</h3>
-                <h6><strong>@username</strong></h6>
+                <h6>@username</h6>
               </div>
             </div>
-        </div>
+          </div>
+          <button class="edit-btn">Editar</button>
         </span>
 
         <ListCard :tweets="tweets" />
@@ -85,6 +86,24 @@ fetchTweets();
   margin: 0;
 }
 
+.edit-btn {
+align-self:first baseline;
+margin-bottom: 1rem;
+margin-left: 1rem;
+background-color: #289ef0;
+border: #289ef0 1px solid;
+color: #ffffff;
+height: 1.3rem;
+width: 3.5rem;
+border-radius: 0.5rem;
+}
+
+.edit-btn:hover{
+  color: #289ef0;
+  background-color: #ffffff;
+  border: 1px solid #289ef0;
+}
+
 .name-username{
   margin-top: 0.6rem;
   margin-bottom: 0.5rem;
@@ -107,9 +126,13 @@ h6 {
 .profile-pic {
   width: 7rem;
   height: 7rem;
-  border: 3px solid black;
+  border: 4px solid #e9e9e9;
   border-radius: 50%;
   margin-top: 1rem;
+}
+
+.profile-pic:hover {
+  border: 4px solid #289ef0;
 }
 
 .profile-header {
@@ -123,6 +146,7 @@ h6 {
 
 .tweet-count {
   font-size: 0.8rem;
+  color: rgb(110, 110, 110);
 }
 
 .arrow-profile {
