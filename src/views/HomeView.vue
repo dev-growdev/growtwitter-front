@@ -1,20 +1,15 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { showPosts } from '@/services/api';
+import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import LoadingDefault from '@/components/LoadingDefault.vue';
-
-const user = {
-  name: 'Spike',
-  hashName: '@Spiegel_Spike',
-  urlImg:
-    'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
-};
+import type { UserType } from '@/types';
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
+const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
 async function fetchTweets() {
@@ -27,14 +22,23 @@ async function fetchTweets() {
   tweets.value = response.data.data;
 }
 
+async function handleGetUser() {
+  const response = await getUser();
+  item.value = response.data.data;
+}
+
 fetchTweets();
+
+onMounted(() => {
+  handleGetUser();
+});
 </script>
 <template>
   <div>
     <LoadingDefault v-if="loadingVisible" />
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="user" />
+        <SideBar :item="item" />
       </div>
       <div class="home-content">
         <span class="home-content-title">

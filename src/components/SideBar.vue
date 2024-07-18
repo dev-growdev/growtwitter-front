@@ -8,15 +8,10 @@ import { ref } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-
-interface sideType {
-  name: string;
-  hashName: string;
-  urlImg: string;
-}
+import type { TweetType, UserType } from '@/types';
 
 interface SidebarProps {
-  item: sideType;
+  item: UserType;
 }
 
 defineProps<SidebarProps>();
@@ -71,12 +66,14 @@ async function handleLogout() {
 
       <div class="perfil-container">
         <div class="perfil-content">
-          <div class="perfil-img"><img :src="item.urlImg" alt="profile-img" /></div>
+          <div class="perfil-img"><img :src="item.avatar_url" alt="profile-img" /></div>
           <div class="perfil-text">
             <div class="name">{{ item.name }}</div>
-            <div class="name-hash">{{ item.hashName }}</div>
+            <div class="name-hash">@{{ item.username }}</div>
           </div>
-          <button class="perfil-button" @click="handleLogout">Sair</button>
+          <div class="perfil-button-container">
+            <button class="perfil-button" @click="handleLogout">Sair</button>
+          </div>
         </div>
       </div>
     </div>
@@ -145,8 +142,6 @@ ul {
 }
 
 .perfil-container {
-  display: flex;
-  align-items: center;
   width: 100%;
   padding-bottom: 10%;
 }
@@ -176,9 +171,11 @@ ul {
   font-size: 1rem;
   color: rgba(0, 0, 0, 0.884);
 }
-
-.perfil-button {
+.perfil-button-container {
+  display: block;
   width: 20%;
+}
+.perfil-button {
   color: white;
   font-size: 100%;
   display: flex;
@@ -193,5 +190,31 @@ ul {
 
 .perfil-button:hover {
   background-color: gray;
+}
+
+@media screen and (max-width: 1500px) {
+  .name-hash {
+    font-size: 0.5rem;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .name-hash {
+    font-size: 0.5rem;
+  }
+
+  .perfil-content {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .perfil-img {
+    width: 60%;
+  }
+  .perfil-text {
+    width: 70%;
+  }
+  .perfil-button-container {
+    width: 70%;
+  }
 }
 </style>
