@@ -1,5 +1,6 @@
 import type { TweetType } from '@/types';
 import axios from 'axios';
+import { getUserToken, resetStorage } from './authentication';
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -15,16 +16,22 @@ export const login = async (email: string, password: string) => {
       password
     });
 
-    if (response.status == 200) {
-      sessionStorage.setItem('token', response.data.data.token);
-    }
-
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    return { error: true, message: 'Usuário ou senha incorretos.' };
+    return response;
+  } catch (error: any) {
+    return error?.response;
   }
 };
+
+export async function logout() {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+  try {
+    return await client.delete('/logout', config);
+  } catch (error: any) {
+    return error?.reponse;
+  }
+}
 
 export async function register(formData: FormData) {
   try {
@@ -47,7 +54,7 @@ export async function doGet(url: string) {
 
 export async function showPosts(endpoint: string) {
   const config = {
-    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${getUserToken()}` }
   };
   try {
     const response = await client.get(endpoint, config);
@@ -57,13 +64,12 @@ export async function showPosts(endpoint: string) {
   }
 }
 
-
-export async function postTweet(content:string) {
+export async function postTweet(content: string) {
   const config = {
-    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-  }
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
   try {
-    return await client.post('/posts', {content}, config);
+    return await client.post('/posts', { content }, config);
   } catch (error) {
     return error;
   }
