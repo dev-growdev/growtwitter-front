@@ -33,7 +33,6 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <LoadingDefault />
   <LoadingDefault v-if="loadingVisible" />
   <div class="background">
     <div class="container">
