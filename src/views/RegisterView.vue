@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { register } from '@/services/api';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import defaultAvatar from '@/assets/default-avatar.png';
+import eyeHide from '@/assets/eye-hide.png';
+import eyeView from '@/assets/eye-view.png';
 import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
 
 import router from '@/router';
 import useAvatar from '@/services/avatar';
+
+const hidePassword = ref<boolean>(true);
 
 const account = reactive<CreateAccountType>({
   username: '',
@@ -71,52 +75,90 @@ const handleRegister = async () => {
   <div class="background">
     <div class="container">
       <div class="form-section">
-        <h2>Sign up to Growtwitter</h2>
+        <h2>Criar conta no Growtwitter</h2>
         <div class="form">
-          <label for="name">Name:</label>
-          <input id="name" class="form-input" v-model="account.name" type="text" />
+          <label for="name">Nome:</label>
+          <input
+            id="name"
+            class="form-input"
+            v-model="account.name"
+            type="text"
+            placeholder="ex: João"
+          />
           <div v-if="validationErrors.name.length > 0" class="error-message">
             <p v-for="message in validationErrors.name" :key="message">{{ message }}</p>
           </div>
 
-          <label for="surname">Surname:</label>
-          <input id="surname" class="form-input" v-model="account.surname" type="text" />
+          <label for="surname">Sobrenome:</label>
+          <input
+            id="surname"
+            class="form-input"
+            v-model="account.surname"
+            type="text"
+            placeholder="ex: Silva"
+          />
           <div v-if="validationErrors.surname.length > 0" class="error-message">
             <p v-for="message in validationErrors.surname" :key="message">{{ message }}</p>
           </div>
 
-          <label for="username">Username:</label>
-          <input id="username" class="form-input" v-model="account.username" type="text" />
+          <label for="username">Nome de usuário:</label>
+          <input
+            id="username"
+            class="form-input"
+            v-model="account.username"
+            type="text"
+            placeholder="ex: jsilva123"
+          />
           <div v-if="validationErrors.username.length > 0" class="error-message">
             <p v-for="message in validationErrors.username" :key="message">{{ message }}</p>
           </div>
 
           <label for="email">E-mail:</label>
-          <input id="email" class="form-input" v-model="account.email" type="email" />
+          <input
+            id="email"
+            class="form-input"
+            v-model="account.email"
+            type="email"
+            placeholder="ex: jsilva@email.com"
+          />
           <div v-if="validationErrors.email.length > 0" class="error-message">
             <p v-for="message in validationErrors.email" :key="message">{{ message }}</p>
           </div>
 
-          <label for="password">Password:</label>
-          <input id="password" class="form-input" v-model="account.password" type="password" />
+          <label for="password">Senha:</label>
+          <span class="password-container">
+            <input
+              v-if="hidePassword"
+              id="password"
+              class="form-input"
+              v-model="account.password"
+              type="password"
+            />
+            <input v-else id="password" class="form-input" v-model="account.password" type="text" />
+            <img
+              class="password-eye"
+              @click="() => (hidePassword = !hidePassword)"
+              :src="hidePassword ? eyeHide : eyeView"
+            />
+          </span>
           <div v-if="validationErrors.password.length > 0" class="error-message">
             <p v-for="message in validationErrors.password" :key="message">{{ message }}</p>
           </div>
 
-          <label>Upload avatar (optional):</label>
+          <label>Escolha um avatar (opcional):</label>
           <div class="upload-avatar-container">
             <input id="avatar" type="file" @change="bindCustomAvatar" />
             <label class="upload-avatar-label" for="avatar">
-              <img :src="previewAvatar ?? defaultAvatar" alt="Image profile" />
+              <img class="avatar" :src="previewAvatar ?? defaultAvatar" alt="Image profile" />
             </label>
           </div>
           <div v-if="validationErrors.avatar.length > 0" class="error-message">
             <p v-for="message in validationErrors.avatar" :key="message">{{ message }}</p>
           </div>
 
-          <button class="btn" @click="handleRegister">Create</button>
+          <button class="btn" @click="handleRegister">Criar</button>
 
-          <p>Already has Sign Up?<RouterLink to="/login">Sign in</RouterLink></p>
+          <p>Já tem uma conta?<RouterLink to="/login">Login</RouterLink></p>
         </div>
       </div>
     </div>
@@ -178,6 +220,20 @@ const handleRegister = async () => {
   border-radius: 5px;
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.password-eye {
+  width: 1.25rem;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
 .upload-avatar-container {
   display: flex;
   justify-content: center;
@@ -195,7 +251,7 @@ const handleRegister = async () => {
   cursor: pointer;
 }
 
-img {
+.avatar {
   width: 70px;
   height: 70px;
   border: 3px solid #acaaaa;
@@ -203,7 +259,7 @@ img {
   overflow: hidden;
 }
 
-img:hover {
+.avatar:hover {
   opacity: 0.4;
 }
 
