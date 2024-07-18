@@ -1,6 +1,6 @@
 import type { TweetType } from '@/types';
 import axios from 'axios';
-import { getUserToken } from './authentication';
+import { getUserToken, resetStorage } from './authentication';
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -21,6 +21,17 @@ export const login = async (email: string, password: string) => {
     return error?.response;
   }
 };
+
+export async function logout() {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+  try {
+    return await client.delete('/logout', config);
+  } catch (error: any) {
+    return error?.reponse;
+  }
+}
 
 export async function register(formData: FormData) {
   try {
