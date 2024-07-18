@@ -8,15 +8,10 @@ import { ref } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-
-interface sideType {
-  name: string;
-  hashName: string;
-  urlImg: string;
-}
+import type { TweetType, UserType } from '@/types';
 
 interface SidebarProps {
-  item: sideType;
+  item: UserType;
 }
 
 defineProps<SidebarProps>();
@@ -71,10 +66,10 @@ async function handleLogout() {
 
       <div class="perfil-container">
         <div class="perfil-content">
-          <div class="perfil-img"><img :src="item.urlImg" alt="profile-img" /></div>
+          <div class="perfil-img"><img :src="item.avatar_url" alt="profile-img" /></div>
           <div class="perfil-text">
             <div class="name">{{ item.name }}</div>
-            <div class="name-hash">{{ item.hashName }}</div>
+            <div class="name-hash">{{ item.username }}</div>
           </div>
           <div class="perfil-button-container">
             <button class="perfil-button" @click="handleLogout">Sair</button>
