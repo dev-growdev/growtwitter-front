@@ -4,14 +4,21 @@ import ListCard from '@/components/ListCard.vue';
 import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref } from 'vue';
+import LoadingDefault from '@/components/LoadingDefault.vue';
 import type { UserType } from '@/types';
 
+const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
 async function fetchTweets() {
+  loadingVisible.value = true;
+
   const response = await showPosts(endpoint);
+
+  loadingVisible.value = false;
+
   tweets.value = response.data.data;
 }
 
@@ -28,6 +35,7 @@ onMounted(() => {
 </script>
 <template>
   <div>
+    <LoadingDefault v-if="loadingVisible" />
     <div class="home-container">
       <div class="home-nav">
         <SideBar :item="item" />

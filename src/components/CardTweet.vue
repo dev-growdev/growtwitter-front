@@ -26,7 +26,15 @@ defineProps<TweetTypeProps>();
       </div>
       <div class="tweet-pop">
         <p>💬</p>
-        <p>🤍{{ data.likes.length > 0 ? data.likes.length : '' }}</p>
+        <div v-if="data.likes.length === 0">
+          <p>🤍</p>
+        </div>
+        <div v-else-if="data.likes.length === 1">
+          <p>❤️ 1 like!</p>
+        </div>
+        <div v-else>
+          <p>❤️{{ data.likes.length }} likes!</p>
+        </div>
       </div>
     </div>
   </div>

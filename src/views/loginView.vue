@@ -2,6 +2,7 @@
 import { login } from '@/services/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import LoadingDefault from '@/components/LoadingDefault.vue';
 
 const email = ref<string>('');
 const password = ref<string>('');
@@ -9,9 +10,15 @@ const keepConnected = ref<boolean>(false);
 const error = ref<string>('');
 const router = useRouter();
 
+const loadingVisible = ref<boolean>(false);
+
 const handleLogin = async () => {
   error.value = '';
+  loadingVisible.value = true;
+  
   const response = await login(email.value, password.value);
+
+  loadingVisible.value = false;
 
   if (response.status === 200 && keepConnected.value) {
     localStorage.setItem('token', response.data.data.token);
@@ -26,6 +33,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
+  <LoadingDefault v-if="loadingVisible" />
   <div class="background">
     <div class="container">
       <div class="info-section">
