@@ -44,7 +44,7 @@ onMounted(() => {
         <span class="home-content-title">
           <span> Página Inicial </span>
         </span>
-
+        
         <ListCard :tweets="tweets" />
       </div>
       <div class="home-whats">
@@ -124,13 +124,12 @@ onMounted(() => {
 .home-content-title {
   display: flex;
   align-items: center;
-  padding: 2%;
+  padding: 1rem;
   width: 100%;
-  height: 5rem;
+  height: 4rem;
   border-bottom: 2px solid #e9e9e9;
-
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-style: normal;
 }
 
@@ -147,7 +146,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding: 5%;
+  padding: 3% 5%;
   gap: 6%;
   width: 90%;
   margin-top: 10%;
@@ -163,16 +162,17 @@ onMounted(() => {
 
 .home-whats-card > div {
   width: 100%;
-  height: 90px;
+  height: 100%;
+  margin-bottom: 1.2rem;
 }
 
 .home-whats-card > div > h2 {
-  font-size: 1.8rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
 .home-whats-card > div > h3 {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
