@@ -8,7 +8,9 @@ import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
 
 import router from '@/router';
 import useAvatar from '@/services/avatar';
+import LoadingDefault from '@/components/LoadingDefault.vue';
 
+const loadingVisible = ref<boolean>(false);
 const hidePassword = ref<boolean>(true);
 
 const account = reactive<CreateAccountType>({
@@ -57,7 +59,11 @@ const handleRegister = async () => {
   formData.append('username', account.username);
   formData.append('avatar', account.avatar ?? '');
 
+  loadingVisible.value = true;
+  
   const response = await register(formData);
+
+  loadingVisible.value = false;
 
   if (response.status === 201) {
     sessionStorage.setItem('token', response.data.token);
@@ -72,6 +78,7 @@ const handleRegister = async () => {
 </script>
 
 <template>
+  <LoadingDefault v-if="loadingVisible" />
   <div class="background">
     <div class="container">
       <div class="form-section">
