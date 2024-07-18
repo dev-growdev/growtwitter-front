@@ -4,6 +4,7 @@ import ListCard from '@/components/ListCard.vue';
 import { showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { ref } from 'vue';
+import LoadingDefault from '@/components/LoadingDefault.vue';
 
 const user = {
   name: 'Spike',
@@ -12,11 +13,17 @@ const user = {
     'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
 };
 
+const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const endpoint = '/posts';
 
 async function fetchTweets() {
+  loadingVisible.value = true;
+
   const response = await showPosts(endpoint);
+
+  loadingVisible.value = false;
+
   tweets.value = response.data.data;
 }
 
@@ -24,6 +31,7 @@ fetchTweets();
 </script>
 <template>
   <div>
+    <LoadingDefault v-if="loadingVisible" />
     <div class="home-container">
       <div class="home-nav">
         <SideBar :item="user" />
