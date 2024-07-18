@@ -6,10 +6,10 @@ import HashTag from '@/components/icons/hashTagLogo.vue';
 import TweetModal from '@/components/TweetModal.vue';
 import { ref } from 'vue';
 
-interface sideType{
-    name:string
-    hashName:string
-    urlImg:string
+interface sideType {
+  name: string;
+  hashName: string;
+  urlImg: string;
 }
 
 interface SidebarProps {
@@ -20,15 +20,13 @@ defineProps<SidebarProps>();
 
 const visible = ref<boolean>(false);
 
-function showModal(){
+function showModal() {
   visible.value = true;
 }
 
 function closeModal() {
   visible.value = false;
 }
-
-
 </script>
 
 <template>
@@ -38,19 +36,21 @@ function closeModal() {
         <div><growtwitterLogo /></div>
         <div class="icon-container">
           <div class="icon">
-            <div><homePageLogo class="icon-img" /><span>Pagina Inicial</span></div>
+            <div>
+              <homePageLogo class="icon-img" /> <RouterLink to="/">Página inicial</RouterLink>
+            </div>
           </div>
           <div class="icon">
-            <div><HashTag class="icon-img" /><span>Explorar</span></div>
+            <div><HashTag class="icon-img" /><RouterLink to="/explore">Explorar</RouterLink></div>
           </div>
           <div class="icon">
-            <div><ProfileLogo class="icon-img" /><span>Perfil</span></div>
+            <div><ProfileLogo class="icon-img" /><RouterLink to="/profile">Perfil</RouterLink></div>
           </div>
         </div>
         <div class="sideBtn">
-            <button @click="showModal" >Tweetar</button>
-            <TweetModal v-if="visible" @close="closeModal"/>
-          </div>
+          <button @click="showModal">Tweetar</button>
+          <TweetModal v-if="visible" @close="closeModal" />
+        </div>
       </div>
 
       <div class="perfil-container">
