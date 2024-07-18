@@ -5,11 +5,14 @@ import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue';
 import TweetModal from '@/components/TweetModal.vue';
 import { ref } from 'vue';
+import { logout } from '@/services/api';
+import router from '@/router';
+import { resetStorage } from '@/services/authentication';
 
-interface sideType{
-    name:string
-    hashName:string
-    urlImg:string
+interface sideType {
+  name: string;
+  hashName: string;
+  urlImg: string;
 }
 
 interface SidebarProps {
@@ -20,7 +23,7 @@ defineProps<SidebarProps>();
 
 const visible = ref<boolean>(false);
 
-function showModal(){
+function showModal() {
   visible.value = true;
 }
 
@@ -28,7 +31,18 @@ function closeModal() {
   visible.value = false;
 }
 
+async function handleLogout() {
+  const response = await logout();
 
+  if (response.status === 200) {
+    resetStorage();
+    router.push('/login');
+  } else if (response.status === 400) {
+    alert('Falha ao deslogar.');
+  } else {
+    alert('Ocorreu um erro entre em contato com o suporte.');
+  }
+}
 </script>
 
 <template>
@@ -48,9 +62,9 @@ function closeModal() {
           </div>
         </div>
         <div class="sideBtn">
-            <button @click="showModal" >Tweetar</button>
-            <TweetModal v-if="visible" @close="closeModal"/>
-          </div>
+          <button @click="showModal">Tweetar</button>
+          <TweetModal v-if="visible" @close="closeModal" />
+        </div>
       </div>
 
       <div class="perfil-container">
@@ -60,7 +74,7 @@ function closeModal() {
             <div class="name">{{ item.name }}</div>
             <div class="name-hash">{{ item.hashName }}</div>
           </div>
-          <RouterLink class="perfil-button" to="/">Sair</RouterLink>
+          <button class="perfil-button" @click="handleLogout">Sair</button>
         </div>
       </div>
     </div>
@@ -168,8 +182,11 @@ ul {
   display: flex;
   justify-content: center;
 
+  border: 1px solid transparent;
+  padding: 0.25rem;
   background-color: #1c9bf0;
   border-radius: 1.375rem;
+  cursor: pointer;
 }
 
 .perfil-button:hover {

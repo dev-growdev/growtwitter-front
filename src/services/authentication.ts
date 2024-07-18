@@ -5,3 +5,8 @@ export function isUserAuthenticated() {
 export function getUserToken() {
   return localStorage.getItem('token') ?? sessionStorage.getItem('token');
 }
+
+export function resetStorage() {
+  localStorage.removeItem('token');
+  sessionStorage.removeItem('token');
+}
