@@ -8,7 +8,8 @@ import { ref } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-import type { TweetType, UserType } from '@/types';
+import type { UserType } from '@/types';
+import LoadingDefault from '@/components/LoadingDefault.vue';
 
 interface SidebarProps {
   item: UserType;
@@ -16,6 +17,7 @@ interface SidebarProps {
 
 defineProps<SidebarProps>();
 
+const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
 
 function showModal() {
@@ -27,20 +29,24 @@ function closeModal() {
 }
 
 async function handleLogout() {
+  loadingVisible.value = true;
   const response = await logout();
-
   if (response.status === 200) {
+    loadingVisible.value = false;
     resetStorage();
     router.push('/login');
   } else if (response.status === 400) {
+    loadingVisible.value = false;
     alert('Falha ao deslogar.');
   } else {
+    loadingVisible.value = false;
     alert('Ocorreu um erro entre em contato com o suporte.');
   }
 }
 </script>
 
 <template>
+  <LoadingDefault id="loading-logout" v-if="loadingVisible" />
   <div class="container-nav">
     <div class="content">
       <div class="menu">
@@ -190,6 +196,12 @@ ul {
 
 .perfil-button:hover {
   background-color: gray;
+}
+
+#loading-logout {
+  background-color: transparent;
+  backdrop-filter: none;
+  left: 0;
 }
 
 @media screen and (max-width: 1500px) {
