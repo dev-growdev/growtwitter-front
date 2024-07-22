@@ -10,6 +10,7 @@ import router from '@/router';
 import { resetStorage } from '@/services/authentication';
 import type { UserType } from '@/types';
 import LoadingDefault from '@/components/LoadingDefault.vue';
+import ButtonDefault from '@/components/ButtonDefault.vue';
 
 interface SidebarProps {
   item: UserType;
@@ -65,7 +66,7 @@ async function handleLogout() {
           </div>
         </div>
         <div class="sideBtn">
-          <button @click="showModal">Tweetar</button>
+          <ButtonDefault @click="showModal">Tweetar</ButtonDefault>
           <TweetModal v-if="visible" @close="closeModal" />
         </div>
       </div>
@@ -78,7 +79,7 @@ async function handleLogout() {
             <div class="name-hash">@{{ item.username }}</div>
           </div>
           <div class="perfil-button-container">
-            <button class="perfil-button" @click="handleLogout">Sair</button>
+            <ButtonDefault class="perfil-button" @click="handleLogout">Sair</ButtonDefault>
           </div>
         </div>
       </div>
@@ -133,19 +134,6 @@ ul {
 .sideBtn {
   width: 60%;
 }
-.sideBtn > button {
-  width: 100%;
-  border: none;
-  border-radius: 20px;
-  background-color: #1c9bf0;
-  color: #f1f1f1;
-  padding: 5px;
-  cursor: pointer;
-}
-
-.sideBtn > button:hover {
-  background-color: gray;
-}
 
 .perfil-container {
   width: 100%;
@@ -180,22 +168,6 @@ ul {
 .perfil-button-container {
   display: block;
   width: 20%;
-}
-.perfil-button {
-  color: white;
-  font-size: 100%;
-  display: flex;
-  justify-content: center;
-
-  border: 1px solid transparent;
-  padding: 0.25rem;
-  background-color: #1c9bf0;
-  border-radius: 1.375rem;
-  cursor: pointer;
-}
-
-.perfil-button:hover {
-  background-color: gray;
 }
 
 #loading-logout {
