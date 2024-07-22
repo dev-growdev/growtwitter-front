@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ButtonDefault from '@/components/ButtonDefault.vue';
 import { login } from '@/services/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -60,7 +61,7 @@ const handleLogin = async () => {
             <input type="checkbox" id="keep-connected" v-model="keepConnected" />
           </div>
 
-          <button class="btn" v-on:click="handleLogin">Entrar</button>
+          <ButtonDefault class="btn" v-on:click="handleLogin">Entrar</ButtonDefault>
           <p>Nao tem uma conta? <RouterLink to="/register">Clique aqui</RouterLink></p>
           <span class="error-message" v-if="error">{{ error }}</span>
         </div>
@@ -130,18 +131,6 @@ const handleLogin = async () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.btn {
-  padding: 10px;
-  background-color: #4285f4;
-  border: none;
-  color: white;
-  border-radius: 21px;
-  cursor: pointer;
-}
-.btn:hover {
-  background-color: #357ae8;
 }
 
 .form-input {
