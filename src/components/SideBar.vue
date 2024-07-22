@@ -8,19 +8,17 @@ import { ref } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-
-interface sideType {
-  name: string;
-  hashName: string;
-  urlImg: string;
-}
+import type { UserType } from '@/types';
+import LoadingDefault from '@/components/LoadingDefault.vue';
+import ButtonDefault from '@/components/ButtonDefault.vue';
 
 interface SidebarProps {
-  item: sideType;
+  item: UserType;
 }
 
 defineProps<SidebarProps>();
 
+const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
 
 function showModal() {
@@ -32,20 +30,24 @@ function closeModal() {
 }
 
 async function handleLogout() {
+  loadingVisible.value = true;
   const response = await logout();
-
   if (response.status === 200) {
+    loadingVisible.value = false;
     resetStorage();
     router.push('/login');
   } else if (response.status === 400) {
+    loadingVisible.value = false;
     alert('Falha ao deslogar.');
   } else {
+    loadingVisible.value = false;
     alert('Ocorreu um erro entre em contato com o suporte.');
   }
 }
 </script>
 
 <template>
+  <LoadingDefault id="loading-logout" v-if="loadingVisible" />
   <div class="container-nav">
     <div class="content">
       <div class="menu">
@@ -64,19 +66,21 @@ async function handleLogout() {
           </div>
         </div>
         <div class="sideBtn">
-          <button @click="showModal">Tweetar</button>
+          <ButtonDefault @click="showModal">Tweetar</ButtonDefault>
           <TweetModal v-if="visible" @close="closeModal" />
         </div>
       </div>
 
       <div class="perfil-container">
         <div class="perfil-content">
-          <div class="perfil-img"><img :src="item.urlImg" alt="profile-img" /></div>
+          <div class="perfil-img"><img :src="item.avatar_url" alt="profile-img" /></div>
           <div class="perfil-text">
             <div class="name">{{ item.name }}</div>
-            <div class="name-hash">{{ item.hashName }}</div>
+            <div class="name-hash">@{{ item.username }}</div>
           </div>
-          <button class="perfil-button" @click="handleLogout">Sair</button>
+          <div class="perfil-button-container">
+            <ButtonDefault class="perfil-button" @click="handleLogout">Sair</ButtonDefault>
+          </div>
         </div>
       </div>
     </div>
@@ -130,23 +134,8 @@ ul {
 .sideBtn {
   width: 60%;
 }
-.sideBtn > button {
-  width: 100%;
-  border: none;
-  border-radius: 20px;
-  background-color: #1c9bf0;
-  color: #f1f1f1;
-  padding: 5px;
-  cursor: pointer;
-}
-
-.sideBtn > button:hover {
-  background-color: gray;
-}
 
 .perfil-container {
-  display: flex;
-  align-items: center;
   width: 100%;
   padding-bottom: 10%;
 }
@@ -176,22 +165,40 @@ ul {
   font-size: 1rem;
   color: rgba(0, 0, 0, 0.884);
 }
-
-.perfil-button {
+.perfil-button-container {
+  display: block;
   width: 20%;
-  color: white;
-  font-size: 100%;
-  display: flex;
-  justify-content: center;
-
-  border: 1px solid transparent;
-  padding: 0.25rem;
-  background-color: #1c9bf0;
-  border-radius: 1.375rem;
-  cursor: pointer;
 }
 
-.perfil-button:hover {
-  background-color: gray;
+#loading-logout {
+  background-color: transparent;
+  backdrop-filter: none;
+  left: 0;
+}
+
+@media screen and (max-width: 1500px) {
+  .name-hash {
+    font-size: 0.5rem;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .name-hash {
+    font-size: 0.5rem;
+  }
+
+  .perfil-content {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .perfil-img {
+    width: 60%;
+  }
+  .perfil-text {
+    width: 70%;
+  }
+  .perfil-button-container {
+    width: 70%;
+  }
 }
 </style>

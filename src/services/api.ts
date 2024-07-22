@@ -74,3 +74,17 @@ export async function postTweet(content: string) {
     return error;
   }
 }
+
+export const getUser = async () => {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+
+  try {
+    const response = await client.get('/users', config);
+
+    return response;
+  } catch (error: any) {
+    return error?.response;
+  }
+};

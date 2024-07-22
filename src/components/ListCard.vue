@@ -11,7 +11,6 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h1>LIsTAGEM:</h1>
   <div>
     <div class="home-content-card" v-for="tweet in tweets" :key="tweet.id">
       <CardTweet :data="tweet" />
@@ -21,10 +20,9 @@ defineProps<Props>();
 
 <style scoped>
 .home-content-card {
-  width: 100%;
-  height: 200px;
-  margin-bottom: 10px;
-  padding: 2rem;
+  width: auto;
+  height: 100%;
   border-bottom: 2px solid #e9e9e9;
+  padding: 10px;
 }
 </style>

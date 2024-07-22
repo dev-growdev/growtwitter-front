@@ -5,10 +5,12 @@ import defaultAvatar from '@/assets/default-avatar.png';
 import eyeHide from '@/assets/eye-hide.png';
 import eyeView from '@/assets/eye-view.png';
 import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
-
+import ButtonDefault from '@/components/ButtonDefault.vue';
 import router from '@/router';
 import useAvatar from '@/services/avatar';
+import LoadingDefault from '@/components/LoadingDefault.vue';
 
+const loadingVisible = ref<boolean>(false);
 const hidePassword = ref<boolean>(true);
 
 const account = reactive<CreateAccountType>({
@@ -57,7 +59,11 @@ const handleRegister = async () => {
   formData.append('username', account.username);
   formData.append('avatar', account.avatar ?? '');
 
+  loadingVisible.value = true;
+  
   const response = await register(formData);
+
+  loadingVisible.value = false;
 
   if (response.status === 201) {
     sessionStorage.setItem('token', response.data.token);
@@ -72,6 +78,7 @@ const handleRegister = async () => {
 </script>
 
 <template>
+  <LoadingDefault v-if="loadingVisible" />
   <div class="background">
     <div class="container">
       <div class="form-section">
@@ -156,7 +163,7 @@ const handleRegister = async () => {
             <p v-for="message in validationErrors.avatar" :key="message">{{ message }}</p>
           </div>
 
-          <button class="btn" @click="handleRegister">Criar</button>
+          <ButtonDefault class="btn" @click="handleRegister">Criar</ButtonDefault>
 
           <p>Já tem uma conta?<RouterLink to="/login">Login</RouterLink></p>
         </div>
@@ -200,18 +207,6 @@ const handleRegister = async () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.btn {
-  padding: 10px;
-  background-color: #4285f4;
-  border: none;
-  color: white;
-  border-radius: 21px;
-  cursor: pointer;
-}
-.btn:hover {
-  background-color: #357ae8;
 }
 
 .form-input {

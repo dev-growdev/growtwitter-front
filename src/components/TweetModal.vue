@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
 import { ref } from 'vue';
+import ButtonDefault from '@/components/ButtonDefault.vue';
 
 const content = ref<string>('');
 const visible = ref<boolean>(true);
@@ -24,13 +25,13 @@ async function handlePostTweet(){
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <button class="delete" @click="closeModal">x</button>
+          <ButtonDefault class="delete" @click="closeModal">x</ButtonDefault>
         </header>
         <section class="modal-card-body">
           <textarea type="content" class="text" placeholder="O que está acontecendo?" v-model="content"></textarea>
         </section>
         <footer class="modal-card-foot">
-          <button class="tweet-button" @click="handlePostTweet" >Tweetar</button>
+          <ButtonDefault class="tweet-button" @click="handlePostTweet" >Tweetar</ButtonDefault>
         </footer>
       </div>
     </div>
@@ -107,25 +108,6 @@ async function handlePostTweet(){
     display: flex;
     justify-content: right;
   }
-  .tweet-button {
-    background-color: #289ef0;
-    font-size: 16px;
-    border: 1px solid #289ef0;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 16px;
-  }
-  .tweet-button:hover {
-    color: #289ef0;
-    background-color: white;
-    /* border: #289ef0 solid 1px; */
-  }
-
   .delete:hover{
     color: #289ef0;
   }

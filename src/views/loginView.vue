@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import ButtonDefault from '@/components/ButtonDefault.vue';
 import { login } from '@/services/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import LoadingDefault from '@/components/LoadingDefault.vue';
 
 const email = ref<string>('');
 const password = ref<string>('');
@@ -9,9 +11,15 @@ const keepConnected = ref<boolean>(false);
 const error = ref<string>('');
 const router = useRouter();
 
+const loadingVisible = ref<boolean>(false);
+
 const handleLogin = async () => {
   error.value = '';
+  loadingVisible.value = true;
+  
   const response = await login(email.value, password.value);
+
+  loadingVisible.value = false;
 
   if (response.status === 200 && keepConnected.value) {
     localStorage.setItem('token', response.data.data.token);
@@ -26,6 +34,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
+  <LoadingDefault v-if="loadingVisible" />
   <div class="background">
     <div class="container">
       <div class="info-section">
@@ -52,7 +61,7 @@ const handleLogin = async () => {
             <input type="checkbox" id="keep-connected" v-model="keepConnected" />
           </div>
 
-          <button class="btn" v-on:click="handleLogin">Entrar</button>
+          <ButtonDefault class="btn" v-on:click="handleLogin">Entrar</ButtonDefault>
           <p>Nao tem uma conta? <RouterLink to="/register">Clique aqui</RouterLink></p>
           <span class="error-message" v-if="error">{{ error }}</span>
         </div>
@@ -122,18 +131,6 @@ const handleLogin = async () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.btn {
-  padding: 10px;
-  background-color: #4285f4;
-  border: none;
-  color: white;
-  border-radius: 21px;
-  cursor: pointer;
-}
-.btn:hover {
-  background-color: #357ae8;
 }
 
 .form-input {

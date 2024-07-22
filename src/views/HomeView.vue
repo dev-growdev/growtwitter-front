@@ -1,38 +1,50 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { showPosts } from '@/services/api';
+import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import LoadingDefault from '@/components/LoadingDefault.vue';
+import type { UserType } from '@/types';
 
-const user = {
-  name: 'Spike',
-  hashName: '@Spiegel_Spike',
-  urlImg:
-    'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
-};
-
+const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
+const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
 async function fetchTweets() {
+  loadingVisible.value = true;
+
   const response = await showPosts(endpoint);
+
+  loadingVisible.value = false;
+
   tweets.value = response.data.data;
 }
 
+async function handleGetUser() {
+  const response = await getUser();
+  item.value = response.data.data;
+}
+
 fetchTweets();
+
+onMounted(() => {
+  handleGetUser();
+});
 </script>
 <template>
   <div>
+    <LoadingDefault v-if="loadingVisible" />
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="user" />
+        <SideBar :item="item" />
       </div>
       <div class="home-content">
         <span class="home-content-title">
           <span> Página Inicial </span>
         </span>
-
+        
         <ListCard :tweets="tweets" />
       </div>
       <div class="home-whats">
@@ -112,13 +124,12 @@ fetchTweets();
 .home-content-title {
   display: flex;
   align-items: center;
-  padding: 2%;
+  padding: 1rem;
   width: 100%;
-  height: 5rem;
+  height: 4rem;
   border-bottom: 2px solid #e9e9e9;
-
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-style: normal;
 }
 
@@ -135,7 +146,7 @@ fetchTweets();
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding: 5%;
+  padding: 3% 5%;
   gap: 6%;
   width: 90%;
   margin-top: 10%;
@@ -151,16 +162,17 @@ fetchTweets();
 
 .home-whats-card > div {
   width: 100%;
-  height: 90px;
+  height: 100%;
+  margin-bottom: 1.2rem;
 }
 
 .home-whats-card > div > h2 {
-  font-size: 1.8rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
 .home-whats-card > div > h3 {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 

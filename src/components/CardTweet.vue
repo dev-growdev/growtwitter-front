@@ -11,7 +11,7 @@ defineProps<TweetTypeProps>();
 
 <template>
   <div class="container1">
-    <div>
+    <div class="container-img">
       <h1></h1>
       <img class="img-avatar" :src="data.user.avatar_url ?? default_avatar" alt="Avatar" />
     </div>
@@ -21,12 +21,20 @@ defineProps<TweetTypeProps>();
         <p>@{{ data.user.username }}</p>
         <!-- <p>{{ data.posted_since }}</p> -->
       </div>
-      <div>
-        <p>{{ data.content }}</p>
+      <div class="container-content">
+        <p class="content-text">{{ data.content }}</p>
       </div>
       <div class="tweet-pop">
         <p>💬</p>
-        <p>🤍{{ data.likes.length > 0 ? data.likes.length : '' }}</p>
+        <div v-if="data.likes.length === 0">
+          <p>🤍</p>
+        </div>
+        <div v-else-if="data.likes.length === 1">
+          <p>❤️ 1 like!</p>
+        </div>
+        <div v-else>
+          <p>❤️{{ data.likes.length }} likes!</p>
+        </div>
       </div>
     </div>
   </div>
@@ -35,11 +43,15 @@ defineProps<TweetTypeProps>();
 <style scoped>
 .container1 {
   display: flex;
-  border: solid 1px lightgrey;
-  margin: auto;
+  width: 100%;
 }
 p {
   margin: 5px 0;
+}
+
+.container-img {
+  display: flex;
+  align-items: flex-start;
 }
 
 .img-avatar {
@@ -48,18 +60,29 @@ p {
   border-radius: 50%;
   margin: 10px;
 }
+
 .tweet-identity {
   display: flex;
   flex-direction: row;
+  margin-top: 3px;
   gap: 10px;
 }
 
 .nick-name {
   font-weight: bold;
+  margin-bottom: 0;
 }
 .tweet-pop {
   display: flex;
   flex-direction: row;
   gap: 10px;
+}
+
+.content-text{
+  margin-bottom: .5rem;
+}
+
+p{
+  margin: 0;
 }
 </style>
