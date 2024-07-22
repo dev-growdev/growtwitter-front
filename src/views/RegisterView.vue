@@ -33,7 +33,7 @@ const validationErrors = reactive<RegisterAccountValidationType>({
 
 const clearValidationErrors = () => {
   for (const key in validationErrors) {
-    validationErrors[key] = [];
+    validationErrors[key as keyof RegisterAccountValidationType] = [];
   }
 };
 
@@ -60,7 +60,7 @@ const handleRegister = async () => {
   formData.append('avatar', account.avatar ?? '');
 
   loadingVisible.value = true;
-  
+
   const response = await register(formData);
 
   loadingVisible.value = false;
@@ -71,7 +71,7 @@ const handleRegister = async () => {
   } else if (response.status === 422) {
     const errors = response.data.errors;
     for (const key in errors) {
-      validationErrors[key] = errors[key];
+      validationErrors[key as keyof RegisterAccountValidationType] = errors[key];
     }
   }
 };
