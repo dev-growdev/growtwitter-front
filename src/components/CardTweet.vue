@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
+import { tempoDesdeCriacao } from '@/utils/PastTime';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -19,7 +20,7 @@ defineProps<TweetTypeProps>();
       <div class="tweet-identity">
         <p class="nick-name">{{ data.user.name }}</p>
         <p>@{{ data.user.username }}</p>
-        <!-- <p>{{ data.posted_since }}</p> -->
+        <p>{{ tempoDesdeCriacao(data.created_at) }}</p>
       </div>
       <div class="container-content">
         <p class="content-text">{{ data.content }}</p>
@@ -78,11 +79,11 @@ p {
   gap: 10px;
 }
 
-.content-text{
-  margin-bottom: .5rem;
+.content-text {
+  margin-bottom: 0.5rem;
 }
 
-p{
+p {
   margin: 0;
 }
 </style>
