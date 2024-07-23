@@ -58,6 +58,7 @@ export async function showPosts(endpoint: string) {
   };
   try {
     const response = await client.get(endpoint, config);
+    console.log(response);
     return response;
   } catch (error) {
     return false;
