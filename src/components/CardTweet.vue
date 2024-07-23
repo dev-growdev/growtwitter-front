@@ -2,18 +2,28 @@
 import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
+import { postLike } from '@/services/api';
+import { ref } from 'vue';
 
 interface TweetTypeProps {
   data: TweetType;
 }
 
 defineProps<TweetTypeProps>();
+
+let updateKey = ref(0);
+
+async function handlePostLike(id: number) {
+  await postLike(id);
+  updateKey.value++;
+
+  // closeModal();
+}
 </script>
 
 <template>
   <div class="container1">
     <div class="container-img">
-      <h1></h1>
       <img class="img-avatar" :src="data.user.avatar_url ?? default_avatar" alt="Avatar" />
     </div>
     <div>
@@ -27,14 +37,16 @@ defineProps<TweetTypeProps>();
       </div>
       <div class="tweet-pop">
         <p>💬</p>
-        <div v-if="data.likes.length === 0">
-          <p>🤍</p>
+        <div :key="updateKey" v-if="data.likes.length === 0">
+          <button @click="() => handlePostLike(data.id)">🤍</button>
         </div>
         <div v-else-if="data.likes.length === 1">
-          <p>❤️ 1 like!</p>
+          <button @click="() => handlePostLike(data.id)">❤️</button>
+          <span>1 like!</span>
         </div>
         <div v-else>
-          <p>❤️{{ data.likes.length }} likes!</p>
+          <button @click="() => handlePostLike(data.id)">❤️</button>
+          <span>{{ data.likes.length }} likes!</span>
         </div>
       </div>
     </div>
