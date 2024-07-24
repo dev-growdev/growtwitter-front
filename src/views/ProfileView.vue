@@ -5,6 +5,8 @@ import { showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { ref } from 'vue';
 import LoadingDefault from '@/components/LoadingDefault.vue';
+import default_avatar from '@/assets/default-avatar.png';
+import type { UserType } from '@/types';
 
 const loadingVisible = ref<boolean>(false);
 
@@ -14,6 +16,11 @@ const user = {
   urlImg:
     'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
 };
+interface ProfileProps {
+  test: UserType;
+}
+
+defineProps<ProfileProps>();
 
 const tweets = ref<TweetType[]>([]);
 const endpoint = '/postsbyuserauth';
@@ -43,7 +50,8 @@ fetchTweets();
               <div class="profile-header">
                 <span class="title"> Perfil de @user </span>
                 <p class="tweet-count">x tweets</p>
-              <img class="profile-pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt="">
+                <img class="profile-pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt="">
+              <!-- <img class="profile-pic" :src="test.avatar_url ?? default_avatar" alt=""> -->
               <div class="name-username">
                 <h3>Nome Sobrenome</h3>
                 <h6>@username</h6>
