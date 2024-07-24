@@ -60,4 +60,10 @@ defineProps<TweetTypeProps>();
   padding: 0;
   margin: 0;
 }
+.v-card-text {
+  padding: 0;
+}
+.v-list-item {
+  padding: 0;
+}
 </style>
