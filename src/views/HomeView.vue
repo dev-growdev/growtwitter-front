@@ -6,7 +6,6 @@ import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref } from 'vue';
 import LoadingDefault from '@/components/LoadingDefault.vue';
 import type { UserType } from '@/types';
-import { title } from 'process';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 
 const loadingVisible = ref<boolean>(false);
@@ -58,20 +57,29 @@ const items = [
 ];
 </script>
 <template>
-  <div>
-    <LoadingDefault v-if="loadingVisible" />
-    <div class="home-container">
-      <div class="home-nav">
-        <SideBar :item="item" />
-      </div>
-      <div class="home-content">
-        <span class="home-content-title">
-          <span> Página Inicial </span>
-        </span>
+  <v-overlay :model-value="loadingVisible" class="align-center justify-center">
+    <v-progress-circular color="primary" size="64" indeterminate></v-progress-circular>
+  </v-overlay>
 
-        <ListCard :tweets="tweets" />
-      </div>
-      <div class="home-whats">
+  <v-container class="h-screen">
+    <v-row>
+      <v-col cols="12" sm="2" class="h-screen position-fixed left-0 top-0 d-none d-sm-flex">
+        <SideBar :item="item" />
+        <!-- Adicionar o novo componet aqui de sidebar.-->
+      </v-col>
+      <v-row>
+        <v-col cols="12" sm="2" class="h-screen d-none d-sm-flex"></v-col>
+        <v-col cols="12" sm="8" class="bg-white border border-black w-100">
+          <span class="home-content-title"> Página Inicial </span>
+          <ListCard :tweets="tweets" class="" />
+          <!-- Adicionar o novo componet aqui de listagem.-->
+        </v-col>
+
+        <v-col cols="12" sm="2" class="h-screen d-none d-sm-flex"></v-col>
+      </v-row>
+
+      <v-col cols="12" sm="2" class="h-screen position-fixed right-0 top-0 d-none d-sm-flex">
+        <!-- Adicionar o novo componet aqui de oque está acontecendo.-->
         <div class="home-whats-card">
           <div>
             <h2>O que está acontecendo?</h2>
@@ -80,12 +88,11 @@ const items = [
             <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
             <h2>{{ item.content }}</h2>
           </div>
-
           <RouterLink to="/explore">Mostrar mais</RouterLink>
         </div>
-      </div>
-    </div>
-  </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
@@ -95,45 +102,9 @@ const items = [
   margin: 0;
 }
 
-.home-container {
-  display: flex;
-
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-}
-
-.home-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 20%;
-  height: 100vh;
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  color: white;
-}
-
-.home-nav-component {
-  width: 90%;
-  height: 100%;
-  padding: 1em 0 0 1em;
-  background-color: black;
-}
-
-.home-content {
-  width: 55%;
-  height: 100%;
-  border-right: 2px solid #e9e9e9;
-  border-left: 2px solid #e9e9e9;
-}
-
 .home-content-title {
   display: flex;
   align-items: center;
-  padding: 1rem;
   width: 100%;
   height: 4rem;
   border-bottom: 2px solid #e9e9e9;
