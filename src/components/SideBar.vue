@@ -8,9 +8,10 @@ import { ref } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-import type { UserType } from '@/types';;
+import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import BackgroundOverlay from './BackgroundOverlay.vue';
 
 interface SidebarProps {
   item: UserType;
@@ -18,7 +19,8 @@ interface SidebarProps {
 
 defineProps<SidebarProps>();
 
-const loadingVisible = ref<boolean>(false);
+const spinnerLoading = ref<boolean>(false);
+const backgrounOverlay = ref<boolean>(false);
 const visible = ref<boolean>(false);
 
 function showModal() {
@@ -30,24 +32,27 @@ function closeModal() {
 }
 
 async function handleLogout() {
-  loadingVisible.value = true;
+  backgrounOverlay.value = true;
   const response = await logout();
   if (response.status === 200) {
-    loadingVisible.value = false;
+    backgrounOverlay.value = false;
     resetStorage();
     router.push('/login');
   } else if (response.status === 400) {
-    loadingVisible.value = false;
+    backgrounOverlay.value = false;
     alert('Falha ao deslogar.');
   } else {
-    loadingVisible.value = false;
+    backgrounOverlay.value = false;
     alert('Ocorreu um erro entre em contato com o suporte.');
   }
 }
 </script>
 
 <template>
-  <SpinnerComponent id="loading-logout" v-if="loadingVisible" color="blue" />
+  <BackgroundOverlay v-if="backgrounOverlay">
+    <SpinnerComponent id="loading-logout" v-if="backgrounOverlay" color="white" />
+  </BackgroundOverlay>
+  <SpinnerComponent id="loading-logout" v-if="spinnerLoading" color="blue" />
   <div class="container-nav">
     <div class="content">
       <div class="menu">
