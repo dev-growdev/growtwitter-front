@@ -8,9 +8,9 @@ import { ref } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-import type { UserType } from '@/types';
-import LoadingDefault from '@/components/LoadingDefault.vue';
+import type { UserType } from '@/types';;
 import ButtonDefault from '@/components/ButtonDefault.vue';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 interface SidebarProps {
   item: UserType;
@@ -47,7 +47,7 @@ async function handleLogout() {
 </script>
 
 <template>
-  <LoadingDefault id="loading-logout" v-if="loadingVisible" />
+  <SpinnerComponent id="loading-logout" v-if="loadingVisible" color="blue" />
   <div class="container-nav">
     <div class="content">
       <div class="menu">
