@@ -38,14 +38,14 @@ async function handlePostLike(id: number) {
       <div class="tweet-pop">
         <p>💬</p>
         <div :key="updateKey" v-if="data.likes.length === 0">
-          <button @click="() => handlePostLike(data.id)">🤍</button>
+          <button class="btn-like" @click="() => handlePostLike(data.id)">🤍</button>
         </div>
         <div v-else-if="data.likes.length === 1">
-          <button @click="() => handlePostLike(data.id)">❤️</button>
+          <button class="btn-like" @click="() => handlePostLike(data.id)">❤️</button>
           <span>1 like!</span>
         </div>
         <div v-else>
-          <button @click="() => handlePostLike(data.id)">❤️</button>
+          <button class="btn-like" @click="() => handlePostLike(data.id)">❤️</button>
           <span>{{ data.likes.length }} likes!</span>
         </div>
       </div>
@@ -97,5 +97,10 @@ p {
 
 p {
   margin: 0;
+}
+
+.btn-like {
+  border: none;
+  background-color: white;
 }
 </style>
