@@ -7,6 +7,7 @@ import { ref } from 'vue';
 import LoadingDefault from '@/components/LoadingDefault.vue';
 import default_avatar from '@/assets/default-avatar.png';
 import type { UserType } from '@/types';
+import { tempoDesdeCriacao } from '@/utils/PastTime';
 
 const loadingVisible = ref<boolean>(false);
 
@@ -35,6 +36,29 @@ async function fetchTweets() {
 }
 
 fetchTweets();
+
+const items = [
+  {
+    title: 'Esportes',
+    content: 'Assunto sobre esportes',
+    created_at: '2024-07-22 20:07:21'
+  },
+  {
+    title: 'Assunto do Momento',
+    content: 'Assunto do Momento em Brasil',
+    created_at: '2024-07-21 18:07:21'
+  },
+  {
+    title: 'Música',
+    content: 'Assunto sobre Música',
+    created_at: '2024-07-20 17:07:21'
+  },
+  {
+    title: 'Cinema',
+    content: 'Assunto sobre Filmes e Cinema',
+    created_at: '2024-07-19 16:07:21'
+  }
+];
 </script>
 <template>
   <LoadingDefault v-if="loadingVisible" />
@@ -68,27 +92,12 @@ fetchTweets();
           <div>
             <h2>O que está acontecendo?</h2>
           </div>
-          <div>
-            <span>Esportes - Há 45 min</span>
-            <h3>Assunto sobre esportes</h3>
+          <div v-for="(item, index) in items" :key="index">
+            <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
+            <h2>{{ item.content }}</h2>
           </div>
 
-          <div>
-            <span>Assunto do Momento em Brasil</span>
-            <h3>Assunto do Momento</h3>
-          </div>
-
-          <div>
-            <span>Música - Assunto do Momento</span>
-            <h3>Assunto sobre Música</h3>
-          </div>
-
-          <div>
-            <span>Cinema - Assunto do Momento</span>
-            <h3>Assunto sobre Filmes e Cinema</h3>
-          </div>
-
-          <a href="">Mostrar mais</a>
+          <RouterLink to="/explore">Mostrar mais</RouterLink>
         </div>
       </div>
     </div>
@@ -208,13 +217,12 @@ h6 {
 .home-content-title {
   display: flex;
   align-items: center;
-  padding: 2%;
+  padding: 1rem;
   width: 100%;
-  height: 16rem;
+  height: 4rem;
   border-bottom: 2px solid #e9e9e9;
-
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-style: normal;
 }
 
@@ -231,7 +239,7 @@ h6 {
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding: 5%;
+  padding: 3% 5%;
   gap: 6%;
   width: 90%;
   margin-top: 10%;
@@ -247,16 +255,17 @@ h6 {
 
 .home-whats-card > div {
   width: 100%;
-  height: 90px;
+  height: 100%;
+  margin-bottom: 1.2rem;
 }
 
 .home-whats-card > div > h2 {
-  font-size: 1.8rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
 .home-whats-card > div > h3 {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
