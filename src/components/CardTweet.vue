@@ -11,79 +11,53 @@ defineProps<TweetTypeProps>();
 </script>
 
 <template>
-  <div class="container1">
-    <div class="container-img">
-      <h1></h1>
-      <img class="img-avatar" :src="data.user.avatar_url ?? default_avatar" alt="Avatar" />
-    </div>
-    <div>
-      <div class="tweet-identity">
-        <p class="nick-name">{{ data.user.name }}</p>
-        <p>@{{ data.user.username }}</p>
-        <p>{{ tempoDesdeCriacao(data.created_at) }}</p>
-      </div>
-      <div class="container-content">
-        <p class="content-text">{{ data.content }}</p>
-      </div>
-      <div class="tweet-pop">
-        <p>💬</p>
-        <div v-if="data.likes.length === 0">
-          <p>🤍</p>
-        </div>
-        <div v-else-if="data.likes.length === 1">
-          <p>❤️ 1 like!</p>
-        </div>
-        <div v-else>
-          <p>❤️{{ data.likes.length }} likes!</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-card class="text-white mx-auto pa-0" color="blue" max-width="37.5rem">
+    <v-card-actions>
+      <v-row align="start" justify="center" class="w-100">
+        <!-- Coluna para a imagem do avatar -->
+        <v-col cols="auto">
+          <v-avatar
+            class="ma-5"
+            :image="data.user.avatar_url ?? default_avatar"
+            size="70"
+          ></v-avatar>
+        </v-col>
+
+        <!-- Coluna para o nome do usuário, username e conteúdo -->
+        <v-col>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="mt-3">{{ data.user.name }}</v-list-item-title>
+              <v-list-item-subtitle>
+                @{{ data.user.username }} · {{ tempoDesdeCriacao(data.created_at) }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-card-text class="text-h5 py-3 mr-3">
+            {{ data.content }}
+          </v-card-text>
+
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="mb-3">💬</span>
+            <div v-if="data.likes.length === 0">
+              <p>🤍</p>
+            </div>
+            <div v-else-if="data.likes.length === 1">
+              <p>❤️ 1 like!</p>
+            </div>
+            <div v-else>
+              <p>❤️{{ data.likes.length }} likes!</p>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <style scoped>
-.container1 {
-  display: flex;
-  width: 100%;
-}
-p {
-  margin: 5px 0;
-}
-
-.container-img {
-  display: flex;
-  align-items: flex-start;
-}
-
-.img-avatar {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  margin: 10px;
-}
-
-.tweet-identity {
-  display: flex;
-  flex-direction: row;
-  margin-top: 3px;
-  gap: 10px;
-}
-
-.nick-name {
-  font-weight: bold;
-  margin-bottom: 0;
-}
-.tweet-pop {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-
-.content-text {
-  margin-bottom: 0.5rem;
-}
-
-p {
+* {
+  padding: 0;
   margin: 0;
 }
 </style>
