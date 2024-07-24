@@ -2,16 +2,13 @@
 import { register } from '@/services/api';
 import { reactive, ref } from 'vue';
 import defaultAvatar from '@/assets/default-avatar.png';
-import eyeHide from '@/assets/eye-hide.png';
-import eyeView from '@/assets/eye-view.png';
 import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
-import ButtonDefault from '@/components/ButtonDefault.vue';
 import router from '@/router';
 import useAvatar from '@/services/avatar';
 import LoadingDefault from '@/components/LoadingDefault.vue';
 
 const loadingVisible = ref<boolean>(false);
-const hidePassword = ref<boolean>(true);
+const visible = ref<boolean>(false);
 
 const account = reactive<CreateAccountType>({
   username: '',
@@ -80,153 +77,111 @@ const handleRegister = async () => {
 <template>
   <LoadingDefault v-if="loadingVisible" />
   <div class="background">
-    <div class="container">
-      <div class="form-section">
-        <h2>Criar conta no Growtwitter</h2>
-        <div class="form">
-          <label for="name">Nome:</label>
-          <input
-            id="name"
-            class="form-input"
-            v-model="account.name"
-            type="text"
-            placeholder="ex: João"
-          />
-          <div v-if="validationErrors.name.length > 0" class="error-message">
-            <p v-for="message in validationErrors.name" :key="message">{{ message }}</p>
-          </div>
+    <div>
+      <v-card class="mx-auto mt-6 pa-12 pb-8" elevation="8" max-width="648" rounded="lg">
+        <h1 class="mt-1 text-center">Criar conta</h1>
+        <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
+        <v-text-field
+          density="compact"
+          placeholder="Seu primeiro nome"
+          prepend-inner-icon="mdi-account-outline"
+          variant="outlined"
+          v-model="account.name"
+          :error-messages="validationErrors.name"
+        ></v-text-field>
 
-          <label for="surname">Sobrenome:</label>
-          <input
-            id="surname"
-            class="form-input"
-            v-model="account.surname"
-            type="text"
-            placeholder="ex: Silva"
-          />
-          <div v-if="validationErrors.surname.length > 0" class="error-message">
-            <p v-for="message in validationErrors.surname" :key="message">{{ message }}</p>
-          </div>
+        <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
+        <v-text-field
+          density="compact"
+          placeholder="Seu sobrenome"
+          prepend-inner-icon="mdi-account-outline"
+          variant="outlined"
+          v-model="account.surname"
+          :error-messages="validationErrors.surname"
+        ></v-text-field>
 
-          <label for="username">Nome de usuário:</label>
-          <input
-            id="username"
-            class="form-input"
-            v-model="account.username"
-            type="text"
-            placeholder="ex: jsilva123"
-          />
-          <div v-if="validationErrors.username.length > 0" class="error-message">
-            <p v-for="message in validationErrors.username" :key="message">{{ message }}</p>
-          </div>
+        <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
+        <v-text-field
+          density="compact"
+          placeholder="Escolha um nome de usuário"
+          prepend-inner-icon="mdi-account-outline"
+          variant="outlined"
+          v-model="account.username"
+          :error-messages="validationErrors.username"
+        ></v-text-field>
 
-          <label for="email">E-mail:</label>
-          <input
-            id="email"
-            class="form-input"
-            v-model="account.email"
-            type="email"
-            placeholder="ex: jsilva@email.com"
-          />
-          <div v-if="validationErrors.email.length > 0" class="error-message">
-            <p v-for="message in validationErrors.email" :key="message">{{ message }}</p>
-          </div>
+        <div class="text-subtitle-1 text-medium-emphasis">E-mail</div>
 
-          <label for="password">Senha:</label>
-          <span class="password-container">
-            <input
-              v-if="hidePassword"
-              id="password"
-              class="form-input"
-              v-model="account.password"
-              type="password"
-            />
-            <input v-else id="password" class="form-input" v-model="account.password" type="text" />
-            <img
-              class="password-eye"
-              @click="() => (hidePassword = !hidePassword)"
-              :src="hidePassword ? eyeHide : eyeView"
-            />
-          </span>
-          <div v-if="validationErrors.password.length > 0" class="error-message">
-            <p v-for="message in validationErrors.password" :key="message">{{ message }}</p>
-          </div>
+        <v-text-field
+          density="compact"
+          placeholder="Seu endereço de e-mail"
+          prepend-inner-icon="mdi-email-outline"
+          variant="outlined"
+          v-model="account.email"
+          :error-messages="validationErrors.email"
+        ></v-text-field>
 
-          <label>Escolha um avatar (opcional):</label>
-          <div class="upload-avatar-container">
-            <input id="avatar" type="file" @change="bindCustomAvatar" />
-            <label class="upload-avatar-label" for="avatar">
-              <img class="avatar" :src="previewAvatar ?? defaultAvatar" alt="Image profile" />
-            </label>
-          </div>
-          <div v-if="validationErrors.avatar.length > 0" class="error-message">
-            <p v-for="message in validationErrors.avatar" :key="message">{{ message }}</p>
-          </div>
-
-          <ButtonDefault class="btn" @click="handleRegister">Criar</ButtonDefault>
-
-          <p>Já tem uma conta?<RouterLink to="/login">Login</RouterLink></p>
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+          Senha
         </div>
-      </div>
+
+        <v-text-field
+          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="visible ? 'text' : 'password'"
+          density="compact"
+          placeholder="Crie uma senha forte"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          @click:append-inner="visible = !visible"
+          v-model="account.password"
+          :error-messages="validationErrors.password"
+        ></v-text-field>
+
+        <div class="mt-1 text-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
+        <div class="upload-avatar-container">
+          <v-file-input
+            class="d-none"
+            accept="image/png, image/jpeg, image/jpg"
+            label="Avatar"
+            @change="bindCustomAvatar"
+            id="avatar"
+          ></v-file-input>
+          <label class="upload-avatar-label mt-3" for="avatar">
+            <v-avatar :image="previewAvatar ?? defaultAvatar" size="75"></v-avatar>
+          </label>
+          <div v-if="validationErrors.avatar.length > 0">
+            <p class="error-avatar-message" v-for="error in validationErrors.avatar" :key="error">
+              {{ error }}
+            </p>
+          </div>
+        </div>
+
+        <v-btn
+          @click="handleRegister"
+          :disabled="account.password.length < 4"
+          class="mb-2"
+          color="blue"
+          size="large"
+          variant="flat"
+          block
+        >
+          Criar
+        </v-btn>
+
+        <v-card-text class="text-center">
+          <RouterLink to="/login" class="text-blue text-decoration-none">
+            Já tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
+          </RouterLink>
+        </v-card-text>
+      </v-card>
     </div>
   </div>
 </template>
 
 <style scoped>
 .background {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
   background-color: #f0f0f0;
-}
-
-.container {
-  display: flex;
-  width: 800px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: white;
-}
-
-.form-section {
-  flex: 1;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.form-section h2 {
-  margin-bottom: 1em;
-  font-size: 1.5em;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.password-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.password-eye {
-  width: 1.25rem;
-  cursor: pointer;
-  position: absolute;
-  top: 8px;
-  right: 10px;
 }
 
 .upload-avatar-container {
@@ -237,37 +192,17 @@ const handleRegister = async () => {
   margin-bottom: 1rem;
 }
 
-.upload-avatar-container div {
-  display: flex;
-  margin-bottom: 1rem;
-}
-
 .upload-avatar-label {
   cursor: pointer;
 }
 
-.avatar {
-  width: 70px;
-  height: 70px;
-  border: 3px solid #acaaaa;
-  border-radius: 50%;
-  overflow: hidden;
+.upload-avatar-label:hover {
+  opacity: 0.3;
 }
 
-.avatar:hover {
-  opacity: 0.4;
-}
-
-input[type='file'] {
-  display: none;
-}
-
-.error-message {
-  color: red;
-  font-size: 0.875rem;
-}
-
-.error-message p {
-  margin: 0;
+.error-avatar-message {
+  margin-top: 0.5rem;
+  color: rgb(176, 0, 32);
+  font-size: 0.75rem;
 }
 </style>
