@@ -103,4 +103,9 @@ p {
   border: none;
   background-color: white;
 }
+
+.btn-like:hover {
+  background-color: yellow;
+  cursor: pointer;
+}
 </style>
