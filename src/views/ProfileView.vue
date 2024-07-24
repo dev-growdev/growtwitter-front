@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { showPosts } from '@/services/api';
+import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import LoadingDefault from '@/components/LoadingDefault.vue';
 import default_avatar from '@/assets/default-avatar.png';
 import type { UserType } from '@/types';
@@ -11,17 +11,20 @@ import { tempoDesdeCriacao } from '@/utils/PastTime';
 
 const loadingVisible = ref<boolean>(false);
 
-const user = {
-  name: 'Spike',
-  hashName: '@Spiegel_Spike',
-  urlImg:
-    'https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg'
-};
-interface ProfileProps {
-  test: UserType;
+const item = ref<UserType[]>([]);
+
+
+async function handleGetUser() {
+  const response = await getUser();
+  item.value = response.data.data;
+  console.log(item.value)
 }
 
-defineProps<ProfileProps>();
+
+onMounted(() => {
+  handleGetUser();
+});
+
 
 const tweets = ref<TweetType[]>([]);
 const endpoint = '/postsbyuserauth';
@@ -65,20 +68,20 @@ const items = [
   <div>
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="user" />
+        <SideBar :item="item" />
       </div>
       <div class="home-content">
         <span class="home-content-title">
             <div class="profile-top">
               <img class="arrow-profile" src="../assets/icone_seta.svg" alt="">
               <div class="profile-header">
-                <span class="title"> Perfil de @user </span>
+                <span class="title"> Perfil de {{item.username}} </span>
                 <p class="tweet-count">x tweets</p>
-                <img class="profile-pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt="">
-              <!-- <img class="profile-pic" :src="test.avatar_url ?? default_avatar" alt=""> -->
+                <!-- <img class="profile-pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt=""> -->
+              <img class="profile-pic" :src="item.avatar_url ?? default_avatar" alt="">
               <div class="name-username">
-                <h3>Nome Sobrenome</h3>
-                <h6>@username</h6>
+                <h3>{{item.name}} {{ item.surname }}</h3>
+                <h6>@{{item.username}}</h6>
               </div>
             </div>
           </div>
@@ -112,6 +115,7 @@ const items = [
 }
 
 .edit-btn {
+font-size: 0.8rem;
 align-self:first baseline;
 margin-bottom: 1rem;
 margin-left: 1rem;
