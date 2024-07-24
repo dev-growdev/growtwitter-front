@@ -13,40 +13,32 @@ defineProps<TweetTypeProps>();
 <template>
   <v-card class="text-white mx-auto pa-0" color="blue" max-width="37.5rem">
     <v-card-actions>
-      <v-row align="center" justify="start" class="w-100">
+      <v-row align="start" justify="center" class="w-100">
         <!-- Coluna para a imagem do avatar -->
         <v-col cols="auto">
-          <v-avatar :image="data.user.avatar_url ?? default_avatar"></v-avatar>
+          <v-avatar
+            class="ma-5"
+            :image="data.user.avatar_url ?? default_avatar"
+            size="70"
+          ></v-avatar>
         </v-col>
 
-        <!-- Coluna para o nome do usuário e username -->
+        <!-- Coluna para o nome do usuário, username e conteúdo -->
         <v-col>
-          <v-list-item-title
-            >{{ data.user.name }}
-            <v-list-item-subtitle>@{{ data.user.username }}</v-list-item-subtitle>
-          </v-list-item-title>
-        </v-col>
-
-        <!-- Coluna para o subtítulo com nome de usuário e tempo desde a criação -->
-        <v-col>
-          <v-list-item-subtitle
-            >{{ data.user.name }} @{{ data.user.username }}
-            {{ tempoDesdeCriacao(data.created_at) }}</v-list-item-subtitle
-          >
-        </v-col>
-
-        <!-- Coluna para o conteúdo -->
-        <v-col cols="12">
-          <v-card-text class="text-h5 py-2">
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="mt-3">{{ data.user.name }}</v-list-item-title>
+              <v-list-item-subtitle>
+                @{{ data.user.username }} · {{ tempoDesdeCriacao(data.created_at) }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-card-text class="text-h5 py-3 mr-3">
             {{ data.content }}
           </v-card-text>
-        </v-col>
 
-        <!-- Coluna para os ícones de interação (likes, comentários) -->
-        <v-col cols="auto" class="ml-auto">
-          <div class="d-flex align-items-center justify-content-end">
-            <v-icon class="me-1" icon="mdi-heart"></v-icon>
-            <span class="me-2">💬</span>
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="mb-3">💬</span>
             <div v-if="data.likes.length === 0">
               <p>🤍</p>
             </div>
@@ -56,11 +48,16 @@ defineProps<TweetTypeProps>();
             <div v-else>
               <p>❤️{{ data.likes.length }} likes!</p>
             </div>
-            <!-- Adicionando o ícone de comentário corretamente -->
-            <v-icon class="me-1">mdi-comment</v-icon>
           </div>
         </v-col>
       </v-row>
     </v-card-actions>
   </v-card>
 </template>
+
+<style scoped>
+* {
+  padding: 0;
+  margin: 0;
+}
+</style>
