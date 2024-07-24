@@ -3,7 +3,8 @@ import ButtonDefault from '@/components/ButtonDefault.vue';
 import { login } from '@/services/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import LoadingDefault from '@/components/LoadingDefault.vue';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import BackgroundOverlay from '@/components/BackgroundOverlay.vue';
 
 const email = ref<string>('');
 const password = ref<string>('');
@@ -34,7 +35,9 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <LoadingDefault v-if="loadingVisible" />
+  <BackgroundOverlay v-if="loadingVisible">
+    <SpinnerComponent color="white" />
+  </BackgroundOverlay>
   <div class="background">
     <div class="container">
       <div class="info-section">
