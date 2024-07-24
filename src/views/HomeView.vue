@@ -4,10 +4,10 @@ import ListCard from '@/components/ListCard.vue';
 import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref } from 'vue';
-import LoadingDefault from '@/components/LoadingDefault.vue';
 import type { UserType } from '@/types';
 import { title } from 'process';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
@@ -59,7 +59,6 @@ const items = [
 </script>
 <template>
   <div>
-    <LoadingDefault v-if="loadingVisible" />
     <div class="home-container">
       <div class="home-nav">
         <SideBar :item="item" />
@@ -69,6 +68,9 @@ const items = [
           <span> Página Inicial </span>
         </span>
 
+        <div class="d-flex justify-center mt-5">
+          <SpinnerComponent v-if="loadingVisible" color="blue" />
+        </div>
         <ListCard :tweets="tweets" />
       </div>
       <div class="home-whats">
