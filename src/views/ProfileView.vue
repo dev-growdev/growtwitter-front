@@ -219,7 +219,7 @@ h6 {
   align-items: center;
   padding: 1rem;
   width: 100%;
-  height: 4rem;
+  height: 16rem;
   border-bottom: 2px solid #e9e9e9;
   font-weight: 600;
   font-size: 1.3rem;
