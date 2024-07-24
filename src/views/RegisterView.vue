@@ -8,7 +8,8 @@ import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import router from '@/router';
 import useAvatar from '@/services/avatar';
-import LoadingDefault from '@/components/LoadingDefault.vue';
+import SpinnerComponent from '@/components/SpinnerComponent.vue';
+import BackgroundOverlay from '@/components/BackgroundOverlay.vue';
 
 const loadingVisible = ref<boolean>(false);
 const hidePassword = ref<boolean>(true);
@@ -78,7 +79,9 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <LoadingDefault v-if="loadingVisible" />
+  <BackgroundOverlay v-if="loadingVisible">
+    <SpinnerComponent color="white" />
+  </BackgroundOverlay>
   <div class="background">
     <div class="container">
       <div class="form-section">
