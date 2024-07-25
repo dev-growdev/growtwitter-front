@@ -13,5 +13,6 @@ export function tempoDesdeCriacao(created_at: string): string {
   if (meses > 0) return `Há ${meses} mes${meses > 1 ? 'es' : ''}`;
   if (dias > 0) return `Há ${dias} dia${dias > 1 ? 's' : ''}`;
   if (horas > 0) return `Há ${horas} hora${horas > 1 ? 's' : ''}`;
-  return `Há ${minutos} minuto${minutos > 1 ? 's' : ''}`;
+  if (minutos > 0) return `Há ${minutos} minuto${minutos > 1 ? 's' : ''}`;
+  return 'agora mesmo';
 }

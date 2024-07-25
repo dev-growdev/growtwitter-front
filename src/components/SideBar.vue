@@ -12,6 +12,7 @@ import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import BackgroundOverlay from './BackgroundOverlay.vue';
+import TweetModalVuetify from './TweetModalVuetify.vue';
 
 interface SidebarProps {
   item: UserType;
@@ -73,6 +74,7 @@ async function handleLogout() {
         <div class="sideBtn">
           <ButtonDefault @click="showModal">Tweetar</ButtonDefault>
           <TweetModal v-if="visible" @close="closeModal" />
+          <TweetModalVuetify />
         </div>
       </div>
 
