@@ -89,3 +89,14 @@ export const getUser = async () => {
     return error?.response;
   }
 };
+
+export async function postLike(postId: number) {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+  try {
+    return await client.post('/likes', { postId }, config);
+  } catch (error) {
+    return error;
+  }
+}

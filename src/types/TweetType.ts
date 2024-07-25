@@ -1,7 +1,7 @@
 import type { UserType } from './UserType';
 
 export interface TweetType {
-  id: string;
+  id: number;
   created_at: string;
   content: string;
   user: UserType;

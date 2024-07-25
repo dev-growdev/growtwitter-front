@@ -2,12 +2,23 @@
 import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
+import { postLike } from '@/services/api';
+import { ref } from 'vue';
 
 interface TweetTypeProps {
   data: TweetType;
 }
 
 defineProps<TweetTypeProps>();
+
+let updateKey = ref(0);
+
+async function handlePostLike(id: number) {
+  await postLike(id);
+  updateKey.value++;
+
+  // closeModal();
+}
 </script>
 
 <template>
