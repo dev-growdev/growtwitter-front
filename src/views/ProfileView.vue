@@ -5,7 +5,6 @@ import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import { onMounted, ref } from 'vue';
-import LoadingDefault from '@/components/LoadingDefault.vue';
 import default_avatar from '@/assets/default-avatar.png';
 import type { UserType } from '@/types';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
@@ -84,7 +83,7 @@ const items = [
           </div>
           <button class="edit-btn">Editar</button>
         </span>
-        <div class="d-flex justify-center mt-5">
+        <div class="spinner-div d-flex justify-center mt-5">
           <SpinnerComponent v-if="loadingVisible" color="blue" />
         </div>
         <ListCard :tweets="tweets" />
@@ -111,6 +110,12 @@ const items = [
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+.spinner-div{
+  position: absolute;
+  left: 46%;
+  top: 50%
 }
 
 .edit-btn {
