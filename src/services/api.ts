@@ -29,7 +29,7 @@ export async function logout() {
   try {
     return await client.delete('/logout', config);
   } catch (error: any) {
-    return error?.reponse;
+    return error?.response;
   }
 }
 
@@ -60,8 +60,8 @@ export async function showPosts(endpoint: string) {
     const response = await client.get(endpoint, config);
     console.log(response);
     return response;
-  } catch (error) {
-    return false;
+  } catch (error: any) {
+    return error?.response.data.message;
   }
 }
 
@@ -71,8 +71,8 @@ export async function postTweet(content: string) {
   };
   try {
     return await client.post('/posts', { content }, config);
-  } catch (error) {
-    return error;
+  } catch (error: any) {
+    return error?.response.data.message;
   }
 }
 
@@ -96,7 +96,7 @@ export async function postLike(postId: number) {
   };
   try {
     return await client.post('/likes', { postId }, config);
-  } catch (error) {
-    return error;
+  } catch (error: any) {
+    return error?.response.data.message;
   }
 }

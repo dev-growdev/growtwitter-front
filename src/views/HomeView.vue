@@ -5,7 +5,6 @@ import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref } from 'vue';
 import type { UserType } from '@/types';
-import { title } from 'process';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 

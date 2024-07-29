@@ -61,23 +61,23 @@ const items = [
 ];
 </script>
 <template>
-  <div>
+ <div>
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="item" />
+        <SideBar :item="item" v-if="item"/>
       </div>
       <div class="home-content">
         <span class="home-content-title">
           <div class="profile-top">
             <img class="arrow-profile" src="../assets/icone_seta.svg" alt="" />
             <div class="profile-header">
-              <span class="title"> Perfil de {{ item.username }} </span>
+              <span class="title"> Perfil de {{ item?.username }} </span>
               <p class="tweet-count">x tweets</p>
               <!-- <img class="profile-pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt=""> -->
-              <img class="profile-pic" :src="item.avatar_url ?? default_avatar" alt="" />
+              <img class="profile-pic" :src="item?.avatar_url ?? default_avatar" alt="" />
               <div class="name-username">
-                <h3>{{ item.name }} {{ item.surname }}</h3>
-                <h6>@{{ item.username }}</h6>
+                <h3>{{ item?.name }} {{ item?.surname }}</h3>
+                <h6>@{{ item?.username }}</h6>
               </div>
             </div>
           </div>
