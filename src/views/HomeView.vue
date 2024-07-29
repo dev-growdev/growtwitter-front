@@ -68,7 +68,7 @@ const items = [
           <span> Página Inicial </span>
         </span>
 
-        <div class="d-flex justify-center mt-5">
+        <div class="spinner-div d-flex justify-center mt-5">
           <SpinnerComponent v-if="loadingVisible" color="blue" />
         </div>
         <ListCard :tweets="tweets" />
@@ -95,6 +95,12 @@ const items = [
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+.spinner-div{
+  position: absolute;
+  left: 46%;
+  top: 50%
 }
 
 .home-container {
