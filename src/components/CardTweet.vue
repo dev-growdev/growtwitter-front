@@ -3,7 +3,7 @@ import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import { postLike } from '@/services/api';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -11,21 +11,28 @@ interface TweetTypeProps {
 
 defineProps<TweetTypeProps>();
 
-let updateKey = ref(0);
+// const props = defineProps<TweetTypeProps>();
+// const liked = ref(false)
+
+const artificialLike = ref(0);
 
 async function handlePostLike(id: number) {
   await postLike(id);
-  updateKey.value++;
-
-  // closeModal();
 }
+
+const toggleValue = () => {
+  artificialLike.value = artificialLike.value === 0 ? 1 : 0;
+};
+
+// onMounted(() => {
+//   liked.value = props.likes.some((like: any) => like.userId == sessionStorage.getItem('userId'))
+// })
 </script>
 
 <template>
   <v-card class="text-white mx-auto pa-0" color="blue" max-width="37.5rem">
     <v-card-actions>
       <v-row align="start" justify="center" class="w-100">
-        <!-- Coluna para a imagem do avatar -->
         <v-col cols="auto">
           <v-avatar
             class="ma-5"
@@ -34,7 +41,6 @@ async function handlePostLike(id: number) {
           ></v-avatar>
         </v-col>
 
-        <!-- Coluna para o nome do usuário, username e conteúdo -->
         <v-col>
           <v-list-item>
             <v-list-item-content>
@@ -51,13 +57,20 @@ async function handlePostLike(id: number) {
           <div class="d-flex align-items-center justify-content-start">
             <span class="mb-3">💬</span>
             <div v-if="data.likes.length === 0">
-              <p>🤍</p>
+              <v-btn @click="toggleValue(), handlePostLike(data.id)">
+                {{ artificialLike === 0 ? '🤍' : '❤️' }} {{ artificialLike }}
+              </v-btn>
             </div>
             <div v-else-if="data.likes.length === 1">
-              <p>❤️ 1 like!</p>
+              <v-btn @click="toggleValue(), handlePostLike(data.id)"
+                >❤️ {{ data.likes.length + artificialLike }}</v-btn
+              >
             </div>
             <div v-else>
-              <p>❤️{{ data.likes.length }} likes!</p>
+              <!-- <v-btn @click="handlePostLike(data.id)">❤️{{ data.likes.length }} likes!</v-btn> -->
+              <v-btn @click="toggleValue(), handlePostLike(data.id)"
+                >❤️{{ data.likes.length + artificialLike }}</v-btn
+              >
             </div>
           </div>
         </v-col>
@@ -78,3 +91,4 @@ async function handlePostLike(id: number) {
   padding: 0;
 }
 </style>
+*/

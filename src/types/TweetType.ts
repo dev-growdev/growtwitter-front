@@ -5,5 +5,5 @@ export interface TweetType {
   created_at: string;
   content: string;
   user: UserType;
-  likes: string;
+  likes: [];
 }
