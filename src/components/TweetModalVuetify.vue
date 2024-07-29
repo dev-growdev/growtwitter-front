@@ -2,7 +2,6 @@
 import { postTweet } from '@/services/api';
 import { ref } from 'vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
-import SpinnerComponent from './SpinnerComponent.vue';
 
 const content = ref<string>('');
 const loadingVisible = ref<boolean>(false);
@@ -33,12 +32,13 @@ async function handlePostTweet() {
         ></v-textarea>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <div class="d-flex justify-center mt-5 loading">
-            <SpinnerComponent v-if="loadingVisible" color="blue" />
-          </div>
-          <ButtonDefault :disabled="content.length < 1" @click="handlePostTweet"
-            >Tweetar</ButtonDefault
-          >
+          <div class="d-flex justify-center mt-5 loading"></div>
+          
+          <ButtonDefault class="tweet-btn mr-2" :disabled="content.length < 1" @click="handlePostTweet"><p v-if="!loadingVisible">Tweetar</p>
+
+        <v-progress-linear v-if="loadingVisible"  indeterminate></v-progress-linear>
+
+      </ButtonDefault>
           <ButtonDefault @click="isActive.value = false">Fechar</ButtonDefault>
         </v-card-actions>
       </v-card>
@@ -52,5 +52,10 @@ async function handlePostTweet() {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -70%);
+}
+
+.tweet-btn{
+  width: 7rem;
+  height: 2.6rem;
 }
 </style>
