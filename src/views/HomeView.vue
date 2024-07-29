@@ -29,10 +29,8 @@ async function handleGetUser() {
   item.value = response.data.data;
 }
 
-fetchTweets();
-
 onMounted(() => {
-  handleGetUser();
+  Promise.all([handleGetUser(), fetchTweets()]);
 });
 const items = [
   {

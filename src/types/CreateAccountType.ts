@@ -4,5 +4,5 @@ export interface CreateAccountType {
   surname: string;
   email: string;
   password: string;
-  avatar?: File;
+  avatar_url?: File;
 }
