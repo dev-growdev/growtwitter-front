@@ -48,9 +48,8 @@ function closeModal() {
           </div>
         </div>
         <div class="sideBtn">
-            <button @click="showModal" >Tweetar</button>
-            <TweetModal v-if="visible" @close="closeModal"/>
-          </div>
+          <ButtonTweet />
+        </div>
       </div>
 
       <div class="perfil-container">
