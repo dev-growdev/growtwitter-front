@@ -40,6 +40,17 @@ export async function register(userData: any) {
   }
 }
 
+export async function edit(userData: any) {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${getUserToken()}` }
+    };
+    return await client.put(`/users/${userData.id}`, userData, config);
+  } catch (error: any) {
+    return error?.response;
+  }
+}
+
 export async function doGet(url: string) {
   try {
     const response = await client.get(url);
