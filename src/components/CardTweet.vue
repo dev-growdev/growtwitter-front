@@ -61,7 +61,7 @@ onMounted(() => {
           </v-card-text>
 
           <div class="d-flex align-items-center justify-content-start">
-            <span class="mb-3">💬</span>
+            <v-btn class="mb-3">💬</v-btn>
             <div v-if="data.likes_count === 0">
               <v-btn @click="handlePostLike(data.id)">
                 {{ artificialLike === 0 ? '🤍' : '❤️' }} {{ artificialLike }}
