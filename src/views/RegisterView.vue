@@ -91,7 +91,7 @@ const handleRegister = async () => {
     console.log(response.data.user);
     if (response.status === 201) {
       sessionStorage.setItem('token', response.data.token);
-      sessionStorage.setItem('userData', JSON.stringify(response.data.user));
+      localStorage.setItem('userData', JSON.stringify(response.data.user));
       router.push('/');
     } else if (response.status === 422) {
       const errors = response.data.errors;
