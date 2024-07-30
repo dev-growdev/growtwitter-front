@@ -3,7 +3,6 @@ import growtwitterLogo from '@/components/icons/growtwitterLogo.vue';
 import homePageLogo from '@/components/icons/homePageLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue';
-import TweetModal from '@/components/TweetModal.vue';
 import { ref } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
@@ -12,7 +11,6 @@ import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import BackgroundOverlay from './BackgroundOverlay.vue';
-import TweetModalVuetify from './TweetModalVuetify.vue';
 
 interface SidebarProps {
   item: UserType;
@@ -22,15 +20,6 @@ defineProps<SidebarProps>();
 
 const spinnerLoading = ref<boolean>(false);
 const backgrounOverlay = ref<boolean>(false);
-const visible = ref<boolean>(false);
-
-function showModal() {
-  visible.value = true;
-}
-
-function closeModal() {
-  visible.value = false;
-}
 
 async function handleLogout() {
   backgrounOverlay.value = true;
@@ -72,9 +61,7 @@ async function handleLogout() {
           </div>
         </div>
         <div class="sideBtn">
-          <ButtonDefault @click="showModal">Tweetar</ButtonDefault>
-          <TweetModal v-if="visible" @close="closeModal" />
-          <TweetModalVuetify />
+          <ButtonTweet />
         </div>
       </div>
 
