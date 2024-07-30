@@ -6,4 +6,5 @@ export interface TweetType {
   content: string;
   user: UserType;
   likes_count: number;
+  likes: [];
 }
