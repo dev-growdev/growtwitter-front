@@ -21,8 +21,6 @@ async function handlePostLike(id: number) {
   await postLike(id);
 }
 
-const toggleValue = () => {};
-
 // onMounted(() => {
 //   liked.value = props.likes.some((like: any) => like.userId == sessionStorage.getItem('userId'))
 // })
@@ -56,20 +54,19 @@ const toggleValue = () => {};
           <div class="d-flex align-items-center justify-content-start">
             <span class="mb-3">💬</span>
             <div v-if="data.likes.length === 0">
-              <v-btn @click="toggleValue(), handlePostLike(data.id)">
+              <v-btn @click="handlePostLike(data.id)">
                 {{ artificialLike === 0 ? '🤍' : '❤️' }} {{ artificialLike }}
                 {{ artificialLike !== 0 ? 'Like!' : '' }}
               </v-btn>
             </div>
             <div v-else-if="data.likes.length === 1">
-              <v-btn @click="toggleValue(), handlePostLike(data.id)"
+              <v-btn @click="handlePostLike(data.id)"
                 >❤️ {{ data.likes.length + artificialLike }}
                 {{ data.likes.length + artificialLike === 1 ? 'Like!' : 'Likes!' }}</v-btn
               >
             </div>
             <div v-else>
-              <!-- <v-btn @click="handlePostLike(data.id)">❤️{{ data.likes.length }} likes!</v-btn> -->
-              <v-btn @click="toggleValue(), handlePostLike(data.id)"
+              <v-btn @click="handlePostLike(data.id)"
                 >❤️{{ data.likes.length + artificialLike }} Likes!</v-btn
               >
             </div>
