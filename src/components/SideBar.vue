@@ -9,8 +9,6 @@ import router from '@/router';
 import { resetStorage } from '@/services/authentication';
 import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
-import SpinnerComponent from '@/components/SpinnerComponent.vue';
-import BackgroundOverlay from './BackgroundOverlay.vue';
 import ButtonTweet from './ButtonTweet.vue';
 
 interface SidebarProps {
@@ -20,30 +18,25 @@ interface SidebarProps {
 defineProps<SidebarProps>();
 
 const spinnerLoading = ref<boolean>(false);
-const backgrounOverlay = ref<boolean>(false);
 
 async function handleLogout() {
-  backgrounOverlay.value = true;
+  spinnerLoading.value = true;
   const response = await logout();
   if (response.status === 200) {
-    backgrounOverlay.value = false;
+    spinnerLoading.value = false;
     resetStorage();
     router.push('/login');
   } else if (response.status === 400) {
-    backgrounOverlay.value = false;
+    spinnerLoading.value = false;
     alert('Falha ao deslogar.');
   } else {
-    backgrounOverlay.value = false;
+    spinnerLoading.value = false;
     alert('Ocorreu um erro entre em contato com o suporte.');
   }
 }
 </script>
 
 <template>
-  <BackgroundOverlay v-if="backgrounOverlay">
-    <SpinnerComponent id="loading-logout" v-if="backgrounOverlay" color="white" />
-  </BackgroundOverlay>
-  <SpinnerComponent id="loading-logout" v-if="spinnerLoading" color="blue" />
   <div class="container-nav">
     <div class="content">
       <div class="menu">
@@ -74,7 +67,11 @@ async function handleLogout() {
             <div class="name-hash">@{{ item.username }}</div>
           </div>
           <div class="perfil-button-container">
-            <ButtonDefault class="perfil-button" @click="handleLogout">Sair</ButtonDefault>
+
+          <ButtonDefault class="logout-btn mr-2" @click="handleLogout"><p v-if="!spinnerLoading">Sair</p>
+            <v-progress-circular class="spinner" v-if="spinnerLoading"  indeterminate></v-progress-circular>
+          </ButtonDefault>
+
           </div>
         </div>
       </div>
@@ -83,6 +80,22 @@ async function handleLogout() {
 </template>
 
 <style scoped>
+
+.name{
+  overflow: hidden;
+  width: 10.5rem;
+}
+
+.logout-btn{
+  width: 3.3rem;
+  height: 2.5rem;
+  margin-left: 3rem;
+}
+
+.spinner {
+  height: 1.5rem;
+}
+
 li {
   list-style-type: none;
 }
@@ -133,6 +146,7 @@ ul {
 .perfil-container {
   width: 100%;
   padding-bottom: 10%;
+  margin-left: -2.5rem;
 }
 
 .perfil-content {
@@ -159,6 +173,8 @@ ul {
 .name-hash {
   font-size: 1rem;
   color: rgba(0, 0, 0, 0.884);
+  overflow: hidden;
+  width: 10.5rem;
 }
 .perfil-button-container {
   display: block;
