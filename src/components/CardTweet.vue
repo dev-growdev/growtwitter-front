@@ -14,10 +14,7 @@ const liked = ref(false);
 
 const artificialLike = ref(0);
 
-async function handlePostLike(id: number) {
-  console.log(liked);
-  console.log(props.data.likes);
-
+function like() {
   if (liked.value === false) {
     artificialLike.value++;
     liked.value = true;
@@ -25,7 +22,19 @@ async function handlePostLike(id: number) {
     artificialLike.value--;
     liked.value = false;
   }
-  await postLike(id);
+}
+
+async function handlePostLike(id: number) {
+  console.log(liked);
+  console.log(props.data);
+
+  like();
+
+  let resp = await postLike(id);
+  if (!resp) {
+    console.log('caiu aqui');
+    like();
+  }
 }
 
 onMounted(() => {
@@ -62,23 +71,11 @@ onMounted(() => {
 
           <div class="d-flex align-items-center justify-content-start">
             <v-btn class="mb-3">💬</v-btn>
-            <div v-if="data.likes_count === 0">
-              <v-btn @click="handlePostLike(data.id)">
-                {{ artificialLike === 0 ? '🤍' : '❤️' }} {{ artificialLike }}
-                {{ artificialLike !== 0 ? 'Like!' : '' }}
-              </v-btn>
-            </div>
-            <div v-else-if="data.likes_count === 1">
-              <v-btn @click="handlePostLike(data.id)"
-                >❤️ {{ data.likes_count + artificialLike }}
-                {{ data.likes_count + artificialLike === 1 ? 'Like!' : 'Likes!' }}</v-btn
-              >
-            </div>
-            <div v-else>
-              <v-btn @click="handlePostLike(data.id)"
-                >❤️{{ data.likes_count + artificialLike }} Likes!</v-btn
-              >
-            </div>
+            <v-btn @click="handlePostLike(data.id)">
+              {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
+              {{ data.likes_count + artificialLike }}
+              {{ 'Like' + (data.likes_count + artificialLike > 1 ? 's' : '') + '!' }}
+            </v-btn>
           </div>
         </v-col>
       </v-row>

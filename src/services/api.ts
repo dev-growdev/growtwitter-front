@@ -93,8 +93,9 @@ export async function postLike(postId: number) {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
   try {
-    return await client.post('/likes', { postId }, config);
+    await client.post('/likes', { postId }, config);
+    return true;
   } catch (error) {
-    return error;
+    return false;
   }
 }
