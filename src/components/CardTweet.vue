@@ -25,15 +25,10 @@ function like() {
 }
 
 async function handlePostLike(id: number) {
-  console.log(liked);
-  console.log(props.data);
-
   like();
-
   let resp = await postLike(id);
   if (!resp) {
-    console.log('caiu aqui');
-    like();
+    like(); //desfazer o like do front se não der 200!!
   }
 }
 
