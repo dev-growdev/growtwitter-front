@@ -12,7 +12,7 @@ defineProps<Props>();
 
 <template>
   <v-row>
-    <v-col cols="12" class="home-content-card" v-for="tweet in tweets" :key="tweet.id">
+    <v-col cols="12" class="home-content-card  mt-5" v-for="tweet in tweets" :key="tweet.id">
       <CardTweet :data="tweet" />
     </v-col>
   </v-row>

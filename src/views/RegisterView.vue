@@ -7,6 +7,7 @@ import router from '@/router';
 import useAvatar from '@/services/avatar';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import BackgroundOverlay from '@/components/BackgroundOverlay.vue';
+import axios from 'axios';
 
 const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
@@ -17,7 +18,7 @@ const account = reactive<CreateAccountType>({
   surname: '',
   email: '',
   password: '',
-  avatar: undefined
+  avatar_url: undefined
 });
 
 const validationErrors = reactive<RegisterAccountValidationType>({
@@ -43,34 +44,63 @@ const bindCustomAvatar = (event: Event) => {
     return;
   }
   const file = input.files[0];
-  account.avatar = loadFileToPreview(file);
+  account.avatar_url = loadFileToPreview(file);
+};
+
+const uploadToCloudinary = async (file: File): Promise<string> => {
+  const cloudName = import.meta.env.VITE_CLOUD_NAME;
+  const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', uploadPreset);
+
+  try {
+    const response = await axios.post(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      formData
+    );
+    return response.data.secure_url;
+  } catch (error) {
+    console.error('Error uploading to Cloudinary:', error);
+    throw new Error('Failed to upload avatar');
+  }
 };
 
 const handleRegister = async () => {
-  clearValidationErrors();
-  const formData = new FormData();
-
-  formData.append('name', account.name);
-  formData.append('surname', account.surname);
-  formData.append('email', account.email);
-  formData.append('password', account.password);
-  formData.append('username', account.username);
-  formData.append('avatar', account.avatar ?? '');
-
-  loadingVisible.value = true;
-
-  const response = await register(formData);
-
-  loadingVisible.value = false;
-
-  if (response.status === 201) {
-    sessionStorage.setItem('token', response.data.token);
-    router.push('/');
-  } else if (response.status === 422) {
-    const errors = response.data.errors;
-    for (const key in errors) {
-      validationErrors[key as keyof RegisterAccountValidationType] = errors[key];
+  try {
+    let avatarUrl = '';
+    if (account.avatar_url instanceof File) {
+      avatarUrl = await uploadToCloudinary(account.avatar_url);
     }
+    clearValidationErrors();
+    const userData = {
+      name: account.name,
+      surname: account.surname,
+      email: account.email,
+      password: account.password,
+      username: account.username,
+      avatar_url: avatarUrl
+    };
+
+    loadingVisible.value = true;
+
+    const response = await register(userData);
+
+    loadingVisible.value = false;
+    console.log(response.data.user);
+    if (response.status === 201) {
+      sessionStorage.setItem('token', response.data.token);
+      localStorage.setItem('userData', JSON.stringify(response.data.user));
+      router.push('/');
+    } else if (response.status === 422) {
+      const errors = response.data.errors;
+      for (const key in errors) {
+        validationErrors[key as keyof RegisterAccountValidationType] = errors[key];
+      }
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 </script>

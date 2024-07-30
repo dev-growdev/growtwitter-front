@@ -5,7 +5,6 @@ import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref } from 'vue';
 import type { UserType } from '@/types';
-import { title } from 'process';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 
@@ -25,14 +24,19 @@ async function fetchTweets() {
 }
 
 async function handleGetUser() {
-  const response = await getUser();
-  item.value = response.data.data;
+  const userData = localStorage.getItem('userData');
+  if (!userData) {
+    const response = await getUser();
+    item.value = response.data.data;
+    localStorage.setItem('userData', JSON.stringify(item.value));
+    return;
+  }
+  item.value = JSON.parse(userData);
 }
-
-fetchTweets();
 
 onMounted(() => {
   handleGetUser();
+  fetchTweets();
 });
 const items = [
   {
@@ -68,7 +72,7 @@ const items = [
           <span> Página Inicial </span>
         </span>
 
-        <div class="d-flex justify-center mt-5">
+        <div class="spinner-div d-flex justify-center mt-5">
           <SpinnerComponent v-if="loadingVisible" color="blue" />
         </div>
         <ListCard :tweets="tweets" />
@@ -95,6 +99,12 @@ const items = [
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+.spinner-div {
+  position: absolute;
+  left: 46%;
+  top: 50%;
 }
 
 .home-container {

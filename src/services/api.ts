@@ -15,7 +15,7 @@ export const login = async (email: string, password: string) => {
       email,
       password
     });
-
+    sessionStorage.setItem('userId', response.data.data.user.id);
     return response;
   } catch (error: any) {
     return error?.response;
@@ -33,9 +33,9 @@ export async function logout() {
   }
 }
 
-export async function register(formData: FormData) {
+export async function register(userData: any) {
   try {
-    return await client.post('/users', formData);
+    return await client.post('/users', userData);
   } catch (error: any) {
     return error?.response;
   }
@@ -58,10 +58,9 @@ export async function showPosts(endpoint: string) {
   };
   try {
     const response = await client.get(endpoint, config);
-    console.log(response);
     return response;
-  } catch (error) {
-    return false;
+  } catch (error: any) {
+    return error?.response;
   }
 }
 
