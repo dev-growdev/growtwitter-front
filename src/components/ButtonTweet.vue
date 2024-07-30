@@ -13,6 +13,7 @@ const closeModal     = ref<boolean>(false);
 async function handlePostTweet() {
   if (content.value == '') {
     showMessage('Você não pode publicar um tweet vazio.', 'error');
+    closeModal.value = false;
     return;
   }
   
@@ -24,6 +25,7 @@ async function handlePostTweet() {
     return;    
   }
 
+  closeModal.value = false; // Fechar modal após mostrar a mensagem
   showMessage('Tweet publicado com sucesso!', 'success');
   content.value = "";
   isTweeting.value = false;
@@ -37,7 +39,6 @@ function showMessage(messageText: string, type: string) {
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   messageTimeout.value = setTimeout(() => {
     hasMessage.value = false;
-    closeModal.value = false; // Fechar modal após mostrar a mensagem
   }, 3000);
 }
 
@@ -45,14 +46,16 @@ function clearMessage() {
   clearTimeout(messageTimeout.value);
   hasMessage.value = false;
 }
-
 </script>
 
 <template>
   <v-btn @click="closeModal.value = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
     <div class="text-none font-weight-regular">Tweetar</div>
-
-    <v-dialog v-model="closeModal" activator="parent" max-width="500">
+    <v-model>
+            <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
+    </v-model>
+    
+    <v-dialog v-model="closeModal" activator="parent" max-width="500" class="modal">
       <template v-slot:default="{ isActive }">
         <v-card rounded="lg">
           <v-card-title class="d-flex justify-space-between align-center">
@@ -81,7 +84,7 @@ function clearMessage() {
           </v-card-text>
 
           <v-divider class="mt-2"></v-divider>
-          <v-alert v-if="hasMessage" closable class="alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
+          
           <!-- Modal Footer -->
           <v-card-actions class="my-2 d-flex justify-end">
             <v-btn
@@ -125,5 +128,17 @@ function clearMessage() {
 
 .alert{
   margin: 0 24px 24px !important;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: auto;
+  max-width: 90%;
+}
+
+.modal{
+  position: fixed;
+  z-index: 9998;
 }
 </style>
