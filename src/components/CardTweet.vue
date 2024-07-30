@@ -50,14 +50,14 @@ async function handlePostLike(id: number) {
 
           <div class="d-flex align-items-center justify-content-start">
             <span class="mb-3">💬</span>
-            <div v-if="data.likes.length === 0">
+            <div v-if="data.likes_count === 0">
               <p>🤍</p>
             </div>
-            <div v-else-if="data.likes.length === 1">
+            <div v-else-if="data.likes_count === 1">
               <p>❤️ 1 like!</p>
             </div>
             <div v-else>
-              <p>❤️{{ data.likes.length }} likes!</p>
+              <p>❤️{{ data.likes_count }} likes!</p>
             </div>
           </div>
         </v-col>

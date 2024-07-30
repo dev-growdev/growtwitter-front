@@ -4,7 +4,7 @@ import ListCard from '@/components/ListCard.vue';
 import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import default_avatar from '@/assets/default-avatar.png';
 import type { UserType } from '@/types';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
@@ -14,13 +14,20 @@ const loadingVisible = ref<boolean>(false);
 const item = ref<UserType[]>([]);
 
 async function handleGetUser() {
-  const response = await getUser();
-  item.value = response.data.data;
-  console.log(item.value);
+  const userData = localStorage.getItem('userData');
+
+  if (!userData) {
+    const response = await getUser();
+    item.value = response.data.data;
+    localStorage.setItem('userData', JSON.stringify(item.value));
+    return;
+  }
+  item.value = JSON.parse(userData);
 }
 
 onMounted(() => {
   handleGetUser();
+  fetchTweets();
 });
 
 const tweets = ref<TweetType[]>([]);
@@ -34,8 +41,6 @@ async function fetchTweets() {
   loadingVisible.value = false;
   tweets.value = response.data.data;
 }
-
-fetchTweets();
 
 const items = [
   {
@@ -112,10 +117,10 @@ const items = [
   margin: 0;
 }
 
-.spinner-div{
+.spinner-div {
   position: absolute;
   left: 46%;
-  top: 50%
+  top: 50%;
 }
 
 .edit-btn {

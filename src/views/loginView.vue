@@ -17,16 +17,18 @@ const loadingVisible = ref<boolean>(false);
 const handleLogin = async () => {
   error.value = '';
   loadingVisible.value = true;
-  
+
   const response = await login(email.value, password.value);
 
   loadingVisible.value = false;
 
   if (response.status === 200 && keepConnected.value) {
     localStorage.setItem('token', response.data.data.token);
+    localStorage.setItem('userData', JSON.stringify(response.data.data.user));
     router.push('/');
   } else if (response.status === 200 && !keepConnected.value) {
     sessionStorage.setItem('token', response.data.data.token);
+    localStorage.setItem('userData', JSON.stringify(response.data.data.user));
     router.push('/');
   }
 
@@ -43,18 +45,19 @@ const handleLogin = async () => {
       <v-row>
         <v-col cols="12" sm="6" class="bg-blue-darken-2 rounded-s-lg pa-8">
           <v-card-title>Growtwitter</v-card-title>
-              <v-card-subtitle class="text-white" >Trabalho final do bloco intermediário</v-card-subtitle>
-              <v-card-text>
-                O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais que
-                buscam uma experiência familiar e poderosa, semelhante ao Twitter, mas com um toque único.
-                Seja parte desta comunidade que valoriza a liberdade de expressão, a conexão com pessoas
-                de todo o mundo e a disseminação de ideias.
-              </v-card-text>
+          <v-card-subtitle class="text-white"
+            >Trabalho final do bloco intermediário</v-card-subtitle
+          >
+          <v-card-text>
+            O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais que
+            buscam uma experiência familiar e poderosa, semelhante ao Twitter, mas com um toque
+            único. Seja parte desta comunidade que valoriza a liberdade de expressão, a conexão com
+            pessoas de todo o mundo e a disseminação de ideias.
+          </v-card-text>
         </v-col>
         <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8">
+          <v-card-title>Entrar no Growtwitter</v-card-title>
 
-          <v-card-title >Entrar no Growtwitter</v-card-title>
-    
           <v-text-field label="Email" v-model="email"></v-text-field>
           <v-text-field type="password" label="Password" v-model="password"></v-text-field>
 
@@ -64,12 +67,16 @@ const handleLogin = async () => {
           </div>
 
           <v-btn block @click="handleLogin" class="bg-blue-darken-2 my-4">Enviar</v-btn>
-          
-          <v-card-text>Não tem uma conta? <RouterLink to="/register">Clique aqui</RouterLink></v-card-text>
-          <v-card-text><span class="error-message" v-if="error">{{ error }}</span></v-card-text>
+
+          <v-card-text
+            >Não tem uma conta? <RouterLink to="/register">Clique aqui</RouterLink></v-card-text
+          >
+          <v-card-text
+            ><span class="error-message" v-if="error">{{ error }}</span></v-card-text
+          >
         </v-col>
-        </v-row>
-        </v-container>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
