@@ -9,9 +9,13 @@ const message        = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType      = ref<string>('');
 const closeModal     = ref<boolean>(false);
+const spinnerLoading = ref<boolean>(false);
 
 async function handlePostTweet() {
+  spinnerLoading.value = true;
+
   if (content.value == '') {
+    spinnerLoading.value = false;
     showMessage('Você não pode publicar um tweet vazio.', 'error');
     return;
   }
@@ -20,10 +24,11 @@ async function handlePostTweet() {
   const res = await postTweet(content.value);
   
   if (!res?.data.success) {
+    spinnerLoading.value = false;
     showMessage('Erro ao publicar tweet', 'error');
     return;    
   }
-
+  spinnerLoading.value = false;
   showMessage('Tweet publicado com sucesso!', 'success');
   content.value = "";
   isTweeting.value = false;
@@ -99,7 +104,7 @@ function clearMessage() {
               variant="flat"
               @click="handlePostTweet"
               :disabled="isTweeting"
-            ></v-btn>
+            ><p v-if="!spinnerLoading">Tweetar</p><v-progress-circular class="spinner" v-if="spinnerLoading"  indeterminate></v-progress-circular></v-btn>
           </v-card-actions>
         </v-card>
       </template>
@@ -125,5 +130,9 @@ function clearMessage() {
 
 .alert{
   margin: 0 24px 24px !important;
+}
+
+.spinner{
+  width: 1.5rem;
 }
 </style>
