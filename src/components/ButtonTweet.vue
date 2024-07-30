@@ -8,6 +8,7 @@ const hasMessage     = ref<boolean>(false);
 const message        = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType      = ref<string>('');
+const closeModal     = ref<boolean>(false);
 
 async function handlePostTweet() {
   if (content.value == '') {
@@ -17,12 +18,12 @@ async function handlePostTweet() {
   
   isTweeting.value = true;
   const res = await postTweet(content.value);
-
+  
   if (!res?.data.success) {
     showMessage('Erro ao publicar tweet', 'error');
     return;    
   }
-  
+
   showMessage('Tweet publicado com sucesso!', 'success');
   content.value = "";
   isTweeting.value = false;
@@ -32,22 +33,26 @@ function showMessage(messageText: string, type: string) {
   hasMessage.value = true;
   message.value = messageText;
   alertType.value = type;
-      
-  if (messageTimeout) clearTimeout(messageTimeout);
-  messageTimeout = setTimeout(() => hasMessage.value = false, 3000);
+
+  if (messageTimeout.value) clearTimeout(messageTimeout.value);
+  messageTimeout.value = setTimeout(() => {
+    hasMessage.value = false;
+    closeModal.value = false; // Fechar modal após mostrar a mensagem
+  }, 3000);
 }
 
 function clearMessage() {
+  clearTimeout(messageTimeout.value);
   hasMessage.value = false;
-  clearTimeout(messageTimeout);
 }
+
 </script>
 
 <template>
-  <v-btn class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
-    <div class="text-none font-weight-regular">Twettar</div>
+  <v-btn @click="closeModal.value = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
+    <div class="text-none font-weight-regular">Tweetar</div>
 
-    <v-dialog activator="parent" max-width="500">
+    <v-dialog v-model="closeModal" activator="parent" max-width="500">
       <template v-slot:default="{ isActive }">
         <v-card rounded="lg">
           <v-card-title class="d-flex justify-space-between align-center">
@@ -75,10 +80,8 @@ function clearMessage() {
             ></v-textarea>
           </v-card-text>
 
-          <v-alert v-if="hasMessage" closable class="alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
-
           <v-divider class="mt-2"></v-divider>
-
+          <v-alert v-if="hasMessage" closable class="alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
           <!-- Modal Footer -->
           <v-card-actions class="my-2 d-flex justify-end">
             <v-btn
