@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import ButtonDefault from '@/components/ButtonDefault.vue';
 import { login } from '@/services/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import BackgroundOverlay from '@/components/BackgroundOverlay.vue';
+import { resetStorage } from '@/services/authentication';
 
 const email = ref<string>('');
 const password = ref<string>('');
@@ -15,6 +15,7 @@ const router = useRouter();
 const loadingVisible = ref<boolean>(false);
 
 const handleLogin = async () => {
+  resetStorage();
   error.value = '';
   loadingVisible.value = true;
 

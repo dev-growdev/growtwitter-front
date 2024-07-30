@@ -1,6 +1,5 @@
-import type { TweetType } from '@/types';
 import axios from 'axios';
-import { getUserToken, resetStorage } from './authentication';
+import { getUserToken } from './authentication';
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
