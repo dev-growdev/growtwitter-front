@@ -3,5 +3,5 @@
 </script>
 
 <template>
-  <v-progress-circular indeterminate :color="color" :size="65" :width="9" />
+  <v-progress-circular indeterminate :color="color" :size="45" :width="9" />
 </template>
