@@ -89,5 +89,8 @@ onMounted(() => {
 .v-list-item {
   padding: 0;
 }
+.v-btn {
+  text-transform: none !important;
+}
 </style>
 */
