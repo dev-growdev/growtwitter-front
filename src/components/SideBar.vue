@@ -11,6 +11,7 @@ import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import BackgroundOverlay from './BackgroundOverlay.vue';
+import ButtonTweet from './ButtonTweet.vue';
 
 interface SidebarProps {
   item: UserType;
