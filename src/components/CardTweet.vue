@@ -42,16 +42,16 @@ onMounted(() => {
 <template>
   <v-card class="card-principal rounded-0 border-b-md">
     <v-card-actions>
-      <v-row align="start" justify="center" class="w-100">
-        <v-col cols="auto">
+      <v-row class="d-flex fles-column w-100">
+        <v-col cols="2">
           <v-avatar
-            class="ma-5"
+            class="ma-6"
             :image="data.user.avatar_url ?? default_avatar"
             size="70"
           ></v-avatar>
         </v-col>
 
-        <v-col>
+        <v-col cols="10">
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="mt-3">{{ data.user.name }}</v-list-item-title>
