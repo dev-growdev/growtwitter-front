@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-card class="text-white mx-auto pa-0" color="blue" max-width="37.5rem">
+  <v-card class="card-principal rounded-0 border-b-md">
     <v-card-actions>
       <v-row align="start" justify="center" class="w-100">
         <v-col cols="auto">
@@ -66,8 +66,10 @@ onMounted(() => {
 
           <div class="d-flex align-items-center justify-content-start">
             <v-btn class="mb-3">💬</v-btn>
-            <v-btn @click="handlePostLike(data.id)">
-              {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
+            <v-btn class="btn-like" @click="handlePostLike(data.id)">
+              <div class="heart-like">
+                {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
+              </div>
               {{ data.likes_count + artificialLike }}
               {{ 'Like' + (data.likes_count + artificialLike > 1 ? 's' : '') + '!' }}
             </v-btn>
@@ -79,6 +81,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.card-principal:hover {
+  background-color: #e0e0e0;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -91,6 +97,11 @@ onMounted(() => {
 }
 .v-btn {
   text-transform: none !important;
+}
+
+.btn-like:hover {
+  filter: drop-shadow(1px 1px 1px red);
+  color: rgb(135, 0, 0);
 }
 </style>
 */
