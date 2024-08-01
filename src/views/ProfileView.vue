@@ -105,7 +105,7 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 const handleEdit = async () => {
   try {
     loadingVisibleModal.value = true;
-    
+
     let avatarUrl = '';
     if (account.avatar_url instanceof File) {
       avatarUrl = await uploadToCloudinary(account.avatar_url);
@@ -138,6 +138,7 @@ const handleEdit = async () => {
       editDialog.value = false;
     } else if (response.status === 422) {
       const errors = response.data.errors;
+      loadingVisibleModal.value = false;
       for (const key in errors) {
         validationErrors[key as keyof RegisterAccountValidationType] = errors[key];
       }
@@ -289,7 +290,7 @@ async function fetchTweets() {
 
         <ListCard :tweets="tweets" />
       </div>
-      <ExploreComponent/>
+      <ExploreComponent />
     </div>
   </div>
 </template>
