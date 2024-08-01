@@ -10,6 +10,7 @@ const messageTimeout = ref<number>(-1);
 const alertType      = ref<string>('');
 const closeModal     = ref<boolean>(false);
 const spinnerLoading = ref<boolean>(false);
+const maxContentLength = 280;
 
 async function handlePostTweet() {
   spinnerLoading.value = true;
@@ -81,7 +82,8 @@ function clearMessage() {
             <v-textarea
               label="O que está acontecendo?"
               v-model="content"
-              :counter="280"
+              :counter="maxContentLength"
+              :maxlength="maxContentLength"
               class="mb-2"
               rows="5"
               variant="outlined"
