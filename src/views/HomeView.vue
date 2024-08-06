@@ -38,25 +38,37 @@ onMounted(() => {
   handleGetUser();
   fetchTweets();
 });
-
 </script>
 <template>
-  <div>
-    <div class="home-container">
-      <div class="home-nav">
-        <SideBar :item="item" />
-      </div>
-      <div class="home-content">
-        <span class="home-content-title">
-          <span> Página Inicial </span>
-        </span>
+  <div class="home-container h-screen">
+    <v-container>
+      <v-row>
+        <v-col cols="12" lg="3">
+          <SideBar :item="item" />
+        </v-col>
 
-        <div class="spinner-div d-flex justify-center mt-5">
-          <SpinnerComponent v-if="loadingVisible" color="blue" />
-        </div>
-        <ListCard :tweets="tweets" />
-      </div>
-      <ExploreComponent/>
+        <v-col cols="12" lg="6">
+          <v-row>
+            <v-col cols="12">
+              <span>Página Inicial</span>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="12">
+              <ListCard :tweets="tweets" />
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="12" lg="3">
+          <ExploreComponent />
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <div class="spinner-div d-flex justify-center mt-5">
+      <SpinnerComponent v-if="loadingVisible" color="blue" />
     </div>
   </div>
 </template>
@@ -76,13 +88,12 @@ onMounted(() => {
 
 .home-container {
   display: flex;
-
   width: 100%;
   height: 100%;
   background: #ffffff;
 }
 
-.home-nav {
+/* .home-nav {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -119,5 +130,5 @@ onMounted(() => {
   font-weight: 600;
   font-size: 1.3rem;
   font-style: normal;
-}
+} */
 </style>
