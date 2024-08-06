@@ -112,7 +112,7 @@ const handleRegister = async () => {
   <div class="background">
     <div>
       <v-card
-        class="mx-auto mt-md-6 pa-6 pa-md-12 pb-md-8"
+        class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8"
         elevation="8"
         max-width="648"
         rounded="lg"
