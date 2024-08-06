@@ -111,8 +111,13 @@ const handleRegister = async () => {
   </BackgroundOverlay>
   <div class="background">
     <div>
-      <v-card class="mx-auto mt-6 pa-12 pb-8" elevation="8" max-width="648" rounded="lg">
-        <h1 class="mt-1 text-center">Criar conta</h1>
+      <v-card
+        class="mx-auto mt-md-6 pa-6 pa-md-12 pb-md-8"
+        elevation="8"
+        max-width="648"
+        rounded="lg"
+      >
+        <h1 class="mt-1 text-center register-title">Criar conta</h1>
         <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
         <v-text-field
           density="compact"
@@ -170,7 +175,9 @@ const handleRegister = async () => {
           :error-messages="validationErrors.password"
         ></v-text-field>
 
-        <div class="mt-1 text-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
+        <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">
+          Escolha um avatar (opcional):
+        </div>
         <div class="upload-avatar-container">
           <v-file-input
             class="d-none"
@@ -180,7 +187,11 @@ const handleRegister = async () => {
             id="avatar"
           ></v-file-input>
           <label class="upload-avatar-label mt-3" for="avatar">
-            <v-avatar :image="previewAvatar ?? defaultAvatar" size="75"></v-avatar>
+            <v-avatar
+              class="avatar-preview"
+              :image="previewAvatar ?? defaultAvatar"
+              size="75"
+            ></v-avatar>
           </label>
           <div v-if="validationErrors.avatar.length > 0">
             <p class="error-avatar-message" v-for="error in validationErrors.avatar" :key="error">
@@ -237,5 +248,15 @@ const handleRegister = async () => {
   margin-top: 0.5rem;
   color: rgb(176, 0, 32);
   font-size: 0.75rem;
+}
+
+@media (max-width: 400px) {
+  .avatar-preview {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  .register-title {
+    font-size: 1.5rem;
+  }
 }
 </style>
