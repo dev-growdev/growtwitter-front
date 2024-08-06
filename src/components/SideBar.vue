@@ -1,21 +1,53 @@
 <script setup lang="ts">
 import growtwitterLogo from '@/components/icons/growtwitterLogo.vue';
 import homePageLogo from '@/components/icons/homePageLogo.vue';
+import defaultAvatar from '@/assets/default-avatar.png';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue';
-import { ref } from 'vue';
-import { logout } from '@/services/api';
+import { onMounted, reactive, ref } from 'vue';
+import { getUser, logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-import type { UserType } from '@/types';
+import type { UserType, CreateAccountType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTweet from './ButtonTweet.vue';
 
-interface SidebarProps {
-  item: UserType;
+const item = ref<UserType>({
+  name: '',
+  surname: '',
+  username: '',
+  email: '',
+  password: '',
+  avatar_url: defaultAvatar
+});
+
+async function handleGetUser() {
+  const userData = localStorage.getItem('userData');
+
+  if (!userData) {
+    const response = await getUser();
+    item.value = response.data.data;
+    localStorage.setItem('userData', JSON.stringify(item.value));
+    return;
+  }
+
+  item.value = JSON.parse(userData);
+
+  account.username = item.value.username;
+  account.name = item.value.name;
+  account.surname = item.value.surname;
+  account.email = item.value.email;
+  account.password = item.value.password;
 }
 
-defineProps<SidebarProps>();
+const account = reactive<CreateAccountType>({
+  username: item.value.username,
+  name: item.value.name,
+  surname: item.value.surname,
+  email: item.value.email,
+  password: item.value.password,
+  avatar_url: undefined
+});
 
 const spinnerLoading = ref<boolean>(false);
 
@@ -34,10 +66,13 @@ async function handleLogout() {
     alert('Ocorreu um erro entre em contato com o suporte.');
   }
 }
+onMounted(() => {
+  handleGetUser();
+});
 </script>
 
 <template>
-  <div class="container-nav">
+  <div class="container-nav position-fixed">
     <div class="content">
       <div class="menu">
         <div><growtwitterLogo /></div>
@@ -67,11 +102,14 @@ async function handleLogout() {
             <div class="name-hash">@{{ item.username }}</div>
           </div>
           <div class="perfil-button-container">
-
-          <ButtonDefault class="logout-btn mr-2" @click="handleLogout"><p v-if="!spinnerLoading">Sair</p>
-            <v-progress-circular class="spinner" v-if="spinnerLoading"  indeterminate></v-progress-circular>
-          </ButtonDefault>
-
+            <ButtonDefault class="logout-btn mr-2" @click="handleLogout"
+              ><p v-if="!spinnerLoading">Sair</p>
+              <v-progress-circular
+                class="spinner"
+                v-if="spinnerLoading"
+                indeterminate
+              ></v-progress-circular>
+            </ButtonDefault>
           </div>
         </div>
       </div>
@@ -80,13 +118,18 @@ async function handleLogout() {
 </template>
 
 <style scoped>
-
-.name{
-  overflow: hidden;
-  width: 10.5rem;
+.container-nav {
+  margin-top: 2%;
+  display: flex;
+  height: 100%;
 }
 
-.logout-btn{
+.name {
+  overflow: hidden;
+  width: 1%;
+}
+
+.logout-btn {
   width: 3.3rem;
   height: 2.5rem;
   margin-left: 3rem;
@@ -102,16 +145,8 @@ li {
 ul {
   padding: 0;
 }
-.container-nav {
-  padding-top: 10%;
-  padding-left: 20%;
-  width: 100%;
-  height: 100%;
-}
 
 .content {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -120,8 +155,10 @@ ul {
 .menu {
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 5%;
 }
+
 .icon-container {
   display: flex;
   flex-direction: column;
@@ -145,7 +182,7 @@ ul {
 
 .perfil-container {
   width: 100%;
-  padding-bottom: 10%;
+  margin-bottom: 20%;
   margin-left: -2.5rem;
 }
 
@@ -172,7 +209,7 @@ ul {
 
 .name-hash {
   font-size: 1rem;
-  color: rgba(0, 0, 0, 0.884);
+  color: black;
   overflow: hidden;
   width: 10.5rem;
 }
