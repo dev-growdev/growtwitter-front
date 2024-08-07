@@ -2,6 +2,8 @@
 import { postTweet } from '@/services/api';
 import { ref } from 'vue';
 
+const emit = defineEmits(['addTweet'])
+
 const content        = ref<string>('');
 const isTweeting     = ref<boolean>(false);
 const hasMessage     = ref<boolean>(false);
@@ -30,6 +32,8 @@ async function handlePostTweet() {
     showMessage('Erro ao publicar tweet', 'error');
     return;    
   }
+
+emit('addTweet')
 
   closeModal.value = false; // Fechar modal após mostrar a mensagem
   

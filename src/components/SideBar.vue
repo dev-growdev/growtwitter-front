@@ -12,42 +12,17 @@ import type { UserType, CreateAccountType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTweet from './ButtonTweet.vue';
 
-const item = ref<UserType>({
-  name: '',
-  surname: '',
-  username: '',
-  email: '',
-  password: '',
-  avatar_url: defaultAvatar
-});
+const emit = defineEmits(['callEmit'])
 
-async function handleGetUser() {
-  const userData = localStorage.getItem('userData');
-
-  if (!userData) {
-    const response = await getUser();
-    item.value = response.data.data;
-    localStorage.setItem('userData', JSON.stringify(item.value));
-    return;
-  }
-
-  item.value = JSON.parse(userData);
-
-  account.username = item.value.username;
-  account.name = item.value.name;
-  account.surname = item.value.surname;
-  account.email = item.value.email;
-  account.password = item.value.password;
+interface SidebarProps {
+  item: UserType;
+}
+const handleEmit = () => {
+  emit('callEmit');
 }
 
-const account = reactive<CreateAccountType>({
-  username: item.value.username,
-  name: item.value.name,
-  surname: item.value.surname,
-  email: item.value.email,
-  password: item.value.password,
-  avatar_url: undefined
-});
+
+defineProps<SidebarProps>();
 
 const spinnerLoading = ref<boolean>(false);
 
@@ -90,7 +65,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="sideBtn">
-          <ButtonTweet />
+          <ButtonTweet @add-tweet="handleEmit"/>
         </div>
       </div>
 

@@ -8,6 +8,10 @@ import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 
+const listenEmit = () => {
+  fetchTweets()
+};
+
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const item = ref<UserType[]>([]);
@@ -40,81 +44,22 @@ onMounted(() => {
 });
 </script>
 <template>
-  <v-layout class="rounded rounded-md">
-    <v-navigation-drawer>
-      <v-list>
-        <v-list-item>
-          <SideBar :item="item" />
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+  <div>
+    <div class="home-container">
+      <div class="home-nav">
+        <SideBar :item="item" @call-emit="listenEmit" />
+      </div>
+      <div class="home-content">
+        <span class="home-content-title">
+          <span> Página Inicial </span>
+        </span>
 
-    <v-navigation-drawer location="right">
-      <v-list>
-        <v-list-item>
-          <ExploreComponent />
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-main class="d-flex align-center justify-center" style="min-height: 300px">
-      <v-list>
-        <v-list-item>
-          <ListCard :tweets="tweets" />
-        </v-list-item>
-      </v-list>
-    </v-main>
-    <div class="spinner-div d-flex justify-center mt-5">
-      <SpinnerComponent v-if="loadingVisible" color="blue" />
-    </div>
-
-    <v-bottom-navigation :elevation="5">
-      <v-btn value="recent">
-        <v-icon>mdi-history</v-icon>
-
-        <span>Recent</span>
-      </v-btn>
-
-      <v-btn value="favorites">
-        <v-icon>mdi-heart</v-icon>
-
-        <span>Favorites</span>
-      </v-btn>
-
-      <v-btn value="nearby">
-        <v-icon>mdi-map-marker</v-icon>
-
-        <span>Nearby</span>
-      </v-btn>
-    </v-bottom-navigation>
-  </v-layout>
-
-  <!-- <div class="home-container h-screen">
-    <v-container fluid>
-      <v-row>
-        <v-col cols="12" lg="3" class="d-none d-lg-flex">
-          <SideBar :item="item" />
-        </v-col>
-
-        <v-col cols="12" lg="6">
-          <v-row>
-            <v-col cols="12" class="border">
-              <span>Página Inicial</span>
-            </v-col>
-            <v-col cols="12" class="border pa-0">
-              <ListCard :tweets="tweets" />
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <v-col cols="12" lg="3" class="d-none d-lg-flex">
-          <ExploreComponent />
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <div class="spinner-div d-flex justify-center mt-5">
-      <SpinnerComponent v-if="loadingVisible" color="blue" />
+        <div class="spinner-div d-flex justify-center mt-5">
+          <SpinnerComponent v-if="loadingVisible" color="blue" />
+        </div>
+        <ListCard :tweets="tweets"/>
+      </div>
+      <ExploreComponent/>
     </div>
   </div> -->
 </template>
