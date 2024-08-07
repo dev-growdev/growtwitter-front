@@ -40,7 +40,56 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="home-container h-screen">
+  <v-layout class="rounded rounded-md">
+    <v-navigation-drawer>
+      <v-list>
+        <v-list-item>
+          <SideBar :item="item" />
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-navigation-drawer location="right">
+      <v-list>
+        <v-list-item>
+          <ExploreComponent />
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-main class="d-flex align-center justify-center" style="min-height: 300px">
+      <v-list>
+        <v-list-item>
+          <ListCard :tweets="tweets" />
+        </v-list-item>
+      </v-list>
+    </v-main>
+    <div class="spinner-div d-flex justify-center mt-5">
+      <SpinnerComponent v-if="loadingVisible" color="blue" />
+    </div>
+
+    <v-bottom-navigation :elevation="5">
+      <v-btn value="recent">
+        <v-icon>mdi-history</v-icon>
+
+        <span>Recent</span>
+      </v-btn>
+
+      <v-btn value="favorites">
+        <v-icon>mdi-heart</v-icon>
+
+        <span>Favorites</span>
+      </v-btn>
+
+      <v-btn value="nearby">
+        <v-icon>mdi-map-marker</v-icon>
+
+        <span>Nearby</span>
+      </v-btn>
+    </v-bottom-navigation>
+  </v-layout>
+
+  <!-- <div class="home-container h-screen">
     <v-container fluid>
       <v-row>
         <v-col cols="12" lg="3" class="d-none d-lg-flex">
@@ -49,10 +98,10 @@ onMounted(() => {
 
         <v-col cols="12" lg="6">
           <v-row>
-            <v-col cols="12">
+            <v-col cols="12" class="border">
               <span>Página Inicial</span>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="12" class="border pa-0">
               <ListCard :tweets="tweets" />
             </v-col>
           </v-row>
@@ -67,7 +116,7 @@ onMounted(() => {
     <div class="spinner-div d-flex justify-center mt-5">
       <SpinnerComponent v-if="loadingVisible" color="blue" />
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
