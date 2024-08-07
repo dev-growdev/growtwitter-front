@@ -45,7 +45,7 @@ async function handleLogout() {
   <v-container class="d-flex h-100">
     <v-row class="">
       <v-col cols="12" lg="12" class="d-flex flex-column align-center align-self-start">
-        <growtwitterLogo class="w-66" />
+        <growtwitterLogo class="w-50" />
         <v-list class="nav-links">
           <v-list-item
             ><RouterLink to="/"
