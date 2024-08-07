@@ -39,7 +39,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-card class="card-principal rounded-0 border-b-md">
+  <v-card class="card-principal rounded-0">
     <v-card-actions>
       <v-row>
         <v-col cols="12">
@@ -66,7 +66,7 @@ onMounted(() => {
 
 <style scoped>
 .card-principal {
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
 }
 
