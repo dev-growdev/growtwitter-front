@@ -42,25 +42,26 @@ onMounted(() => {
 <template>
   <v-card class="card-principal rounded-0 border-b-md">
     <v-card-actions>
-      <v-row class="d-flex fles-column w-100">
+      <v-row>
         <v-col cols="2">
           <v-avatar
-            class="ma-6"
+            class="d-block ma-6 rounded-circle"
             :image="data.user.avatar_url ?? default_avatar"
-            size="70"
+            size="60"
           ></v-avatar>
         </v-col>
 
         <v-col cols="10">
           <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="mt-3">{{ data.user.name }}</v-list-item-title>
+            <h3 class="mt-3">{{ data.user.name }}</h3>
+            <v-list-item-content class="d-block d-md-flex">
+              <v-list-item-subtitle> @{{ data.user.username }} - </v-list-item-subtitle>
               <v-list-item-subtitle>
-                @{{ data.user.username }} · {{ tempoDesdeCriacao(data.created_at) }}
+                {{ tempoDesdeCriacao(data.created_at) }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-card-text class="text-h5 py-3 mr-3">
+          <v-card-text class="text-h5 py-3">
             {{ data.content }}
           </v-card-text>
 
