@@ -11,7 +11,6 @@ interface TweetTypeProps {
 
 const props = defineProps<TweetTypeProps>();
 const liked = ref(false);
-
 const artificialLike = ref(0);
 
 function like() {
@@ -42,36 +41,21 @@ onMounted(() => {
 <template>
   <v-card class="card-principal rounded-0 border-b-md">
     <v-card-actions>
-      <v-row class="d-flex fles-column w-100">
-        <v-col cols="2">
-          <v-avatar
-            class="ma-6"
-            :image="data.user.avatar_url ?? default_avatar"
-            size="70"
-          ></v-avatar>
+      <v-row>
+        <v-col cols="12">
+          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
         </v-col>
-
-        <v-col cols="10">
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="mt-3">{{ data.user.name }}</v-list-item-title>
-              <v-list-item-subtitle>
-                @{{ data.user.username }} · {{ tempoDesdeCriacao(data.created_at) }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-card-text class="text-h5 py-3 mr-3">
-            {{ data.content }}
-          </v-card-text>
-
-          <div class="d-flex align-items-center justify-content-start">
-            <v-btn class="mb-3">💬</v-btn>
-            <v-btn class="btn-like" @click="handlePostLike(data.id)">
-              <div class="heart-like">
-                {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
-              </div>
+        <v-col cols="12">
+          <div class="tweet-header">
+            <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+            <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+          </div>
+          <p class="tweet-content">{{ data.content }}</p>
+          <div class="tweet-actions">
+            <v-btn icon small>💬</v-btn>
+            <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
+              {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
               {{ data.likes_count + artificialLike }}
-              {{ 'Like' + (data.likes_count + artificialLike > 1 ? 's' : '') + '!' }}
             </v-btn>
           </div>
         </v-col>
@@ -81,23 +65,31 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.card-principal:hover {
-  background-color: #e0e0e0;
-}
 .card-principal {
-  position: unset;
+  border-bottom: 1px solid #ccc;
+  transition: background-color 0.3s ease;
 }
 
-* {
-  padding: 0;
-  margin: 0;
+.card-principal:hover {
+  background-color: #f5f8fa;
 }
-.v-card-text {
-  padding: 0;
+
+.tweet-header strong {
+  font-weight: bold;
 }
-.v-list-item {
-  padding: 0;
+
+.tweet-header span {
+  color: #657786;
+  font-size: 14px;
 }
+
+.tweet-content {
+  margin-top: 10px;
+  font-size: 18px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 .v-btn {
   text-transform: none !important;
 }
@@ -107,4 +99,3 @@ onMounted(() => {
   color: rgb(135, 0, 0);
 }
 </style>
-*/
