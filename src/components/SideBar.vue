@@ -109,10 +109,10 @@ ul {
   padding: 0;
 }
 .container-nav {
-  padding-top: 10%;
-  padding-left: 20%;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  padding: 3rem;
+  width: 28%;
+  height: 100vh;
 }
 
 .content {
@@ -152,7 +152,6 @@ ul {
 .perfil-container {
   width: 100%;
   padding-bottom: 10%;
-  margin-left: -2.5rem;
 }
 
 .perfil-content {
