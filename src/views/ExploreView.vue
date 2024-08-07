@@ -23,7 +23,6 @@ async function handleGetUser() {
 
 onMounted(() => {
   handleGetUser();
-
 });
 
 </script>

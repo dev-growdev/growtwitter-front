@@ -11,9 +11,15 @@ import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTweet from './ButtonTweet.vue';
 
+const emit = defineEmits(['callEmit'])
+
 interface SidebarProps {
   item: UserType;
 }
+const handleEmit = () => {
+  emit('callEmit');
+}
+
 
 defineProps<SidebarProps>();
 
@@ -55,7 +61,7 @@ async function handleLogout() {
           </div>
         </div>
         <div class="sideBtn">
-          <ButtonTweet />
+          <ButtonTweet @add-tweet="handleEmit"/>
         </div>
       </div>
 

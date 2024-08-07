@@ -8,6 +8,10 @@ import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 
+const listenEmit = () => {
+  fetchTweets()
+};
+
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const item = ref<UserType[]>([]);
@@ -44,7 +48,7 @@ onMounted(() => {
   <div>
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="item" />
+        <SideBar :item="item" @call-emit="listenEmit" />
       </div>
       <div class="home-content">
         <span class="home-content-title">
@@ -54,7 +58,7 @@ onMounted(() => {
         <div class="spinner-div d-flex justify-center mt-5">
           <SpinnerComponent v-if="loadingVisible" color="blue" />
         </div>
-        <ListCard :tweets="tweets" />
+        <ListCard :tweets="tweets"/>
       </div>
       <ExploreComponent/>
     </div>

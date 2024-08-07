@@ -84,6 +84,9 @@ onMounted(() => {
 .card-principal:hover {
   background-color: #e0e0e0;
 }
+.card-principal {
+  position: unset;
+}
 
 * {
   padding: 0;
