@@ -41,9 +41,9 @@ onMounted(() => {
 </script>
 <template>
   <div class="home-container h-screen">
-    <v-container>
+    <v-container fluid>
       <v-row>
-        <v-col cols="12" lg="3">
+        <v-col cols="12" lg="3" class="d-none d-lg-flex">
           <SideBar :item="item" />
         </v-col>
 
@@ -52,16 +52,13 @@ onMounted(() => {
             <v-col cols="12">
               <span>Página Inicial</span>
             </v-col>
-          </v-row>
-
-          <v-row>
             <v-col cols="12">
               <ListCard :tweets="tweets" />
             </v-col>
           </v-row>
         </v-col>
 
-        <v-col cols="12" lg="3">
+        <v-col cols="12" lg="3" class="d-none d-lg-flex">
           <ExploreComponent />
         </v-col>
       </v-row>
@@ -92,43 +89,4 @@ onMounted(() => {
   height: 100%;
   background: #ffffff;
 }
-
-/* .home-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 20%;
-  height: 100vh;
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  color: white;
-}
-
-.home-nav-component {
-  width: 90%;
-  height: 100%;
-  padding: 1em 0 0 1em;
-  background-color: black;
-}
-
-.home-content {
-  width: 55%;
-  height: 100%;
-  border-right: 2px solid #e9e9e9;
-  border-left: 2px solid #e9e9e9;
-}
-
-.home-content-title {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  width: 100%;
-  height: 4rem;
-  border-bottom: 2px solid #e9e9e9;
-  font-weight: 600;
-  font-size: 1.3rem;
-  font-style: normal;
-} */
 </style>
