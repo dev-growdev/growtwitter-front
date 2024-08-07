@@ -44,11 +44,50 @@ onMounted(() => {
 });
 
 </script>
+
 <template>
-  <div>
+  <v-container class="h-screen ma-0 pa-0" fluid>
+    <v-row>
+      <v-col cols="3" class="d-none d-lg-flex">
+        <SideBar :item="item" @call-emit="listenEmit" />
+      </v-col>
+      <v-col cols="12" md="6">
+        <ListCard :tweets="tweets"/>
+      </v-col>
+      <v-col cols="3" class="d-none d-lg-flex">
+        <ExploreComponent />
+      </v-col>
+    </v-row>
+    <div class="spinner-div d-flex justify-center mt-5">
+      <SpinnerComponent v-if="loadingVisible" color="blue" />
+    </div>
+  </v-container>
+  <!-- <v-layout class="rounded rounded-md">
+    <v-navigation-drawer>
+      <v-list>
+        <v-list-item>
+          <SideBar :item="item" @call-emit="listenEmit" />
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-navigation-drawer location="right">
+      <v-list>
+        <v-list-item>
+          <ExploreComponent />
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-main style="min-height: 200px;">
+      <ListCard :tweets="tweets"/>
+    </v-main>
+  </v-layout> -->
+
+  <!-- <div>
     <div class="home-container">
       <div class="home-nav">
-        <SideBar :item="item" @call-emit="listenEmit" />
+        
       </div>
       <div class="home-content">
         <span class="home-content-title">
@@ -58,11 +97,11 @@ onMounted(() => {
         <div class="spinner-div d-flex justify-center mt-5">
           <SpinnerComponent v-if="loadingVisible" color="blue" />
         </div>
-        <ListCard :tweets="tweets"/>
+        
       </div>
       <ExploreComponent/>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
@@ -76,52 +115,5 @@ onMounted(() => {
   position: absolute;
   left: 46%;
   top: 50%;
-}
-
-.home-container {
-  display: flex;
-
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-}
-
-.home-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 20%;
-  height: 100vh;
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  color: white;
-}
-
-.home-nav-component {
-  width: 90%;
-  height: 100%;
-  padding: 1em 0 0 1em;
-  background-color: black;
-}
-
-.home-content {
-  width: 55%;
-  height: 100%;
-  border-right: 2px solid #e9e9e9;
-  border-left: 2px solid #e9e9e9;
-}
-
-.home-content-title {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  width: 100%;
-  height: 4rem;
-  border-bottom: 2px solid #e9e9e9;
-  font-weight: 600;
-  font-size: 1.3rem;
-  font-style: normal;
 }
 </style>
