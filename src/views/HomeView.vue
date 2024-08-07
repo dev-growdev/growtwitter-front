@@ -42,6 +42,7 @@ onMounted(() => {
   handleGetUser();
   fetchTweets();
 });
+
 </script>
 <template>
   <div>
@@ -61,7 +62,7 @@ onMounted(() => {
       </div>
       <ExploreComponent/>
     </div>
-  </div> -->
+  </div>
 </template>
 
 <style scoped>
@@ -79,8 +80,48 @@ onMounted(() => {
 
 .home-container {
   display: flex;
+
   width: 100%;
   height: 100%;
   background: #ffffff;
+}
+
+.home-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 20%;
+  height: 100vh;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  color: white;
+}
+
+.home-nav-component {
+  width: 90%;
+  height: 100%;
+  padding: 1em 0 0 1em;
+  background-color: black;
+}
+
+.home-content {
+  width: 55%;
+  height: 100%;
+  border-right: 2px solid #e9e9e9;
+  border-left: 2px solid #e9e9e9;
+}
+
+.home-content-title {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+  height: 4rem;
+  border-bottom: 2px solid #e9e9e9;
+  font-weight: 600;
+  font-size: 1.3rem;
+  font-style: normal;
 }
 </style>

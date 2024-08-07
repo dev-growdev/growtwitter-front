@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import growtwitterLogo from '@/components/icons/growtwitterLogo.vue';
 import homePageLogo from '@/components/icons/homePageLogo.vue';
-import defaultAvatar from '@/assets/default-avatar.png';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue';
-import { onMounted, reactive, ref } from 'vue';
-import { getUser, logout } from '@/services/api';
+import { ref } from 'vue';
+import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-import type { UserType, CreateAccountType } from '@/types';
+import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTweet from './ButtonTweet.vue';
 
@@ -41,13 +40,10 @@ async function handleLogout() {
     alert('Ocorreu um erro entre em contato com o suporte.');
   }
 }
-onMounted(() => {
-  handleGetUser();
-});
 </script>
 
 <template>
-  <div class="container-nav position-fixed">
+  <div class="container-nav">
     <div class="content">
       <div class="menu">
         <div><growtwitterLogo /></div>
@@ -77,14 +73,11 @@ onMounted(() => {
             <div class="name-hash">@{{ item.username }}</div>
           </div>
           <div class="perfil-button-container">
-            <ButtonDefault class="logout-btn mr-2" @click="handleLogout"
-              ><p v-if="!spinnerLoading">Sair</p>
-              <v-progress-circular
-                class="spinner"
-                v-if="spinnerLoading"
-                indeterminate
-              ></v-progress-circular>
-            </ButtonDefault>
+
+          <ButtonDefault class="logout-btn mr-2" @click="handleLogout"><p v-if="!spinnerLoading">Sair</p>
+            <v-progress-circular class="spinner" v-if="spinnerLoading"  indeterminate></v-progress-circular>
+          </ButtonDefault>
+
           </div>
         </div>
       </div>
@@ -93,18 +86,13 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.container-nav {
-  margin-top: 2%;
-  display: flex;
-  height: 100%;
-}
 
-.name {
+.name{
   overflow: hidden;
-  width: 1%;
+  width: 10.5rem;
 }
 
-.logout-btn {
+.logout-btn{
   width: 3.3rem;
   height: 2.5rem;
   margin-left: 3rem;
@@ -120,8 +108,16 @@ li {
 ul {
   padding: 0;
 }
+.container-nav {
+  padding-top: 10%;
+  padding-left: 20%;
+  width: 100%;
+  height: 100%;
+}
 
 .content {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -130,10 +126,8 @@ ul {
 .menu {
   display: flex;
   flex-direction: column;
-  width: 100%;
   gap: 5%;
 }
-
 .icon-container {
   display: flex;
   flex-direction: column;
@@ -157,7 +151,7 @@ ul {
 
 .perfil-container {
   width: 100%;
-  margin-bottom: 20%;
+  padding-bottom: 10%;
   margin-left: -2.5rem;
 }
 
@@ -184,7 +178,7 @@ ul {
 
 .name-hash {
   font-size: 1rem;
-  color: black;
+  color: rgba(0, 0, 0, 0.884);
   overflow: hidden;
   width: 10.5rem;
 }
