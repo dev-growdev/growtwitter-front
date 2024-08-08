@@ -6,7 +6,7 @@ import ProfileLogo from '@/components/icons/profileLogo.vue';
 
 <template>
   <v-layout>
-    <v-bottom-navigation grow class="d-flex d-md-none">
+    <v-bottom-navigation grow class="d-flex d-lg-none">
       <v-btn>
         <homePageLogo class="img-icon" />
         <RouterLink to="/" />
