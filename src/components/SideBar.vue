@@ -45,30 +45,30 @@ async function handleLogout() {
   <v-row class="h-screen position-fixed ma-0 pa-0 top-0 left-0 responsivity-force">
     <v-col cols="12" class="d-flex flex-column mx-12 align-self-start">
       <growtwitterLogo />
-      <v-list>
-        <v-list-item>
-          <RouterLink to="/">
-            <homePageLogo class="img-icon" />
+      <v-list class="d-flex flex-column ga-2">
+        <div class="d-flex align-center ga-2">
+          <homePageLogo class="img-icon" />
+          <RouterLink to="/" class="text-black font-weight-semibold text-h6">
             Página inicial
           </RouterLink>
-        </v-list-item>
-        <v-list-item
-          ><RouterLink to="/explore">
-            <HashTag class="img-icon" />
+        </div>
+        <div class="d-flex align-center ga-2">
+          <HashTag class="img-icon" />
+          <RouterLink to="/explore" class="text-black font-weight-semibold text-h6 pt-1">
             Explorar
           </RouterLink>
-        </v-list-item>
-        <v-list-item
-          ><RouterLink to="/profile">
-            <ProfileLogo class="img-icon" />
+        </div>
+        <div class="d-flex align-center ga-2">
+          <ProfileLogo class="img-icon" />
+          <RouterLink to="/profile" class="text-black font-weight-semibold text-h6 pt-2">
             Perfil
           </RouterLink>
-        </v-list-item>
+        </div>
       </v-list>
 
       <ButtonTweet @add-tweet="handleEmit" />
     </v-col>
-    <v-col cols="12" class="d-flex align-center align-self-end mx-12 ga-2">
+    <v-col cols="12" class="d-flex align-center align-self-end mx-12 ga-4">
       <v-img max-width="50" class="rounded-circle" :src="item.avatar_url"> </v-img>
       <div>
         <p class="text-black">{{ item.name }}</p>
@@ -90,7 +90,8 @@ async function handleLogout() {
 <!-- Isto não sei como, mas funciona, não questione, apenas aceite! -->
 <style scoped>
 .img-icon {
-  max-height: 3.375vh;
+  max-width: 2.6vh;
+  max-height: 3vh;
 }
 
 .responsivity-force {
