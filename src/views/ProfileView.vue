@@ -174,42 +174,38 @@ async function fetchTweets() {
         <SideBar :item="item" />
       </div>
       <div class="home-content">
-        <span class="home-content-title">
+        <div class="wrapper-profile">
           <div class="profile-top">
-            <img class="arrow-profile" src="../assets/icone_seta.svg" alt="" />
-            <div class="profile-header">
-              <span class="title"> Perfil de {{ item.username }} </span>
-              <p class="tweet-count">{{ tweets.length }} tweets</p>
-              <!-- <img class="profile-pic" src="https://pyxis.nymag.com/v1/imgs/d8e/265/8647a0155d65e195130745751c6682e17d-cowboy-bebop-.rsquare.w330.jpg" alt=""> -->
-              <img class="profile-pic" :src="item.avatar_url ?? default_avatar" alt="" />
-              <div class="name-username">
-                <h3>{{ item.name }} {{ item.surname }}</h3>
-                <h6>@{{ item.username }}</h6>
+            <div style="display: flex; align-items: first baseline; gap: 10px">
+              <a href="/"><img class="arrow-profile" src="../assets/icone_seta.svg" alt="" /></a>
+              <div style="display: flex; flex-direction: column">
+                <span style="font-weight: 700"> Perfil de {{ item.username }} </span>
+                <p style="font-size: small">{{ tweets.length }} tweets</p>
               </div>
             </div>
+
+            <button @click="editDialog = true"><span>Editar</span></button>
           </div>
-
-          <button class="edit-btn" @click="editDialog = true">Editar</button>
-
+          <div class="profile-header">
+            <img class="profile-pic" :src="item.avatar_url ?? default_avatar" alt="" />
+            <div class="name-username">
+              <h3>{{ item.name }} {{ item.surname }}</h3>
+              <h6>@{{ item.username }}</h6>
+            </div>
+          </div>
           <div class="spinner-div d-flex justify-center mt-5">
             <SpinnerComponent v-if="loadingVisible" color="blue" />
           </div>
 
           <template>
-            <div class="pa-4 text-center">
-              <v-dialog v-model="editDialog" max-width="600">
-                <template v-slot:activator="{ props: activatorProps }">
-                  <v-btn
-                    class="text-none font-weight-regular"
-                    prepend-icon="mdi-account"
-                    text="Edit Profile"
-                    variant="tonal"
-                    v-bind="activatorProps"
-                  ></v-btn>
-                </template>
-
+            <div class="text-center" style="background-color: brown">
+              <v-dialog v-model="editDialog" class="profile-dialog">
                 <!-- Modal de edição de perfil -->
-                <v-card class="mx-auto mt-6 pa-12 pb-8" elevation="8" min-width="720" rounded="lg">
+                <v-card class="mx-auto pa-12 pb-8 profile-card" elevation="8">
+                  <v-btn icon class="close-btn" @click="editDialog = false">
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+
                   <div>
                     <h1 class="mt-1 text-center">Editar perfil</h1>
                     <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
@@ -286,11 +282,13 @@ async function fetchTweets() {
               </v-dialog>
             </div>
           </template>
-        </span>
+        </div>
 
         <ListCard :tweets="tweets" />
       </div>
-      <ExploreComponent />
+      <div class="home-explorer">
+        <ExploreComponent />
+      </div>
     </div>
   </div>
 </template>
@@ -301,13 +299,39 @@ async function fetchTweets() {
   padding: 0;
   margin: 0;
 }
-
-.spinner-div {
-  position: absolute;
-  left: 46%;
-  top: 50%;
+.wrapper-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  border-bottom: 2px solid #e9e9e9;
+  color: white;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  padding-bottom: 10px;
 }
-
+.profile-top {
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.5rem;
+  justify-content: space-between;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  padding-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.profile-pic {
+  width: 7rem;
+  height: 7rem;
+  border: 4px solid #e9e9e9;
+  border-radius: 50%;
+}
 .edit-btn {
   font-size: 0.8rem;
   align-self: first baseline;
@@ -320,66 +344,15 @@ async function fetchTweets() {
   width: 3.5rem;
   border-radius: 0.5rem;
 }
-
-.edit-btn:hover {
-  color: #289ef0;
-  background-color: #ffffff;
-  border: 1px solid #289ef0;
-}
-
-.name-username {
-  margin-top: 0.6rem;
-  margin-bottom: 0.5rem;
-}
-
-h3 {
-  font-size: 1rem;
-}
-h6 {
-  font-size: 0.8rem;
-}
-
-.profile-top {
-  display: flex;
-  flex-direction: row;
-  margin-top: 0.5rem;
-}
-
-.profile-pic {
-  width: 7rem;
-  height: 7rem;
-  border: 4px solid #e9e9e9;
-  border-radius: 50%;
-  margin-top: 1rem;
-}
-
-.profile-pic:hover {
-  border: 4px solid #289ef0;
-}
-
-.profile-header {
-  display: flex;
-  flex-direction: column;
-}
-
-.title {
-  font-size: 1.1rem;
-}
-
-.tweet-count {
-  font-size: 0.8rem;
-  color: rgb(110, 110, 110);
-}
-
-.arrow-profile {
-  margin: 1rem;
-  height: 0.7rem;
+.spinner-div {
+  position: absolute;
+  left: 46%;
+  top: 50%;
 }
 
 .home-container {
   display: flex;
-
-  width: 100%;
+  width: 100vw;
   height: 100%;
   background: #ffffff;
 }
@@ -396,30 +369,117 @@ h6 {
   top: 0;
   color: white;
 }
-
-.home-nav-component {
-  width: 90%;
-  height: 100%;
-  padding: 1em 0 0 1em;
-  background-color: black;
-}
-
 .home-content {
   width: 55%;
   height: 100%;
   border-right: 2px solid #e9e9e9;
   border-left: 2px solid #e9e9e9;
+  border-bottom: 2px solid #e9e9e9;
 }
 
-.home-content-title {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
+button {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  padding: 0.4rem 1rem;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.05rem;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 500px;
+  overflow: hidden;
+  background: #23a6d5;
+  color: ghostwhite;
+}
+
+button span {
+  position: relative;
+  z-index: 10;
+  transition: color 0.4s;
+}
+
+button:hover span {
+  color: white;
+}
+
+button::before,
+button::after {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 16rem;
-  border-bottom: 2px solid #e9e9e9;
-  font-weight: 600;
-  font-size: 1.3rem;
-  font-style: normal;
+  height: 100%;
+  z-index: 0;
+}
+
+button::before {
+  content: '';
+  background: #000;
+  width: 120%;
+  left: -10%;
+  transform: skew(30deg);
+  transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+}
+
+button:hover::before {
+  transform: translate3d(100%, 0, 0);
+}
+.profile-dialog .v-card {
+  min-width: 720px;
+  border-radius: 8px;
+  margin: 0;
+}
+
+.profile-dialog .close-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+@media (max-width: 600px) {
+  .profile-dialog .v-card {
+    min-width: 100vw;
+    min-height: 100vh;
+    border-radius: 0;
+    margin: 0;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .home-nav {
+    display: none;
+  }
+  .home-explorer {
+    display: none;
+  }
+  .home-content {
+    width: 100vw !important;
+
+    height: 100% !important;
+    border-right: none;
+    border-left: none;
+    border-bottom: 2px solid #e9e9e9;
+  }
+}
+@media screen and (max-width: 350px) {
+  button {
+    font-size: 10px;
+    padding: 0.1rem 0.6rem;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>
