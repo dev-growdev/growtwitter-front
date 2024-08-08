@@ -9,7 +9,7 @@ import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 
 const listenEmit = () => {
-  fetchTweets()
+  fetchTweets();
 };
 
 const loadingVisible = ref<boolean>(false);
@@ -42,26 +42,24 @@ onMounted(() => {
   handleGetUser();
   fetchTweets();
 });
-
 </script>
 
 <template>
-  <v-container class="h-screen ma-0 pa-0" fluid>
-    <v-row>
-      <v-col cols="3" class="d-none d-lg-flex">
-        <SideBar :item="item" @call-emit="listenEmit" />
-      </v-col>
-      <v-col cols="12" md="6">
-        <ListCard :tweets="tweets"/>
-      </v-col>
-      <v-col cols="3" class="d-none d-lg-flex">
-        <ExploreComponent />
-      </v-col>
-    </v-row>
-    <div class="spinner-div d-flex justify-center mt-5">
-      <SpinnerComponent v-if="loadingVisible" color="blue" />
-    </div>
-  </v-container>
+  <v-row class="ma-0 pa-0">
+    <v-col cols="3" class="d-none d-lg-flex">
+      <SideBar :item="item" @call-emit="listenEmit" />
+    </v-col>
+    <v-col cols="12" md="6">
+      <ListCard :tweets="tweets" />
+    </v-col>
+    <v-col cols="3" class="d-none d-lg-flex">
+      <ExploreComponent />
+    </v-col>
+  </v-row>
+  <div class="spinner-div d-flex justify-center mt-5">
+    <SpinnerComponent v-if="loadingVisible" color="blue" />
+  </div>
+
   <!-- <v-layout class="rounded rounded-md">
     <v-navigation-drawer>
       <v-list>
@@ -79,8 +77,8 @@ onMounted(() => {
       </v-list>
     </v-navigation-drawer>
 
-    <v-main style="min-height: 200px;">
-      <ListCard :tweets="tweets"/>
+    <v-main style="min-height: 200px">
+      <ListCard :tweets="tweets" />
     </v-main>
   </v-layout> -->
 
