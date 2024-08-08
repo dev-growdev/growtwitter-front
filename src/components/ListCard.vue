@@ -18,7 +18,7 @@ defineProps<Props>();
   </v-row>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .home-content-card {
   width: auto;
   height: 100%;
@@ -26,4 +26,4 @@ defineProps<Props>();
   padding: 10px;
   margin: 5px;
 }
-</style>
+</style> -->
