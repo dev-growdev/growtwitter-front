@@ -7,6 +7,7 @@ import { onMounted, ref } from 'vue';
 import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
+import ApplicationBar from '@/components/ApplicationBar.vue';
 
 const listenEmit = () => {
   fetchTweets();
@@ -59,47 +60,7 @@ onMounted(() => {
   <div class="spinner-div d-flex justify-center mt-5">
     <SpinnerComponent v-if="loadingVisible" color="blue" />
   </div>
-
-  <!-- <v-layout class="rounded rounded-md">
-    <v-navigation-drawer>
-      <v-list>
-        <v-list-item>
-          <SideBar :item="item" @call-emit="listenEmit" />
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-navigation-drawer location="right">
-      <v-list>
-        <v-list-item>
-          <ExploreComponent />
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-main style="min-height: 200px">
-      <ListCard :tweets="tweets" />
-    </v-main>
-  </v-layout> -->
-
-  <!-- <div>
-    <div class="home-container">
-      <div class="home-nav">
-        
-      </div>
-      <div class="home-content">
-        <span class="home-content-title">
-          <span> Página Inicial </span>
-        </span>
-
-        <div class="spinner-div d-flex justify-center mt-5">
-          <SpinnerComponent v-if="loadingVisible" color="blue" />
-        </div>
-        
-      </div>
-      <ExploreComponent/>
-    </div>
-  </div> -->
+  <ApplicationBar />
 </template>
 
 <style scoped>
@@ -108,7 +69,6 @@ onMounted(() => {
   padding: 0;
   margin: 0;
 }
-
 .spinner-div {
   position: absolute;
   left: 46%;
