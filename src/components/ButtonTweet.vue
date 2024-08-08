@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
+import { emit } from 'process';
 import { ref } from 'vue';
 
 const emit = defineEmits(['addTweet']);
-
 const content = ref<string>('');
 const isTweeting = ref<boolean>(false);
 const hasMessage = ref<boolean>(false);
@@ -16,6 +16,8 @@ const maxContentLength = 280;
 
 async function handlePostTweet() {
   spinnerLoading.value = true;
+
+  emit('updateKey', new Date().getTime());
 
   if (content.value == '') {
     spinnerLoading.value = false;
@@ -78,9 +80,9 @@ function clearMessage() {
       ></v-alert>
     </v-model>
 
-    <v-dialog v-model="closeModal" activator="parent" max-width="500" class="modal">
+    <v-dialog class="modal" v-model="closeModal" activator="parent" max-width="500">
       <template v-slot:default="{ isActive }">
-        <v-card rounded="lg">
+        <v-card id="tweet-card" rounded="lg">
           <v-card-title class="d-flex justify-space-between align-center">
             <div class="text-h5 text-medium-emphasis ps-2">Tweetar</div>
 
@@ -137,6 +139,20 @@ function clearMessage() {
 </template>
 
 <style scoped>
+@media (max-width: 500px) {
+  #tweet-card {
+    margin-top: -28px;
+    margin-left: -25px;
+    margin-bottom: -25px;
+    height: 100vh !important;
+    width: 100vw !important;
+    border-radius: 0 !important;
+  }
+  .modal {
+    max-height: 100% !important;
+  }
+}
+
 .v-btn.tweet-btn {
   padding: 1em 1.5em 1em;
   background-color: #4285f4;
