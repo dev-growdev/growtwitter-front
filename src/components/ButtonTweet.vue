@@ -3,14 +3,14 @@ import { postTweet } from '@/services/api';
 import { emit } from 'process';
 import { ref } from 'vue';
 
-const emit = defineEmits(['addTweet'])
-const content        = ref<string>('');
-const isTweeting     = ref<boolean>(false);
-const hasMessage     = ref<boolean>(false);
-const message        = ref<string>('');
+const emit = defineEmits(['addTweet']);
+const content = ref<string>('');
+const isTweeting = ref<boolean>(false);
+const hasMessage = ref<boolean>(false);
+const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
-const alertType      = ref<string>('');
-const closeModal     = ref<boolean>(false);
+const alertType = ref<string>('');
+const closeModal = ref<boolean>(false);
 const spinnerLoading = ref<boolean>(false);
 const maxContentLength = 280;
 
@@ -25,22 +25,22 @@ async function handlePostTweet() {
     closeModal.value = false;
     return;
   }
-  
+
   isTweeting.value = true;
   const res = await postTweet(content.value);
-  
+
   if (!res?.data.success) {
     spinnerLoading.value = false;
     showMessage('Erro ao publicar tweet', 'error');
-    return;    
+    return;
   }
 
-  emit('addTweet')
+  emit('addTweet');
 
   closeModal.value = false; // Fechar modal após mostrar a mensagem
-  
+
   showMessage('Tweet publicado com sucesso!', 'success');
-  content.value = "";
+  content.value = '';
   isTweeting.value = false;
 }
 
@@ -62,23 +62,31 @@ function clearMessage() {
 </script>
 
 <template>
-  <v-btn @click="closeModal.value = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
+  <v-btn
+    @click="closeModal.value = true"
+    class="pe-2 tweet-btn"
+    prepend-icon="mdi-feather"
+    variant="flat"
+  >
     <div class="text-none font-weight-regular">Tweetar</div>
     <v-model>
-            <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
+      <v-alert
+        v-if="hasMessage"
+        closable
+        class="alert fixed-alert"
+        :text="message"
+        :color="alertType"
+        @click:close="clearMessage()"
+      ></v-alert>
     </v-model>
-    
+
     <v-dialog class="modal" v-model="closeModal" activator="parent" max-width="500">
       <template v-slot:default="{ isActive }">
         <v-card id="tweet-card" rounded="lg">
           <v-card-title class="d-flex justify-space-between align-center">
             <div class="text-h5 text-medium-emphasis ps-2">Tweetar</div>
 
-            <v-btn
-              icon="mdi-close"
-              variant="text"
-              @click="isActive.value = false"
-            ></v-btn>
+            <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
           </v-card-title>
 
           <v-divider class="mb-4"></v-divider>
@@ -98,7 +106,7 @@ function clearMessage() {
           </v-card-text>
 
           <v-divider class="mt-2"></v-divider>
-          
+
           <!-- Modal Footer -->
           <v-card-actions class="my-2 d-flex justify-end">
             <v-btn
@@ -116,7 +124,13 @@ function clearMessage() {
               variant="flat"
               @click="handlePostTweet"
               :disabled="isTweeting"
-            ><p v-if="!spinnerLoading">Tweetar</p><v-progress-circular class="spinner" v-if="spinnerLoading"  indeterminate></v-progress-circular></v-btn>
+              ><p v-if="!spinnerLoading">Tweetar</p>
+              <v-progress-circular
+                class="spinner"
+                v-if="spinnerLoading"
+                indeterminate
+              ></v-progress-circular
+            ></v-btn>
           </v-card-actions>
         </v-card>
       </template>
@@ -125,40 +139,36 @@ function clearMessage() {
 </template>
 
 <style scoped>
-
 @media (max-width: 500px) {
   #tweet-card {
-      margin-top: -28px;
-      margin-left: -25px;
-      margin-bottom: -25px;
-      height: 100vh !important;
-      width: 100vw !important;
-      border-radius: 0 !important;
-    }
+    margin-top: -28px;
+    margin-left: -25px;
+    margin-bottom: -25px;
+    height: 100vh !important;
+    width: 100vw !important;
+    border-radius: 0 !important;
+  }
   .modal {
     max-height: 100% !important;
   }
-
-
-
 }
 
 .v-btn.tweet-btn {
-    padding: 1em 1.5em 1em;
-    background-color: #4285f4;
-    border: none;
-    color: white;
-    border-radius: 21px;
-    cursor: pointer;
-    font-size: 1em;
-    display: flex;
-    align-items: center;
+  padding: 1em 1.5em 1em;
+  background-color: #4285f4;
+  border: none;
+  color: white;
+  border-radius: 21px;
+  cursor: pointer;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
 }
 .v-btn.tweet-btn:hover {
-    background-color: #357ae8;
+  background-color: #357ae8;
 }
 
-.alert{
+.alert {
   margin: 0 24px 24px !important;
   position: fixed;
   top: 20px;
@@ -169,12 +179,12 @@ function clearMessage() {
   max-width: 90%;
 }
 
-.modal{
+.modal {
   position: fixed;
   z-index: 9998;
 }
 
-.spinner{
+.spinner {
   width: 1.5rem;
 }
 </style>

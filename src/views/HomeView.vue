@@ -7,9 +7,10 @@ import { onMounted, ref } from 'vue';
 import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
+import ApplicationBar from '@/components/ApplicationBar.vue';
 
 const listenEmit = () => {
-  fetchTweets()
+  fetchTweets();
 };
 
 const loadingVisible = ref<boolean>(false);
@@ -42,27 +43,24 @@ onMounted(() => {
   handleGetUser();
   fetchTweets();
 });
-
 </script>
-<template>
-  <div>
-    <div class="home-container">
-      <div class="home-nav">
-        <SideBar :item="item" @call-emit="listenEmit" />
-      </div>
-      <div class="home-content">
-        <span class="home-content-title">
-          <span> Página Inicial </span>
-        </span>
 
-        <div class="spinner-div d-flex justify-center mt-5">
-          <SpinnerComponent v-if="loadingVisible" color="blue" />
-        </div>
-        <ListCard :tweets="tweets"/>
-      </div>
-      <ExploreComponent/>
-    </div>
+<template>
+  <v-row class="ma-0 pa-0">
+    <v-col cols="3" class="d-none d-lg-flex">
+      <SideBar :item="item" @call-emit="listenEmit" />
+    </v-col>
+    <v-col cols="12" md="6">
+      <ListCard :tweets="tweets" />
+    </v-col>
+    <v-col cols="3" class="d-none d-lg-flex">
+      <ExploreComponent />
+    </v-col>
+  </v-row>
+  <div class="spinner-div d-flex justify-center mt-5">
+    <SpinnerComponent v-if="loadingVisible" color="blue" />
   </div>
+  <ApplicationBar />
 </template>
 
 <style scoped>
@@ -71,57 +69,9 @@ onMounted(() => {
   padding: 0;
   margin: 0;
 }
-
 .spinner-div {
   position: absolute;
   left: 46%;
   top: 50%;
-}
-
-.home-container {
-  display: flex;
-
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-}
-
-.home-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 20%;
-  height: 100vh;
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  color: white;
-}
-
-.home-nav-component {
-  width: 90%;
-  height: 100%;
-  padding: 1em 0 0 1em;
-  background-color: black;
-}
-
-.home-content {
-  width: 55%;
-  height: 100%;
-  border-right: 2px solid #e9e9e9;
-  border-left: 2px solid #e9e9e9;
-}
-
-.home-content-title {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  width: 100%;
-  height: 4rem;
-  border-bottom: 2px solid #e9e9e9;
-  font-weight: 600;
-  font-size: 1.3rem;
-  font-style: normal;
 }
 </style>
