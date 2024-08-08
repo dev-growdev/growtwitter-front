@@ -42,57 +42,58 @@ async function handleLogout() {
 </script>
 
 <template>
-  <v-container class="d-flex h-100">
-    <v-row class="">
-      <v-col cols="12" lg="12" class="d-flex flex-column align-center align-self-start">
-        <growtwitterLogo class="w-50" />
-        <v-list class="nav-links">
-          <v-list-item
-            ><RouterLink to="/"
-              ><homePageLogo class="img-icon" /> Página inicial</RouterLink
-            ></v-list-item
-          >
-          <v-list-item
-            ><RouterLink to="/explore"
-              ><HashTag class="img-icon" /> Explorar</RouterLink
-            ></v-list-item
-          >
-          <v-list-item
-            ><RouterLink to="/profile"
-              ><ProfileLogo class="img-icon" /> Perfil</RouterLink
-            ></v-list-item
-          >
-        </v-list>
+  <v-row class="h-screen position-fixed ma-0 pa-0 top-0 left-0 responsivity-force">
+    <v-col cols="12" class="d-flex flex-column mx-12 align-self-start">
+      <growtwitterLogo />
+      <v-list>
+        <v-list-item>
+          <RouterLink to="/">
+            <homePageLogo class="img-icon" />
+            Página inicial
+          </RouterLink>
+        </v-list-item>
+        <v-list-item
+          ><RouterLink to="/explore">
+            <HashTag class="img-icon" />
+            Explorar
+          </RouterLink>
+        </v-list-item>
+        <v-list-item
+          ><RouterLink to="/profile">
+            <ProfileLogo class="img-icon" />
+            Perfil
+          </RouterLink>
+        </v-list-item>
+      </v-list>
 
-        <ButtonTweet class="w-50" @add-tweet="handleEmit" />
-      </v-col>
-      <v-col cols="12" lg="12" class="d-flex align-center justify-center ga-5 align-self-end">
-        <v-img max-width="70" class="rounded-circle img-perfil" :src="item.avatar_url"> </v-img>
-        <div>
-          <p class="text-black">{{ item.name }}</p>
-          <p class="text-black">@{{ item.username }}</p>
-        </div>
+      <ButtonTweet @add-tweet="handleEmit" />
+    </v-col>
+    <v-col cols="12" class="d-flex align-center align-self-end mx-12 ga-2">
+      <v-img max-width="50" class="rounded-circle" :src="item.avatar_url"> </v-img>
+      <div>
+        <p class="text-black">{{ item.name }}</p>
+        <p class="text-black">@{{ item.username }}</p>
+      </div>
 
-        <ButtonDefault class="logout-btn mr-2" @click="handleLogout"
-          ><p v-if="!spinnerLoading">Sair</p>
-          <v-progress-circular
-            class="spinner"
-            v-if="spinnerLoading"
-            indeterminate
-          ></v-progress-circular>
-        </ButtonDefault>
-      </v-col>
-    </v-row>
-  </v-container>
+      <ButtonDefault class="" @click="handleLogout"
+        ><p v-if="!spinnerLoading">Sair</p>
+        <v-progress-circular
+          class="spinner"
+          v-if="spinnerLoading"
+          indeterminate
+        ></v-progress-circular>
+      </ButtonDefault>
+    </v-col>
+  </v-row>
 </template>
 
+<!-- Isto não sei como, mas funciona, não questione, apenas aceite! -->
 <style scoped>
 .img-icon {
-  width: 20px;
-  height: 20px;
+  max-height: 3.375vh;
 }
 
-.nav-links {
-  width: 60%;
+.responsivity-force {
+  width: 16vw;
 }
 </style>
