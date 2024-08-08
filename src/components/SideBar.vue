@@ -112,7 +112,7 @@ ul {
   position: fixed;
   padding: 3rem;
   width: 28%;
-  height: 100vh;
+  height: 100%;
 }
 
 .content {
