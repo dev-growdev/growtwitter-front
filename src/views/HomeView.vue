@@ -88,7 +88,6 @@ onUnmounted(() => {
   padding: 0;
   margin: 0;
 }
-
 .spinner-div {
   position: absolute;
   left: 46%;
