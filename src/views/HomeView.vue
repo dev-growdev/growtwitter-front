@@ -13,6 +13,10 @@ const tweets = ref<TweetType[]>([]);
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
+const listenEmit = () => {
+  fetchTweets();
+}
+
 async function fetchTweets() {
   loadingVisible.value = true;
   const response = await showPosts(endpoint);
