@@ -35,7 +35,7 @@ async function handlePostTweet() {
 
 emit('addTweet')
 
-  closeModal.value = false; // Fechar modal após mostrar a mensagem
+  closeModal.value = false;
   
   showMessage('Tweet publicado com sucesso!', 'success');
   content.value = "";
@@ -61,68 +61,106 @@ function clearMessage() {
 
 <template>
   <v-btn @click="closeModal.value = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
-    <div class="text-none font-weight-regular">Tweetar</div>
+    <div class="text-none mobile-text-none font-weight-regular">Tweetar</div>
     <v-model>
             <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
     </v-model>
     
-    <v-dialog v-model="closeModal" activator="parent" max-width="500" class="modal">
-      <template v-slot:default="{ isActive }">
-        <v-card rounded="lg">
-          <v-card-title class="d-flex justify-space-between align-center">
-            <div class="text-h5 text-medium-emphasis ps-2">Tweetar</div>
+    <v-dialog
+  v-model="closeModal"
+  activator="parent"
+  max-width="500"
+  class="full-screen-dialog"
+>
+  <template v-slot:default="{ isActive }">
+    <v-card>
+      <v-card-title class="d-flex justify-space-between align-center">
+        <div class="text-h5 text-medium-emphasis ps-2">Tweetar</div>
 
-            <v-btn
-              icon="mdi-close"
-              variant="text"
-              @click="isActive.value = false"
-            ></v-btn>
-          </v-card-title>
+        <v-btn
+          icon="mdi-close"
+          variant="text"
+          @click="isActive.value = false"
+        ></v-btn>
+      </v-card-title>
 
-          <v-divider class="mb-4"></v-divider>
+      <v-divider class="mb-4"></v-divider>
 
-          <!-- Modal Body -->
-          <v-card-text>
-            <v-textarea
-              label="O que está acontecendo?"
-              v-model="content"
-              :counter="maxContentLength"
-              :maxlength="maxContentLength"
-              class="mb-2"
-              rows="5"
-              variant="outlined"
-              persistent-counter
-            ></v-textarea>
-          </v-card-text>
+      <!-- Modal Body -->
+      <v-card-text>
+        <v-textarea
+          label="O que está acontecendo?"
+          v-model="content"
+          :counter="maxContentLength"
+          :maxlength="maxContentLength"
+          class="mb-2"
+          rows="5"
+          variant="outlined"
+          persistent-counter
+        ></v-textarea>
+      </v-card-text>
 
-          <v-divider class="mt-2"></v-divider>
-          
-          <!-- Modal Footer -->
-          <v-card-actions class="my-2 d-flex justify-end">
-            <v-btn
-              class="text-none"
-              rounded="xl"
-              text="Cancel"
-              @click="isActive.value = false"
-            ></v-btn>
+      <v-divider class="mt-2"></v-divider>
 
-            <v-btn
-              class="text-none"
-              color="primary"
-              rounded="xl"
-              text="Tweetar"
-              variant="flat"
-              @click="handlePostTweet"
-              :disabled="isTweeting"
-            ><p v-if="!spinnerLoading">Tweetar</p><v-progress-circular class="spinner" v-if="spinnerLoading"  indeterminate></v-progress-circular></v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
-    </v-dialog>
+      <!-- Modal Footer -->
+      <v-card-actions class="my-2 d-flex justify-end">
+        <v-btn
+          class="text-none"
+          rounded="xl"
+          text="Cancel"
+          @click="isActive.value = false"
+        ></v-btn>
+
+        <v-btn
+          class="text-none"
+          color="primary"
+          rounded="xl"
+          text="Tweetar"
+          variant="flat"
+          @click="handlePostTweet"
+          :disabled="isTweeting"
+        >
+          <p v-if="!spinnerLoading">Tweetar</p>
+          <v-progress-circular
+            class="spinner"
+            v-if="spinnerLoading"
+            indeterminate
+          ></v-progress-circular>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </template>
+</v-dialog>
   </v-btn>
 </template>
 
 <style scoped>
+@media (max-width: 1200px) {
+  .mobile-text-none{
+      display: none;
+    }
+  }
+@media (max-width: 600px) {
+    .full-screen-dialog .v-card {
+      width: 100% !important;
+      height: 100vh !important;
+      max-width: 100% !important;
+      max-height: 100vh !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+    }
+    .tweet-btn{
+    z-index: 1000000;
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+  }
+    .mobile-text-none{
+      display: none;
+    }
+  }
+  
 .v-btn.tweet-btn {
     padding: 1em 1.5em 1em;
     background-color: #4285f4;
