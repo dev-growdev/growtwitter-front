@@ -68,7 +68,7 @@ function clearMessage() {
     prepend-icon="mdi-feather"
     variant="flat"
   >
-    <div class="text-none font-weight-regular">Tweetar</div>
+    <div class="text-none mobile-text-none font-weight-regular">Tweetar</div>
     <v-model>
       <v-alert
         v-if="hasMessage"
@@ -80,9 +80,9 @@ function clearMessage() {
       ></v-alert>
     </v-model>
 
-    <v-dialog class="modal" v-model="closeModal" activator="parent" max-width="500">
+    <v-dialog v-model="closeModal" activator="parent" max-width="500" class="full-screen-dialog">
       <template v-slot:default="{ isActive }">
-        <v-card id="tweet-card" rounded="lg">
+        <v-card>
           <v-card-title class="d-flex justify-space-between align-center">
             <div class="text-h5 text-medium-emphasis ps-2">Tweetar</div>
 
@@ -124,13 +124,14 @@ function clearMessage() {
               variant="flat"
               @click="handlePostTweet"
               :disabled="isTweeting"
-              ><p v-if="!spinnerLoading">Tweetar</p>
+            >
+              <p v-if="!spinnerLoading">Tweetar</p>
               <v-progress-circular
                 class="spinner"
                 v-if="spinnerLoading"
                 indeterminate
-              ></v-progress-circular
-            ></v-btn>
+              ></v-progress-circular>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </template>
@@ -151,6 +152,40 @@ function clearMessage() {
   .modal {
     max-height: 100% !important;
   }
+}
+@media (max-width: 1200px) {
+  .mobile-text-none {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .full-screen-dialog .v-card {
+    width: 100% !important;
+    height: 100vh !important;
+    max-width: 100% !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  .mobile-text-none {
+    display: none;
+  }
+}
+
+.v-btn.tweet-btn {
+  padding: 1em 1.5em 1em;
+  background-color: #4285f4;
+  border: none;
+  color: white;
+  border-radius: 21px;
+  cursor: pointer;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+}
+.v-btn.tweet-btn:hover {
+  background-color: #357ae8;
 }
 
 .v-btn.tweet-btn {
