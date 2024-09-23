@@ -70,7 +70,7 @@ onUnmounted(() => {
       <v-container class="pa-0">
         <v-row>
           <v-col v-if="!loadingVisible" class="border px-4 px-md-0 mx-0 mx-md-4">
-            <p class="text-start font-weight-bold pt-6 text-h5">Página Inicial</p>
+            <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
             <ListCard :tweets="tweets" />
           </v-col>
         </v-row>
