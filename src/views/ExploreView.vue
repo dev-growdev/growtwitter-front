@@ -6,6 +6,7 @@ import type { UserType } from '@/types';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import { items } from '@/utils/ExploreArray';
+import ApplicationBar from '@/components/ApplicationBar.vue';
 
 const item = ref<UserType[]>([]);
 
