@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue';
-import { getUser} from '@/services/api';
+import { getUser } from '@/services/api';
 import { onMounted, ref } from 'vue';
 import type { UserType } from '@/types';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import { items } from '@/utils/ExploreArray';
+import ApplicationBar from '@/components/ApplicationBar.vue';
 
 const item = ref<UserType[]>([]);
-
 
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
@@ -24,30 +24,39 @@ async function handleGetUser() {
 onMounted(() => {
   handleGetUser();
 });
-
 </script>
 
 <template>
-  <div>
-    <div class="home-container">
-      <div class="home-nav">
-        <SideBar :item="item" />
-      </div>
-      <div class="home-content">
-        <span class="home-content-title">
-          <span> Explorar </span>
-        </span>
+  <v-app>
+    <v-navigation-drawer width="470" class="border-0 pa-0">
+      <SideBar :item="item" />
+    </v-navigation-drawer>
 
-        <div class="explore-div" v-for="(item, index) in items" :key="index">
-          <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
-          <h4>{{ item.content }}</h4>
-        </div>
-      </div>
+    <ApplicationBar class="d-flex d-lg-none" />
 
-      <ExploreComponent/>
+    <v-main>
+      <v-container class="border pa-0">
+        <v-row> 
+          <v-col class="mx-4 mt-6">
+            <h2>O que está acontecendo?</h2>
+          </v-col>
+          <v-col
+            cols="12"
+            class="d-flex flex-column border-t mx-2 py-4"
+            v-for="(item, index) in items"
+            :key="index"
+          >
+            <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
+            <h3>{{ item.content }}</h3>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
 
-      </div>
-  </div>
+    <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
+      <ExploreComponent />
+    </v-navigation-drawer>
+  </v-app>
 </template>
 
 <style scoped>
@@ -57,19 +66,19 @@ onMounted(() => {
   margin: 0;
 }
 
-.explore-div{
+.explore-div {
   margin: 1rem;
-  margin-bottom: 1.6rem ;
+  margin-bottom: 1.6rem;
 }
 
 .explore-div p {
   font-size: 0.8rem;
 }
 
-.spinner-div{
+.spinner-div {
   position: absolute;
   left: 46%;
-  top: 50%
+  top: 50%;
 }
 
 .home-container {

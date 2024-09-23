@@ -42,7 +42,6 @@ onMounted(() => {
 });
 
 const windowWidth = ref(window.innerWidth);
-const isMobileView = computed(() => windowWidth.value < 600);
 
 const handleResize = () => {
   windowWidth.value = window.innerWidth;
@@ -58,83 +57,47 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="home-container">
-      <div class="home-nav">
-        <SideBar :item="item" @call-emit="listenEmit" />
-      </div>
+  <v-app id="app">
+    <v-navigation-drawer width="470" class="border-0 pa-0">
+      <SideBar :item="item" @call-emit="listenEmit" />
+    </v-navigation-drawer>
 
-      <!-- Aplica a classe 'full-width' ao home-content se for visualização móvel -->
-      <div class="home-content" :class="{ 'full-width': isMobileView }">
-        <span class="home-content-title">
-          <span>Página Inicial</span>
-        </span>
+    <ApplicationBar class="d-flex d-lg-none" />
 
-        <div class="spinner-div d-flex justify-center mt-5">
-          <SpinnerComponent v-if="loadingVisible" color="blue" />
-        </div>
+    <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
-        <ListCard :tweets="tweets" />
-      </div>
+    <v-main>
+      <v-container class="pa-0">
+        <v-row>
+          <v-col v-if="!loadingVisible" class="border px-4 px-md-0 mx-0 mx-md-4">
+            <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
+            <ListCard :tweets="tweets" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
 
-      <!-- Esconde o ExploreComponent em telas pequenas -->
-      <ExploreComponent v-if="!isMobileView" />
-    </div>
-  </div>
-  <ApplicationBar />
+    <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
+      <ExploreComponent />
+    </v-navigation-drawer>
+  </v-app>
 </template>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+.app {
+  overflow-x: hidden;
 }
+
+@media (max-width: 600px) {
+  .spinner-div {
+    position: fixed;
+    top: 50%;
+  }
+}
+
 .spinner-div {
   position: absolute;
-  left: 46%;
   top: 50%;
-}
-
-.home-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-}
-
-.home-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 20%;
-  height: 100vh;
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  color: white;
-}
-
-.home-content {
-  width: 55%;
-  height: 100%;
-  border-right: 2px solid #e9e9e9;
-  border-left: 2px solid #e9e9e9;
-}
-
-.home-content.full-width {
-  width: 100%;
-}
-
-.home-content-title {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  width: 100%;
-  height: 4rem;
-  border-bottom: 2px solid #e9e9e9;
-  font-weight: 600;
-  font-size: 1.3rem;
-  font-style: normal;
+  left: 50%;
 }
 </style>

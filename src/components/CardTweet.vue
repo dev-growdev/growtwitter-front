@@ -39,29 +39,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-card class="card-principal rounded-0">
-    <v-card-actions>
-      <v-row>
-        <v-col cols="12">
-          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
-        </v-col>
-        <v-col cols="12">
-          <div class="tweet-header">
-            <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
-            <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
-          </div>
-          <p class="tweet-content">{{ data.content }}</p>
-          <div class="tweet-actions">
-            <v-btn icon small>💬</v-btn>
-            <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
-              {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
-              {{ data.likes_count + artificialLike }}
-            </v-btn>
-          </div>
-        </v-col>
-      </v-row>
+  <div class="card-principal rounded-0">
+    <v-card-actions class="ga-2">
+      <div class="d-block align-self-start">
+        <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+      </div>
+      <div class="d-block">
+        <div class="tweet-header">
+          <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+          <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+        </div>
+        <p class="tweet-content">{{ data.content }}</p>
+        <div class="tweet-actions">
+          <v-btn icon small>💬</v-btn>
+          <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
+            {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
+            {{ data.likes_count + artificialLike }}
+          </v-btn>
+        </div>
+      </div>
     </v-card-actions>
-  </v-card>
+  </div>
 </template>
 
 <style scoped>
@@ -84,8 +82,6 @@ onMounted(() => {
 }
 
 .tweet-content {
-  margin-top: 10px;
-  font-size: 18px;
   overflow-wrap: break-word;
   word-break: break-word;
 }
