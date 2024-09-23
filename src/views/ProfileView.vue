@@ -168,129 +168,150 @@ async function fetchTweets() {
 }
 </script>
 <template>
-  <div>
-    <div class="home-container">
-      <div class="home-nav">
-        <SideBar :item="item" />
-      </div>
-      <div class="home-content">
-        <div class="wrapper-profile">
-          <div class="profile-top">
-            <div style="display: flex; align-items: first baseline; gap: 10px">
-              <a href="/"><img class="arrow-profile" src="../assets/icone_seta.svg" alt="" /></a>
-              <div style="display: flex; flex-direction: column">
-                <span style="font-weight: 700"> Perfil de {{ item.username }} </span>
-                <p style="font-size: small">{{ tweets.length }} tweets</p>
-              </div>
-            </div>
+  <v-app id="app">
+    <v-navigation-drawer width="470" class="border-0 pa-0">
+      <SideBar :item="item" />
+    </v-navigation-drawer>
 
-            <button @click="editDialog = true"><span>Editar</span></button>
-          </div>
-          <div class="profile-header">
-            <img class="profile-pic" :src="item.avatar_url ?? default_avatar" alt="" />
-            <div class="name-username">
-              <h3>{{ item.name }} {{ item.surname }}</h3>
-              <h6>@{{ item.username }}</h6>
-            </div>
-          </div>
-          <div class="spinner-div d-flex justify-center mt-5">
-            <SpinnerComponent v-if="loadingVisible" color="blue" />
-          </div>
+    <ApplicationBar class="d-flex d-lg-none" />
 
-          <template>
-            <div class="text-center" style="background-color: brown">
-              <v-dialog v-model="editDialog" class="profile-dialog">
-                <!-- Modal de edição de perfil -->
-                <v-card class="mx-auto pa-12 pb-8 profile-card" elevation="8">
-                  <v-btn icon class="close-btn" @click="editDialog = false">
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
+    <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
-                  <div>
-                    <h1 class="mt-1 text-center">Editar perfil</h1>
-                    <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-                    <v-text-field
-                      density="compact"
-                      :placeholder="account.name.toUpperCase()"
-                      prepend-inner-icon="mdi-account-outline"
-                      variant="outlined"
-                      v-model="account.name"
-                      :error-messages="validationErrors.name"
-                    ></v-text-field>
-
-                    <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
-                    <v-text-field
-                      density="compact"
-                      :placeholder="account.surname.toUpperCase()"
-                      prepend-inner-icon="mdi-account-outline"
-                      variant="outlined"
-                      v-model="account.surname"
-                      :error-messages="validationErrors.surname"
-                    ></v-text-field>
-
-                    <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
-                    <v-text-field
-                      density="compact"
-                      :placeholder="account.username"
-                      prepend-inner-icon="mdi-account-outline"
-                      variant="outlined"
-                      v-model="account.username"
-                      :error-messages="validationErrors.username"
-                    ></v-text-field>
-
-                    <div class="mt-1 text-center text-subtitle-1 text-medium-emphasis">
-                      Escolha um avatar (opcional):
-                    </div>
-                    <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
-                      <v-file-input
-                        class="d-none"
-                        accept="image/png, image/jpeg, image/jpg"
-                        label="Avatar"
-                        @change="bindCustomAvatar"
-                        id="avatar"
-                      ></v-file-input>
-                      <label class="upload-avatar-label" for="avatar">
-                        <v-avatar :image="previewAvatar ?? item.avatar_url" size="75"></v-avatar>
-                      </label>
-                      <div v-if="validationErrors.avatar.length > 0">
-                        <p
-                          class="error-avatar-message"
-                          v-for="error in validationErrors.avatar"
-                          :key="error"
-                        >
-                          {{ error }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <v-btn
-                      @click="handleEdit"
-                      class="mb-2"
-                      color="blue"
-                      size="large"
-                      variant="flat"
-                      block
-                      :disabled="loadingVisibleModal"
-                    >
-                      <span v-if="!loadingVisibleModal"> Editar Perfil </span>
-                      <div class="d-flex justify-center" v-if="loadingVisibleModal">
-                        <v-progress-circular indeterminate color="white" :size="20" :width="3" />
-                      </div>
-                    </v-btn>
+    <v-main>
+      <v-container class="pa-0">
+        <v-row>
+          <v-col cols="12" v-if="!loadingVisible" class="border px-4 px-md-0 mx-0 mx-md-4">
+            <div class="wrapper-profile">
+              <div class="profile-top">
+                <div style="display: flex; align-items: first baseline; gap: 10px">
+                  <a href="/"
+                    ><img class="arrow-profile" src="../assets/icone_seta.svg" alt=""
+                  /></a>
+                  <div style="display: flex; flex-direction: column">
+                    <span style="font-weight: 700"> Perfil de {{ item.username }} </span>
+                    <p style="font-size: small">{{ tweets.length }} tweets</p>
                   </div>
-                </v-card>
-              </v-dialog>
-            </div>
-          </template>
-        </div>
+                </div>
 
-        <ListCard :tweets="tweets" />
-      </div>
-      <div class="home-explorer">
-        <ExploreComponent />
-      </div>
-    </div>
-  </div>
+                <button @click="editDialog = true"><span>Editar</span></button>
+              </div>
+              <div class="profile-header">
+                <img class="profile-pic" :src="item.avatar_url ?? default_avatar" alt="" />
+                <div class="name-username">
+                  <h3>{{ item.name }} {{ item.surname }}</h3>
+                  <h6>@{{ item.username }}</h6>
+                </div>
+              </div>
+              <div class="spinner-div d-flex justify-center mt-5">
+                <SpinnerComponent v-if="loadingVisible" color="blue" />
+              </div>
+
+              <template>
+                <div class="text-center" style="background-color: brown">
+                  <v-dialog v-model="editDialog" class="profile-dialog">
+                    <!-- Modal de edição de perfil -->
+                    <v-card class="mx-auto pa-12 pb-8 profile-card" elevation="8">
+                      <v-btn icon class="close-btn" @click="editDialog = false">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+
+                      <div>
+                        <h1 class="mt-1 text-center">Editar perfil</h1>
+                        <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
+                        <v-text-field
+                          density="compact"
+                          :placeholder="account.name.toUpperCase()"
+                          prepend-inner-icon="mdi-account-outline"
+                          variant="outlined"
+                          v-model="account.name"
+                          :error-messages="validationErrors.name"
+                        ></v-text-field>
+
+                        <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
+                        <v-text-field
+                          density="compact"
+                          :placeholder="account.surname.toUpperCase()"
+                          prepend-inner-icon="mdi-account-outline"
+                          variant="outlined"
+                          v-model="account.surname"
+                          :error-messages="validationErrors.surname"
+                        ></v-text-field>
+
+                        <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
+                        <v-text-field
+                          density="compact"
+                          :placeholder="account.username"
+                          prepend-inner-icon="mdi-account-outline"
+                          variant="outlined"
+                          v-model="account.username"
+                          :error-messages="validationErrors.username"
+                        ></v-text-field>
+
+                        <div class="mt-1 text-center text-subtitle-1 text-medium-emphasis">
+                          Escolha um avatar (opcional):
+                        </div>
+                        <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
+                          <v-file-input
+                            class="d-none"
+                            accept="image/png, image/jpeg, image/jpg"
+                            label="Avatar"
+                            @change="bindCustomAvatar"
+                            id="avatar"
+                          ></v-file-input>
+                          <label class="upload-avatar-label" for="avatar">
+                            <v-avatar
+                              :image="previewAvatar ?? item.avatar_url"
+                              size="75"
+                            ></v-avatar>
+                          </label>
+                          <div v-if="validationErrors.avatar.length > 0">
+                            <p
+                              class="error-avatar-message"
+                              v-for="error in validationErrors.avatar"
+                              :key="error"
+                            >
+                              {{ error }}
+                            </p>
+                          </div>
+                        </div>
+
+                        <v-btn
+                          @click="handleEdit"
+                          class="mb-2"
+                          color="blue"
+                          size="large"
+                          variant="flat"
+                          block
+                          :disabled="loadingVisibleModal"
+                        >
+                          <span v-if="!loadingVisibleModal"> Editar Perfil </span>
+                          <div class="d-flex justify-center" v-if="loadingVisibleModal">
+                            <v-progress-circular
+                              indeterminate
+                              color="white"
+                              :size="20"
+                              :width="3"
+                            />
+                          </div>
+                        </v-btn>
+                      </div>
+                    </v-card>
+                  </v-dialog>
+                </div>
+              </template>
+            </div>
+          </v-col>
+          <v-col>
+            <ListCard :tweets="tweets" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+
+    <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
+      <ExploreComponent />
+    </v-navigation-drawer>
+  </v-app>
 </template>
 
 <style scoped>
@@ -299,17 +320,7 @@ async function fetchTweets() {
   padding: 0;
   margin: 0;
 }
-.wrapper-profile {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  border-bottom: 2px solid #e9e9e9;
-  color: white;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  padding-bottom: 10px;
-}
+
 .profile-top {
   display: flex;
   flex-direction: row;
@@ -319,6 +330,7 @@ async function fetchTweets() {
   padding-left: 20px;
   padding-right: 20px;
 }
+
 .profile-header {
   display: flex;
   flex-direction: column;
@@ -350,25 +362,7 @@ async function fetchTweets() {
   top: 50%;
 }
 
-.home-container {
-  display: flex;
-  width: 100vw;
-  height: 100%;
-  background: #ffffff;
-}
 
-.home-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 20%;
-  height: 100vh;
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  color: white;
-}
 .home-content {
   width: 55%;
   height: 100%;
@@ -427,59 +421,5 @@ button::before {
 
 button:hover::before {
   transform: translate3d(100%, 0, 0);
-}
-.profile-dialog .v-card {
-  min-width: 720px;
-  border-radius: 8px;
-  margin: 0;
-}
-
-.profile-dialog .close-btn {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 10;
-}
-@media (max-width: 600px) {
-  .profile-dialog .v-card {
-    min-width: 100vw;
-    min-height: 100vh;
-    border-radius: 0;
-    margin: 0;
-  }
-}
-@media screen and (max-width: 1000px) {
-  .home-nav {
-    display: none;
-  }
-  .home-explorer {
-    display: none;
-  }
-  .home-content {
-    width: 100vw !important;
-
-    height: 100% !important;
-    border-right: none;
-    border-left: none;
-    border-bottom: 2px solid #e9e9e9;
-  }
-}
-@media screen and (max-width: 350px) {
-  button {
-    font-size: 10px;
-    padding: 0.1rem 0.6rem;
-  }
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 </style>
