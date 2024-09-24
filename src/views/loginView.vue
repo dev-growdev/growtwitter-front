@@ -93,7 +93,7 @@ const handleLogin = async () => {
             >
 
             <v-card-text class="text-center">
-              <RouterLink to="/login" class="text-blue text-decoration-none">
+              <RouterLink to="/register" class="text-blue text-decoration-none">
                 Não tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
               </RouterLink>
             </v-card-text>
