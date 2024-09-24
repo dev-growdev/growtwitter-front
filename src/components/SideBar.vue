@@ -62,7 +62,7 @@ async function handleLogout() {
         </div>
         <div class="d-flex align-center ga-2">
           <ProfileLogo class="img-icon" />
-          <RouterLink to="/profile" class="text-black font-weight-semibold text-h6 pt-2">
+          <RouterLink :to="`/profile/${item.id}`" class="text-black font-weight-semibold text-h6 pt-2">
             Perfil
           </RouterLink>
         </div>

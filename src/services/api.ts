@@ -98,7 +98,19 @@ export const getUser = async () => {
     return error?.response;
   }
 };
+export const getUserbyId = async (id: number) => {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
 
+  try {
+    const response = await client.get('/users/'+id, config);
+
+    return response;
+  } catch (error: any) {
+    return error?.response;
+  }
+};
 export async function postLike(postId: number) {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
