@@ -247,7 +247,7 @@ async function fetchTweets() {
 
 <template>
   <v-app id="app">
-    <v-navigation-drawer width="470" class="d-none w-0 w-md-25 d-md-flex border-0 pa-0">
+    <v-navigation-drawer width="470" class="d-none d-md-flex border-0 pa-0">
       <SideBar :item="item" />
     </v-navigation-drawer>
 
@@ -341,31 +341,31 @@ async function fetchTweets() {
       </div>
     </template>
 
-    <v-main>
+    <v-main class="mx-0 mx-md-4">
       <v-container class="mt-0 pa-0">
         <v-row class="border ga-4">
           <v-col class="pa-0 ma-0">
-            <v-img
-              class="bg-red"
-              :src="`../assets/default-banner.png`"
-              height="215"
-              aspect-ratio="16/9"
-              cover
-            />
+            <v-img class="bg-grey" height="215" aspect-ratio="16/9" cover />
             <img
-              class="profile-img mx-2 mt-1 rounded-circle border-md"
+              class="profile-img mx-2 mt-4 rounded-circle border-md"
               width="100"
               height="100"
               :src="anotherUser.avatar_url ?? default_avatar"
               alt=""
             />
-            <!-- <img src="../assets/default-banner.png" class="d-flex fill-height" width="700" /> -->
           </v-col>
           <v-col cols="12" class="d-flex flex-row justify-end ga-2 py-0">
             <button v-if="item.id === anotherUser.id" @click="editDialog = true">
               <span>Editar</span>
             </button>
-            <button><span class="font-weight-black">...</span></button>
+            <v-btn
+              :loading="btnLoading"
+              class="d-flex justify-start align-self-start"
+              height="32"
+              @click="handleFollow"
+            >
+              <span>{{ isFollowing ? 'Seguindo' : 'Seguir' }}</span>
+            </v-btn>
           </v-col>
           <v-col class="py-0">
             <v-list class="py-0">
@@ -373,9 +373,6 @@ async function fetchTweets() {
                 <span class="text-h4 font-weight-bold"
                   >{{ anotherUser.name }} {{ anotherUser.surname }}</span
                 >
-                <v-btn :loading="btnLoading" class="flex-grow-1" height="32" @click="handleFollow">
-                  <span> {{ isFollowing ? 'Seguindo' : 'Seguir' }}</span>
-                </v-btn>
                 <span class="text-h6">@{{ anotherUser.username }}</span>
               </div>
               <div class="d-flex ga-4">
@@ -403,7 +400,7 @@ async function fetchTweets() {
     <v-navigation-drawer
       width="455"
       location="right"
-      class="w-0 w-md-25 d-none d-md-flex border-0 pa-2"
+      class="d-none d-md-flex border-0 pa-2"
     >
       <ExploreComponent />
     </v-navigation-drawer>
