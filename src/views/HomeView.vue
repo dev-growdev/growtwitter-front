@@ -9,7 +9,7 @@ import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 
-const hasMessage = ref<boolean>(true);
+const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
