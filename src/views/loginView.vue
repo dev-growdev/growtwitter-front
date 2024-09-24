@@ -43,40 +43,66 @@ const handleLogin = async () => {
   </BackgroundOverlay>
   <div class="background">
     <v-container>
-      <v-row>
-        <v-col cols="12" sm="6" class="bg-blue-darken-2 rounded-s-lg pa-8">
-          <v-card-title>Growtwitter</v-card-title>
-          <v-card-subtitle class="text-white"
-            >Trabalho final do bloco intermediário</v-card-subtitle
-          >
-          <v-card-text>
-            O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais que
-            buscam uma experiência familiar e poderosa, semelhante ao Twitter, mas com um toque
-            único. Seja parte desta comunidade que valoriza a liberdade de expressão, a conexão com
-            pessoas de todo o mundo e a disseminação de ideias.
-          </v-card-text>
-        </v-col>
-        <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8">
-          <v-card-title>Entrar no Growtwitter</v-card-title>
+      <v-card
+        class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8"
+        elevation="8"
+        max-width="900"
+        rounded="lg"
+      >
+        <v-row class="d-flex align-center ">
+          <v-col cols="12" sm="6" class="bg-blue rounded py-15" >
+            <v-card-title>Growtwitter</v-card-title>
+            <v-card-subtitle class="text-white"
+              >Trabalho final do bloco intermediário</v-card-subtitle
+            >
+            <v-card-text >
+              O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais
+              que buscam uma experiência familiar e poderosa, semelhante ao Twitter, mas com um
+              toque único. Seja parte desta comunidade que valoriza a liberdade de expressão, a
+              conexão com pessoas de todo o mundo e a disseminação de ideias.
+            </v-card-text>
+          </v-col>
 
-          <v-text-field label="Email" v-model="email"></v-text-field>
-          <v-text-field type="password" label="Password" v-model="password"></v-text-field>
+          <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8">
+            <h1 class="pa-5 mb-5 text-center register-title">Entrar no Growtwitter</h1>
 
-          <div class="keep-connected-container">
-            <label for="keep-connected">Permanecer conectado:</label>
-            <input type="checkbox" id="keep-connected" v-model="keepConnected" />
-          </div>
+            <v-text-field
+              density="compact"
+              placeholder="Digite seu endereço de e-mail"
+              prepend-inner-icon="mdi-email-outline"
+              variant="outlined"
+              v-model="email"
+            ></v-text-field>
 
-          <v-btn block @click="handleLogin" class="bg-blue-darken-2 my-4">Enviar</v-btn>
+            <v-text-field
+              :type="visible ? 'text' : 'password'"
+              density="compact"
+              placeholder="Digite sua  senha "
+              prepend-inner-icon="mdi-lock-outline"
+              variant="outlined"
+              v-model="password"
+            ></v-text-field>
 
-          <v-card-text
-            >Não tem uma conta? <RouterLink to="/register">Clique aqui</RouterLink></v-card-text
-          >
-          <v-card-text
-            ><span class="error-message" v-if="error">{{ error }}</span></v-card-text
-          >
-        </v-col>
-      </v-row>
+            <div class="keep-connected-container pa-5">
+              <label for="keep-connected">Permanecer conectado:</label>
+              <input type="checkbox" id="keep-connected" v-model="keepConnected" />
+            </div>
+
+            <v-btn @click="handleLogin" class="mb-2" color="blue" size="large" variant="flat" block
+              >Enviar</v-btn
+            >
+
+            <v-card-text class="text-center">
+              <RouterLink to="/register" class="text-blue text-decoration-none">
+                Não tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
+              </RouterLink>
+            </v-card-text>
+            <v-card-text
+              ><span class="error-message" v-if="error">{{ error }}</span></v-card-text
+            >
+          </v-col>
+        </v-row>
+      </v-card>
     </v-container>
   </div>
 </template>
@@ -90,64 +116,10 @@ const handleLogin = async () => {
   background-color: #f0f0f0;
 }
 
-.container {
-  display: flex;
-  width: 800px;
-  height: 450px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: white;
-}
-
-.info-section {
-  flex: 1;
-  background-color: #4285f4;
-  color: white;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.info-section h1 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
-}
-
-.info-section h3 {
-  font-size: 1.2em;
-  margin-bottom: 1em;
-}
-
-.info-section p {
-  font-size: 1em;
-  line-height: 1.5;
-}
-
-.form-section {
-  flex: 1;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.form-section h2 {
-  margin-bottom: 1em;
-  font-size: 1.5em;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.form-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+@media (max-width: 600px) {
+  .bg-blue {
+    display: none;
+  }
 }
 
 .keep-connected-container {
