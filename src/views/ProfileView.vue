@@ -2,7 +2,14 @@
 import SideBar from '@/components/SideBar.vue';
 import defaultAvatar from '@/assets/default-avatar.png';
 import ListCard from '@/components/ListCard.vue';
-import { edit, getUser, showPosts, getUserbyId } from '@/services/api';
+import {
+  edit,
+  getUser,
+  showPosts,
+  getUserbyId,
+  getFollowersAndFollowingById,
+  postFollow
+} from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import { onMounted, reactive, ref } from 'vue';
@@ -11,8 +18,9 @@ import type { CreateAccountType, RegisterAccountValidationType, UserType } from 
 import useAvatar from '@/services/avatar';
 import axios from 'axios';
 import ExploreComponent from '@/components/ExploreComponent.vue';
-import { useRoute } from 'vue-router'
-const route = useRoute()
+import { useRoute } from 'vue-router';
+import ApplicationBar from '@/components/ApplicationBar.vue';
+const route = useRoute();
 
 const loadingVisible = ref<boolean>(false);
 const loadingVisibleModal = ref<boolean>(false);
@@ -24,8 +32,11 @@ const item = ref<UserType>({
   email: '',
   password: '',
   avatar_url: defaultAvatar,
-  id: 0
+  id: 0,
+  followers_count: 0,
+  following_count: 0
 });
+
 const anotherUser = ref<UserType>({
   name: '',
   surname: '',
@@ -33,7 +44,9 @@ const anotherUser = ref<UserType>({
   email: '',
   password: '',
   avatar_url: defaultAvatar,
-  id: 0
+  id: 0,
+  followers_count: 0,
+  following_count: 0
 });
 
 const editDialog = ref<boolean>(false);
@@ -50,8 +63,6 @@ async function handleGetUser() {
 
   item.value = JSON.parse(userData);
 
-
-
   account.username = item.value.username;
   account.name = item.value.name;
   account.surname = item.value.surname;
@@ -63,6 +74,7 @@ async function handleGetUser() {
 // MODAL
 
 const account = reactive<CreateAccountType>({
+  id: item.value.id,
   username: item.value.username,
   name: item.value.name,
   surname: item.value.surname,
@@ -165,20 +177,58 @@ const handleEdit = async () => {
 
 // END MODAL
 
-async function getuserbyid(id: number) {
+const isFollowing = ref<boolean>(false);
+const btnLoading = ref<boolean>(false);
+
+async function getFollowersAndFollowing(id: number) {
   try {
-    const response = await getUserbyId(id);
+    const response = await getFollowersAndFollowingById(id);
+    if (
+      response.data.followersData.some((follower: any) => follower.followerId === item.value.id)
+    ) {
+      isFollowing.value = true;
+    }
+    anotherUser.value.followers_count = response.data.followings;
+    anotherUser.value.following_count = response.data.followers;
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function handleFollow() {
+  try {
+    btnLoading.value = true;
+    console.log(anotherUser.value.followers_count);
 
-    anotherUser.value = response.data.data;
-
+    const response = await postFollow(route.params.id, item.value.id);
+    console.log(response);
+    if (isFollowing.value) {
+      anotherUser.value.following_count--;
+      isFollowing.value = false;
+    } else {
+      anotherUser.value.following_count++;
+      isFollowing.value = true;
+    }
+    btnLoading.value = false;
   } catch (error) {
     console.log(error);
   }
 }
 
+async function getuserbyid(id: number) {
+  try {
+    loadingVisible.value = true;
+    const response = await getUserbyId(id);
+    loadingVisible.value = false;
+
+    anotherUser.value = response.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 onMounted(() => {
   getuserbyid(route.params.id);
+  getFollowersAndFollowing(route.params.id);
   handleGetUser();
   fetchTweets();
 });
@@ -188,16 +238,16 @@ const endpoint = '/posts/' + route.params.id;
 
 async function fetchTweets() {
   loadingVisible.value = true;
-
   const response = await showPosts(endpoint);
 
   loadingVisible.value = false;
   tweets.value = response.data.data;
 }
 </script>
+
 <template>
   <v-app id="app">
-    <v-navigation-drawer width="470" class="border-0 pa-0">
+    <v-navigation-drawer width="470" class="d-none d-md-flex border-0 pa-0">
       <SideBar :item="item" />
     </v-navigation-drawer>
 
@@ -205,160 +255,175 @@ async function fetchTweets() {
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
-    <v-main>
-      <v-container class="pa-0">
-        <v-row>
-          <v-col cols="12" v-if="!loadingVisible" class="border px-4 px-md-0 mx-0 mx-md-4">
-            <div class="wrapper-profile">
-              <div class="profile-top">
-                <div style="display: flex; align-items: first baseline; gap: 10px">
-                  <a href="/"><img class="arrow-profile" src="../assets/icone_seta.svg" alt="" /></a>
-                  <div style="display: flex; flex-direction: column">
-                    <span style="font-weight: 700"> Perfil de {{ anotherUser.username }} </span>
-                    <p style="font-size: small">{{ tweets.length }} tweets</p>
-                  </div>
-                </div>
+    <!-- Modal para editar o perfil -->
+    <template>
+      <div class="text-center" style="background-color: brown">
+        <v-dialog v-model="editDialog" class="mx-16">
+          <v-card class="pa-12 pb-8 profile-card" elevation="8">
+            <v-btn icon class="close-btn" @click="editDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
 
-                <button v-if="item.id === anotherUser.id" @click="editDialog = true"><span>Editar</span></button>
+            <div>
+              <h1 class="mt-1 text-center">Editar perfil</h1>
+              <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
+              <v-text-field
+                density="compact"
+                :placeholder="account.name.toUpperCase()"
+                prepend-inner-icon="mdi-account-outline"
+                variant="outlined"
+                v-model="account.name"
+                :error-messages="validationErrors.name"
+              ></v-text-field>
+
+              <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
+              <v-text-field
+                density="compact"
+                :placeholder="account.surname.toUpperCase()"
+                prepend-inner-icon="mdi-account-outline"
+                variant="outlined"
+                v-model="account.surname"
+                :error-messages="validationErrors.surname"
+              ></v-text-field>
+
+              <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
+              <v-text-field
+                density="compact"
+                :placeholder="account.username"
+                prepend-inner-icon="mdi-account-outline"
+                variant="outlined"
+                v-model="account.username"
+                :error-messages="validationErrors.username"
+              ></v-text-field>
+
+              <div class="mt-1 text-center text-subtitle-1 text-medium-emphasis">
+                Escolha um avatar (opcional):
               </div>
-              <div class="profile-header">
-                <img class="profile-pic" :src="anotherUser.avatar_url ?? default_avatar" alt="" />
-                <div class="name-username">
-                  <h3>{{ anotherUser.name }} {{ anotherUser.surname }}</h3>
-                  <h6>@{{ anotherUser.username }}</h6>
+              <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
+                <v-file-input
+                  class="d-none"
+                  accept="image/png, image/jpeg, image/jpg"
+                  label="Avatar"
+                  @change="bindCustomAvatar"
+                  id="avatar"
+                ></v-file-input>
+                <label class="upload-avatar-label" for="avatar">
+                  <v-avatar :image="previewAvatar ?? item.avatar_url" size="75"></v-avatar>
+                </label>
+                <div v-if="validationErrors.avatar.length > 0">
+                  <p
+                    class="error-avatar-message"
+                    v-for="error in validationErrors.avatar"
+                    :key="error"
+                  >
+                    {{ error }}
+                  </p>
                 </div>
               </div>
-              <div class="spinner-div d-flex justify-center mt-5">
-                <SpinnerComponent v-if="loadingVisible" color="blue" />
-              </div>
 
-              <template>
-                <div class="text-center" style="background-color: brown">
-                  <v-dialog v-model="editDialog" class="profile-dialog">
-                    <!-- Modal de edição de perfil -->
-                    <v-card class="mx-auto pa-12 pb-8 profile-card" elevation="8">
-                      <v-btn icon class="close-btn" @click="editDialog = false">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-
-                      <div>
-                        <h1 class="mt-1 text-center">Editar perfil</h1>
-                        <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-                        <v-text-field density="compact" :placeholder="account.name.toUpperCase()"
-                          prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.name"
-                          :error-messages="validationErrors.name"></v-text-field>
-
-                        <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
-                        <v-text-field density="compact" :placeholder="account.surname.toUpperCase()"
-                          prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.surname"
-                          :error-messages="validationErrors.surname"></v-text-field>
-
-                        <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
-                        <v-text-field density="compact" :placeholder="account.username"
-                          prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.username"
-                          :error-messages="validationErrors.username"></v-text-field>
-
-                        <div class="mt-1 text-center text-subtitle-1 text-medium-emphasis">
-                          Escolha um avatar (opcional):
-                        </div>
-                        <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
-                          <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
-                            @change="bindCustomAvatar" id="avatar"></v-file-input>
-                          <label class="upload-avatar-label" for="avatar">
-                            <v-avatar :image="previewAvatar ?? item.avatar_url" size="75"></v-avatar>
-                          </label>
-                          <div v-if="validationErrors.avatar.length > 0">
-                            <p class="error-avatar-message" v-for="error in validationErrors.avatar" :key="error">
-                              {{ error }}
-                            </p>
-                          </div>
-                        </div>
-
-                        <v-btn @click="handleEdit" class="mb-2" color="blue" size="large" variant="flat" block
-                          :disabled="loadingVisibleModal">
-                          <span v-if="!loadingVisibleModal"> Editar Perfil </span>
-                          <div class="d-flex justify-center" v-if="loadingVisibleModal">
-                            <v-progress-circular indeterminate color="white" :size="20" :width="3" />
-                          </div>
-                        </v-btn>
-                      </div>
-                    </v-card>
-                  </v-dialog>
+              <v-btn
+                @click="handleEdit"
+                class="mb-2"
+                color="blue"
+                size="large"
+                variant="flat"
+                block
+                :disabled="loadingVisibleModal"
+              >
+                <span v-if="!loadingVisibleModal"> Editar Perfil </span>
+                <div class="d-flex justify-center" v-if="loadingVisibleModal">
+                  <v-progress-circular indeterminate color="white" :size="20" :width="3" />
                 </div>
-              </template>
+              </v-btn>
             </div>
+          </v-card>
+        </v-dialog>
+      </div>
+    </template>
+
+    <v-main class="mx-0 mx-md-4">
+      <v-container class="mt-0 pa-0">
+        <v-row class="border ga-4">
+          <v-col class="pa-0 ma-0">
+            <v-img class="bg-grey" height="215" aspect-ratio="16/9" cover />
+            <img
+              class="profile-img mx-2 mt-4 rounded-circle border-md"
+              width="100"
+              height="100"
+              :src="anotherUser.avatar_url ?? default_avatar"
+              alt=""
+            />
           </v-col>
-          <v-col>
+          <v-col cols="12" class="d-flex flex-row justify-end ga-2 py-0">
+            <button v-if="item.id === anotherUser.id" @click="editDialog = true">
+              <span>Editar</span>
+            </button>
+            <v-btn
+              :loading="btnLoading"
+              class="d-flex justify-start align-self-start"
+              height="32"
+              @click="handleFollow"
+            >
+              <span>{{ isFollowing ? 'Seguindo' : 'Seguir' }}</span>
+            </v-btn>
+          </v-col>
+          <v-col class="py-0">
+            <v-list class="py-0">
+              <div class="d-flex flex-column">
+                <span class="text-h4 font-weight-bold"
+                  >{{ anotherUser.name }} {{ anotherUser.surname }}</span
+                >
+                <span class="text-h6">@{{ anotherUser.username }}</span>
+              </div>
+              <div class="d-flex ga-4">
+                <p class="text-h7">
+                  <span class="font-weight-bold">{{ anotherUser.followers_count ?? '0' }}</span>
+                  seguidores
+                </p>
+                <p class="text-h7">
+                  <span class="font-weight-bold">{{ anotherUser.following_count ?? '0' }}</span>
+                  seguindo
+                </p>
+                <p class="text-h7">
+                  <span class="font-weight-bold">{{ tweets.length }}</span> posts
+                </p>
+              </div>
+            </v-list>
+          </v-col>
+          <v-col cols="12">
             <ListCard :tweets="tweets" />
           </v-col>
         </v-row>
       </v-container>
     </v-main>
 
-    <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
+    <v-navigation-drawer
+      width="455"
+      location="right"
+      class="d-none d-md-flex border-0 pa-2"
+    >
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
 </template>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-.profile-top {
-  display: flex;
-  flex-direction: row;
-  margin-top: 0.5rem;
-  justify-content: space-between;
-  width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-.profile-header {
-  display: flex;
-  flex-direction: column;
-  padding-left: 30px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.profile-pic {
-  width: 7rem;
-  height: 7rem;
-  border: 4px solid #e9e9e9;
-  border-radius: 50%;
-}
-
-.edit-btn {
-  font-size: 0.8rem;
-  align-self: first baseline;
-  margin-bottom: 1rem;
-  margin-left: 1rem;
-  background-color: #289ef0;
-  border: #289ef0 1px solid;
-  color: #ffffff;
-  height: 1.3rem;
-  width: 3.5rem;
-  border-radius: 0.5rem;
+@media (max-width: 600px) {
+  .spinner-div {
+    position: fixed;
+    top: 50%;
+  }
 }
 
 .spinner-div {
   position: absolute;
-  left: 46%;
   top: 50%;
+  left: 50%;
 }
 
-
-.home-content {
-  width: 55%;
-  height: 100%;
-  border-right: 2px solid #e9e9e9;
-  border-left: 2px solid #e9e9e9;
-  border-bottom: 2px solid #e9e9e9;
+.profile-img {
+  position: absolute;
+  top: 16.375vh;
 }
 
 button {
