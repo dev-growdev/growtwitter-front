@@ -2,7 +2,7 @@
 import SideBar from '@/components/SideBar.vue';
 import defaultAvatar from '@/assets/default-avatar.png';
 import ListCard from '@/components/ListCard.vue';
-import { edit, getUser, showPosts } from '@/services/api';
+import { edit, getUser, showPosts, getUserbyId } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import { onMounted, reactive, ref } from 'vue';
@@ -11,6 +11,8 @@ import type { CreateAccountType, RegisterAccountValidationType, UserType } from 
 import useAvatar from '@/services/avatar';
 import axios from 'axios';
 import ExploreComponent from '@/components/ExploreComponent.vue';
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
 const loadingVisible = ref<boolean>(false);
 const loadingVisibleModal = ref<boolean>(false);
@@ -21,7 +23,17 @@ const item = ref<UserType>({
   username: '',
   email: '',
   password: '',
-  avatar_url: defaultAvatar
+  avatar_url: defaultAvatar,
+  id: 0
+});
+const anotherUser = ref<UserType>({
+  name: '',
+  surname: '',
+  username: '',
+  email: '',
+  password: '',
+  avatar_url: defaultAvatar,
+  id: 0
 });
 
 const editDialog = ref<boolean>(false);
@@ -38,11 +50,14 @@ async function handleGetUser() {
 
   item.value = JSON.parse(userData);
 
+
+
   account.username = item.value.username;
   account.name = item.value.name;
   account.surname = item.value.surname;
   account.email = item.value.email;
   account.password = item.value.password;
+  account.id = item.value.id;
 }
 
 // MODAL
@@ -150,13 +165,26 @@ const handleEdit = async () => {
 
 // END MODAL
 
+async function getuserbyid(id: number) {
+  try {
+    const response = await getUserbyId(id);
+
+    anotherUser.value = response.data.data;
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
 onMounted(() => {
+  getuserbyid(route.params.id);
   handleGetUser();
   fetchTweets();
 });
 
 const tweets = ref<TweetType[]>([]);
-const endpoint = '/postsbyuserauth';
+const endpoint = '/posts/' + route.params.id;
 
 async function fetchTweets() {
   loadingVisible.value = true;
@@ -184,22 +212,20 @@ async function fetchTweets() {
             <div class="wrapper-profile">
               <div class="profile-top">
                 <div style="display: flex; align-items: first baseline; gap: 10px">
-                  <a href="/"
-                    ><img class="arrow-profile" src="../assets/icone_seta.svg" alt=""
-                  /></a>
+                  <a href="/"><img class="arrow-profile" src="../assets/icone_seta.svg" alt="" /></a>
                   <div style="display: flex; flex-direction: column">
-                    <span style="font-weight: 700"> Perfil de {{ item.username }} </span>
+                    <span style="font-weight: 700"> Perfil de {{ anotherUser.username }} </span>
                     <p style="font-size: small">{{ tweets.length }} tweets</p>
                   </div>
                 </div>
 
-                <button @click="editDialog = true"><span>Editar</span></button>
+                <button v-if="item.id === anotherUser.id" @click="editDialog = true"><span>Editar</span></button>
               </div>
               <div class="profile-header">
-                <img class="profile-pic" :src="item.avatar_url ?? default_avatar" alt="" />
+                <img class="profile-pic" :src="anotherUser.avatar_url ?? default_avatar" alt="" />
                 <div class="name-username">
-                  <h3>{{ item.name }} {{ item.surname }}</h3>
-                  <h6>@{{ item.username }}</h6>
+                  <h3>{{ anotherUser.name }} {{ anotherUser.surname }}</h3>
+                  <h6>@{{ anotherUser.username }}</h6>
                 </div>
               </div>
               <div class="spinner-div d-flex justify-center mt-5">
@@ -218,80 +244,41 @@ async function fetchTweets() {
                       <div>
                         <h1 class="mt-1 text-center">Editar perfil</h1>
                         <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-                        <v-text-field
-                          density="compact"
-                          :placeholder="account.name.toUpperCase()"
-                          prepend-inner-icon="mdi-account-outline"
-                          variant="outlined"
-                          v-model="account.name"
-                          :error-messages="validationErrors.name"
-                        ></v-text-field>
+                        <v-text-field density="compact" :placeholder="account.name.toUpperCase()"
+                          prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.name"
+                          :error-messages="validationErrors.name"></v-text-field>
 
                         <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
-                        <v-text-field
-                          density="compact"
-                          :placeholder="account.surname.toUpperCase()"
-                          prepend-inner-icon="mdi-account-outline"
-                          variant="outlined"
-                          v-model="account.surname"
-                          :error-messages="validationErrors.surname"
-                        ></v-text-field>
+                        <v-text-field density="compact" :placeholder="account.surname.toUpperCase()"
+                          prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.surname"
+                          :error-messages="validationErrors.surname"></v-text-field>
 
                         <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
-                        <v-text-field
-                          density="compact"
-                          :placeholder="account.username"
-                          prepend-inner-icon="mdi-account-outline"
-                          variant="outlined"
-                          v-model="account.username"
-                          :error-messages="validationErrors.username"
-                        ></v-text-field>
+                        <v-text-field density="compact" :placeholder="account.username"
+                          prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.username"
+                          :error-messages="validationErrors.username"></v-text-field>
 
                         <div class="mt-1 text-center text-subtitle-1 text-medium-emphasis">
                           Escolha um avatar (opcional):
                         </div>
                         <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
-                          <v-file-input
-                            class="d-none"
-                            accept="image/png, image/jpeg, image/jpg"
-                            label="Avatar"
-                            @change="bindCustomAvatar"
-                            id="avatar"
-                          ></v-file-input>
+                          <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
+                            @change="bindCustomAvatar" id="avatar"></v-file-input>
                           <label class="upload-avatar-label" for="avatar">
-                            <v-avatar
-                              :image="previewAvatar ?? item.avatar_url"
-                              size="75"
-                            ></v-avatar>
+                            <v-avatar :image="previewAvatar ?? item.avatar_url" size="75"></v-avatar>
                           </label>
                           <div v-if="validationErrors.avatar.length > 0">
-                            <p
-                              class="error-avatar-message"
-                              v-for="error in validationErrors.avatar"
-                              :key="error"
-                            >
+                            <p class="error-avatar-message" v-for="error in validationErrors.avatar" :key="error">
                               {{ error }}
                             </p>
                           </div>
                         </div>
 
-                        <v-btn
-                          @click="handleEdit"
-                          class="mb-2"
-                          color="blue"
-                          size="large"
-                          variant="flat"
-                          block
-                          :disabled="loadingVisibleModal"
-                        >
+                        <v-btn @click="handleEdit" class="mb-2" color="blue" size="large" variant="flat" block
+                          :disabled="loadingVisibleModal">
                           <span v-if="!loadingVisibleModal"> Editar Perfil </span>
                           <div class="d-flex justify-center" v-if="loadingVisibleModal">
-                            <v-progress-circular
-                              indeterminate
-                              color="white"
-                              :size="20"
-                              :width="3"
-                            />
+                            <v-progress-circular indeterminate color="white" :size="20" :width="3" />
                           </div>
                         </v-btn>
                       </div>
@@ -338,12 +325,14 @@ async function fetchTweets() {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
 .profile-pic {
   width: 7rem;
   height: 7rem;
   border: 4px solid #e9e9e9;
   border-radius: 50%;
 }
+
 .edit-btn {
   font-size: 0.8rem;
   align-self: first baseline;
@@ -356,6 +345,7 @@ async function fetchTweets() {
   width: 3.5rem;
   border-radius: 0.5rem;
 }
+
 .spinner-div {
   position: absolute;
   left: 46%;

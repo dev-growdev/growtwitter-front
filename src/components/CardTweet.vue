@@ -42,11 +42,17 @@ onMounted(() => {
   <div class="card-principal rounded-0">
     <v-card-actions class="ga-2">
       <div class="d-block align-self-start">
-        <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+        <RouterLink :to="`/profile/${data.user.id}`">
+          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+        </RouterLink>
+
       </div>
       <div class="d-block">
         <div class="tweet-header">
-          <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+          <RouterLink :to="`/profile/${data.user.id}`">
+            <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+          </RouterLink>
+
           <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
         </div>
         <p class="tweet-content">{{ data.content }}</p>
