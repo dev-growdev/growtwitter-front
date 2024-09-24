@@ -34,15 +34,15 @@ onMounted(() => {
 
     <ApplicationBar class="d-flex d-lg-none" />
 
-    <v-main>
-      <v-container class="border pa-0">
-        <v-row> 
-          <v-col class="mx-4 mt-6">
+    <v-main class="mx-0 mx-md-4">
+      <v-container class="pa-0">
+        <v-row class="border px-4 px-md-0"> 
+          <v-col class="mx-2 mt-6">
             <h2>O que está acontecendo?</h2>
           </v-col>
           <v-col
             cols="12"
-            class="d-flex flex-column border-t mx-2 py-4"
+            class="d-flex flex-column border-t py-4"
             v-for="(item, index) in items"
             :key="index"
           >
