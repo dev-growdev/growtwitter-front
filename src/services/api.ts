@@ -111,6 +111,36 @@ export const getUserbyId = async (id: number) => {
     return error?.response;
   }
 };
+export const getFollowersAndFollowingById = async (id: number) => {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+
+  try {
+    const response = await client.get('/follow/'+id, config);
+
+    return response;
+  } catch (error: any) {
+    return error?.response;
+  }
+};
+export const postFollow = async (followingId: number,followerId : number) => {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+  const data = {
+    followingId: followingId,
+    followerId: followerId
+  };
+  try {
+    const response = await client.post('/follow/',data, config);
+
+    return response;
+  } catch (error: any) {
+    return error?.response;
+  }
+};
+
 export async function postLike(postId: number) {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
