@@ -50,7 +50,7 @@ const handleLogin = async () => {
         rounded="lg"
       >
         <v-row class="d-flex align-center ">
-          <v-col cols="6" class="bg-blue rounded py-15" >
+          <v-col cols="12" sm="6" class="bg-blue rounded py-15" >
             <v-card-title>Growtwitter</v-card-title>
             <v-card-subtitle class="text-white"
               >Trabalho final do bloco intermediário</v-card-subtitle
@@ -63,7 +63,7 @@ const handleLogin = async () => {
             </v-card-text>
           </v-col>
 
-          <v-col cols="6" class="bg-white rounded-e-lg pa-8">
+          <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8">
             <h1 class="pa-5 mb-5 text-center register-title">Entrar no Growtwitter</h1>
 
             <v-text-field
