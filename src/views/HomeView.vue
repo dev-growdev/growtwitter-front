@@ -9,9 +9,36 @@ import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 
+const hasMessage = ref<boolean>(false);
+const message = ref<string>('');
+const messageTimeout = ref<number>(-1);
+const alertType = ref<string>('');
+
 const listenEmit = () => {
+  showMessage('Tweet publicado com sucesso!', 'success');
   fetchTweets();
 };
+
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+async function showMessage(messageText: string, type: string) {
+  hasMessage.value = true;
+  message.value = messageText;
+  alertType.value = type;
+
+  if (messageTimeout.value) clearTimeout(messageTimeout.value);
+    hasMessage.value = true;
+    await delay(3000);
+    hasMessage.value = false;
+}
+
+function clearMessage() {
+  clearTimeout(messageTimeout.value);
+  hasMessage.value = false;
+}
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
@@ -58,14 +85,25 @@ onUnmounted(() => {
 
 <template>
   <v-app id="app">
+    <v-model class="model-alert">
+          <v-alert
+            v-if="hasMessage"
+            closable
+            class="alert fixed-alert"
+            :text="message"
+            :color="alertType"
+            @click:close="clearMessage()"
+          ></v-alert>
+      </v-model>
     <v-navigation-drawer width="470" class="border-0 pa-0">
-      <SideBar :item="item" @call-emit="listenEmit" />
+      <SideBar :item="item" @call-emit="listenEmit"/>
     </v-navigation-drawer>
 
+    
     <ApplicationBar class="d-flex d-lg-none" />
-
+    
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
-
+    
     <v-main>
       <v-container class="pa-0">
         <v-row>
@@ -99,5 +137,13 @@ onUnmounted(() => {
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+.alert {
+  position: absolute;
+  top: 20px;
+  left: 30%;
+  right: 30%;
+  z-index: 9999;
 }
 </style>

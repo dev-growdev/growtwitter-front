@@ -67,7 +67,7 @@ async function handleLogout() {
           </RouterLink>
         </div>
         <div class="d-flex align-center ga-0">
-          <ButtonTweet @add-tweet="handleEmit" />
+          <ButtonTweet @add-tweet="handleEmit"/>
         </div>
       </v-list>
     </div>
