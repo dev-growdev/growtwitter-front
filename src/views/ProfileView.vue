@@ -2,7 +2,7 @@
 import SideBar from '@/components/SideBar.vue';
 import defaultAvatar from '@/assets/default-avatar.png';
 import ListCard from '@/components/ListCard.vue';
-import { edit, getUser, showPosts, getUserbyId } from '@/services/api';
+import { edit, getUser, showPosts, getUserbyId, getFollowersAndFollowingById, postFollow } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import { onMounted, reactive, ref } from 'vue';
@@ -168,17 +168,48 @@ const handleEdit = async () => {
 async function getuserbyid(id: number) {
   try {
     const response = await getUserbyId(id);
-
     anotherUser.value = response.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+const isFollowing = ref<boolean>(false);
+const btnLoading = ref<boolean>(false);
+async function getFollowersAndFollowing(id: number) {
+  try {
+    const response = await getFollowersAndFollowingById(id);
+    if (response.data.followersData.some(follower => follower.followerId === item.value.id)) {
+      isFollowing.value = true;
+    }
+    anotherUser.value.followers_count = response.data.followings;
+    anotherUser.value.following_count = response.data.followers;
+
 
   } catch (error) {
     console.log(error);
   }
 }
-
+async function handleFollow() {
+  try {
+    btnLoading.value = true;
+    const response = await postFollow(route.params.id, item.value.id);
+    console.log(response);
+    if (isFollowing.value) {
+      anotherUser.value.following_count--
+      isFollowing.value = false;
+    } else {
+      anotherUser.value.following_count++
+      isFollowing.value = true;
+    }
+    btnLoading.value = false;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 onMounted(() => {
   getuserbyid(route.params.id);
+  getFollowersAndFollowing(route.params.id);
   handleGetUser();
   fetchTweets();
 });
@@ -225,7 +256,16 @@ async function fetchTweets() {
                 <img class="profile-pic" :src="anotherUser.avatar_url ?? default_avatar" alt="" />
                 <div class="name-username">
                   <h3>{{ anotherUser.name }} {{ anotherUser.surname }}</h3>
+
+                  <v-btn :loading="btnLoading" class="flex-grow-1" height="32" @click="handleFollow">
+                    <span> {{ isFollowing ? 'Seguindo' : 'Seguir' }}</span>
+                  </v-btn>
                   <h6>@{{ anotherUser.username }}</h6>
+                </div>
+                <div>
+                  <span>Seguidores: {{ anotherUser.following_count }}</span>
+                  <br>
+                  <span>Seguindo: {{ anotherUser.followers_count }}</span>
                 </div>
               </div>
               <div class="spinner-div d-flex justify-center mt-5">
