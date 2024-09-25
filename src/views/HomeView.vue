@@ -8,6 +8,7 @@ import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
+import { isLogged } from '@/utils/isLogged';
 
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
@@ -20,9 +21,8 @@ const listenEmit = () => {
 };
 
 function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
 
 async function showMessage(messageText: string, type: string) {
   hasMessage.value = true;
@@ -30,9 +30,9 @@ async function showMessage(messageText: string, type: string) {
   alertType.value = type;
 
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
-    hasMessage.value = true;
-    await delay(3000);
-    hasMessage.value = false;
+  hasMessage.value = true;
+  await delay(3000);
+  hasMessage.value = false;
 }
 
 function clearMessage() {
@@ -64,6 +64,7 @@ async function handleGetUser() {
 }
 
 onMounted(() => {
+  isLogged();
   handleGetUser();
   fetchTweets();
 });
@@ -86,21 +87,21 @@ onUnmounted(() => {
 <template>
   <v-app class="ma-0" id="app">
     <v-model class="model-alert">
-          <v-alert
-            v-if="hasMessage"
-            closable
-            class="alert fixed-alert"
-            :text="message"
-            :color="alertType"
-            @click:close="clearMessage()"
-          ></v-alert>
-      </v-model>
+      <v-alert
+        v-if="hasMessage"
+        closable
+        class="alert fixed-alert"
+        :text="message"
+        :color="alertType"
+        @click:close="clearMessage()"
+      ></v-alert>
+    </v-model>
     <v-navigation-drawer width="470" class="border-0 pa-0">
-      <SideBar :item="item" @call-emit="listenEmit"/>
+      <SideBar :item="item" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
-    
+
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
     <v-main class="mx-0">
