@@ -246,7 +246,7 @@ async function fetchTweets() {
 </script>
 
 <template>
-  <v-app id="app">
+  <v-app class="ma-0" id="app">
     <v-navigation-drawer width="470" class="d-none d-md-flex border-0 pa-0">
       <SideBar :item="item" />
     </v-navigation-drawer>
@@ -258,7 +258,7 @@ async function fetchTweets() {
     <!-- Modal para editar o perfil -->
     <template>
       <div class="text-center" style="background-color: brown">
-        <v-dialog v-model="editDialog" class="mx-16">
+        <v-dialog v-model="editDialog">
           <v-card class="pa-12 pb-8 profile-card" elevation="8">
             <v-btn icon class="close-btn" @click="editDialog = false">
               <v-icon>mdi-close</v-icon>
@@ -347,14 +347,14 @@ async function fetchTweets() {
           <v-col class="pa-0 ma-0">
             <v-img class="bg-grey" height="215" aspect-ratio="16/9" cover />
             <img
-              class="profile-img mx-2 mt-4 rounded-circle border-md"
+              class="profile-img mx-4 rounded-circle border-md"
               width="100"
               height="100"
               :src="anotherUser.avatar_url ?? default_avatar"
               alt=""
             />
           </v-col>
-          <v-col cols="12" class="d-flex flex-row justify-end ga-2 py-0">
+          <v-col cols="12" class="d-flex flex-row justify-end ga-2 py-4 py-md-0 px-4">
             <button v-if="item.id === anotherUser.id" @click="editDialog = true">
               <span>Editar</span>
             </button>
@@ -367,7 +367,7 @@ async function fetchTweets() {
               <span>{{ isFollowing ? 'Seguindo' : 'Seguir' }}</span>
             </v-btn>
           </v-col>
-          <v-col class="py-0">
+          <v-col class="py-0 px-4">
             <v-list class="py-0">
               <div class="d-flex flex-column">
                 <span class="text-h4 font-weight-bold"
@@ -397,17 +397,25 @@ async function fetchTweets() {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer
-      width="455"
-      location="right"
-      class="d-none d-md-flex border-0 pa-2"
-    >
+    <v-navigation-drawer width="455" location="right" class="d-none d-md-flex border-0 pa-2">
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
 </template>
 
 <style scoped>
+@media (max-width: 600px) {
+  .profile-card {
+    margin: 0 0vw;
+  }
+}
+
+@media (min-width: 600px) {
+  .profile-card {
+    margin: 0 20vw;
+  }
+}
+
 @media (max-width: 600px) {
   .spinner-div {
     position: fixed;
@@ -417,13 +425,13 @@ async function fetchTweets() {
 
 .spinner-div {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 60%;
+  left: 45%;
 }
 
 .profile-img {
-  position: absolute;
-  top: 16.375vh;
+  position: fixed;
+  top: 17dvh;
 }
 
 button {

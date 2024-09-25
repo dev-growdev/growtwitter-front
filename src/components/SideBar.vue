@@ -44,30 +44,35 @@ async function handleLogout() {
 <template>
   <div class="d-flex flex-column justify-space-between h-screen px-2 py-4">
     <div class="d-flex justify-end">
-      <v-list class="d-flex flex-column ga-2">
-        <div class="d-flex align-center">
+      <v-list class="d-flex flex-column">
+        <div class="d-flex align-center mb-4" style="margin-left: 12px">
           <growtwitterLogo height="50px" width="200px" />
         </div>
-        <div class="d-flex align-center ga-2">
+        <RouterLink
+          to="/"
+          class="router-icon text-black font-weight-semibold text-h6 d-flex align-center ga-2"
+        >
           <homePageLogo class="img-icon" />
-          <RouterLink to="/" class="text-black font-weight-semibold text-h6">
-            Página inicial
-          </RouterLink>
-        </div>
-        <div class="d-flex align-center ga-2">
+          Página inicial
+        </RouterLink>
+
+        <RouterLink
+          to="/explore"
+          class="router-icon text-black font-weight-semibold text-h6 pt-1 d-flex align-center ga-2"
+        >
           <HashTag class="img-icon" />
-          <RouterLink to="/explore" class="text-black font-weight-semibold text-h6 pt-1">
-            Explorar
-          </RouterLink>
-        </div>
-        <div class="d-flex align-center ga-2">
+          Explorar
+        </RouterLink>
+
+        <RouterLink
+          :to="`/profile/${item.id}`"
+          class="router-icon text-black font-weight-semibold text-h6 pt-2 d-flex align-center ga-2"
+        >
           <ProfileLogo class="img-icon" />
-          <RouterLink :to="`/profile/${item.id}`" class="text-black font-weight-semibold text-h6 pt-2">
-            Perfil
-          </RouterLink>
-        </div>
-        <div class="d-flex align-center ga-0">
-          <ButtonTweet @add-tweet="handleEmit"/>
+          Perfil
+        </RouterLink>
+        <div class="d-flex align-center ga-0 mt-2" style="margin-left: 8px">
+          <ButtonTweet @add-tweet="handleEmit" />
         </div>
       </v-list>
     </div>
@@ -92,6 +97,16 @@ async function handleLogout() {
 </template>
 
 <style scoped>
+.router-icon {
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.router-icon:hover {
+  background-color: rgb(240, 240, 240);
+}
+
 .img-icon {
   max-width: 2.6vh;
   max-height: 3vh;
