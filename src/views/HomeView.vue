@@ -84,7 +84,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-app id="app">
+  <v-app class="ma-0" id="app">
     <v-model class="model-alert">
           <v-alert
             v-if="hasMessage"
@@ -99,15 +99,14 @@ onUnmounted(() => {
       <SideBar :item="item" @call-emit="listenEmit"/>
     </v-navigation-drawer>
 
-    
     <ApplicationBar class="d-flex d-lg-none" />
     
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
-    
-    <v-main>
-      <v-container class="pa-0">
-        <v-row>
-          <v-col v-if="!loadingVisible" class="border px-4 px-md-0 mx-0 mx-md-4">
+
+    <v-main class="mx-0">
+      <v-container class="mt-0 pa-0">
+        <v-row class="">
+          <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
             <ListCard :tweets="tweets" />
           </v-col>
@@ -129,13 +128,13 @@ onUnmounted(() => {
 @media (max-width: 600px) {
   .spinner-div {
     position: fixed;
-    top: 50%;
+    top: 40%;
   }
 }
 
 .spinner-div {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
 }
 
