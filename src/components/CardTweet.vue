@@ -32,9 +32,13 @@ async function handlePostLike(id: number) {
 }
 
 onMounted(() => {
-  liked.value = props.data.likes.some(
-    (like: any) => like.userId == sessionStorage.getItem('userId')
+  const user = localStorage.getItem('userData');
+  if(user){
+    liked.value = props.data.likes.some(
+    (like: any) => like.userId == JSON.parse(user).id
   );
+  }
+  
 });
 </script>
 
@@ -59,7 +63,7 @@ onMounted(() => {
         <div class="tweet-actions">
           <v-btn icon small>💬</v-btn>
           <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
-            {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
+            {{ liked ? '❤️' : '🤍' }}
             {{ data.likes_count + artificialLike }}
           </v-btn>
         </div>

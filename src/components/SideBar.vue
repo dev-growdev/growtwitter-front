@@ -10,6 +10,7 @@ import { resetStorage } from '@/services/authentication';
 import type { UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTweet from './ButtonTweet.vue';
+import BackToTop from './BackToTop.vue';
 
 const emit = defineEmits(['callEmit']);
 
@@ -85,6 +86,7 @@ async function handleLogout() {
           <p class="text-black">@{{ item.username }}</p>
         </div>
 
+        <BackToTop/>
         <div>
           <ButtonDefault @click="handleLogout">
             <p v-if="!spinnerLoading">Sair</p>
@@ -92,6 +94,7 @@ async function handleLogout() {
           </ButtonDefault>
         </div>
       </v-list>
+     
     </div>
   </div>
 </template>

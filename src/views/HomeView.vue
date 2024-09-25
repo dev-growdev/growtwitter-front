@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BackToTop from '@/components/BackToTop.vue';
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
 import { getUser, showPosts } from '@/services/api';
@@ -97,12 +98,17 @@ onUnmounted(() => {
       ></v-alert>
     </v-model>
     <v-navigation-drawer width="470" class="border-0 pa-0">
-      <SideBar :item="item" @call-emit="listenEmit" />
+      <SideBar :item="item" @call-emit="listenEmit" 
+      />
+ 
+   
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
+   
+    
 
     <v-main class="mx-0">
       <v-container class="mt-0 pa-0">
@@ -117,6 +123,7 @@ onUnmounted(() => {
 
     <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
       <ExploreComponent />
+
     </v-navigation-drawer>
   </v-app>
 </template>
