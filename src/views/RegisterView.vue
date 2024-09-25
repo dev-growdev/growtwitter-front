@@ -11,6 +11,8 @@ import axios from 'axios';
 
 const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
+const especialCharNotFound = ref<boolean>(true);
+const passErrorMsg = ref<string>('');
 
 const account = reactive<CreateAccountType>({
   username: '',
@@ -75,10 +77,21 @@ const handleRegister = async () => {
     }
     clearValidationErrors();
 
-    // if (account.password > 6) {
-    //   console.log('CAIU AQUi');
-    //   return;
-    // }
+    if (account.password.length >= 7) {
+      for (let d of account.password) {
+        if (d === '-' || d === '!' || d === '@' || d === '_' || d === '#') {
+          especialCharNotFound.value = true;
+        } else {
+          passErrorMsg.value = "Sua senha deve ter algum dos caracteres especiais '#, -, !, _' ";
+          especialCharNotFound.value = false;
+        }
+      }
+    } else {
+      passErrorMsg.value = 'Sua senha deve ser maior que 6 dígitos';
+      especialCharNotFound.value = false;
+    }
+
+    if (!especialCharNotFound.value) return;
     const userData = {
       name: account.name,
       surname: account.surname,
@@ -93,7 +106,7 @@ const handleRegister = async () => {
     const response = await register(userData);
 
     loadingVisible.value = false;
-    console.log(response.data.user);
+    console.log(passErrorMsg.value);
     if (response.status === 201) {
       sessionStorage.setItem('token', response.data.token);
       localStorage.setItem('userData', JSON.stringify(response.data.user));
@@ -181,11 +194,9 @@ const handleRegister = async () => {
           @click:append-inner="visible = !visible"
           v-model="account.password"
           :error-messages="validationErrors.password"
-          required
         ></v-text-field>
-        <div class="d-none">
-          Sua senha deve ser maior que 6 dígitos, e ter algum dos caracteres especiais "#, -, !, _",
-          e pelo menos um número.
+        <div class="" v-if="!especialCharNotFound">
+          {{ passErrorMsg }}
         </div>
 
         <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">
