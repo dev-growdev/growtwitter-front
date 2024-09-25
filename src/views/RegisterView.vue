@@ -74,6 +74,11 @@ const handleRegister = async () => {
       avatarUrl = await uploadToCloudinary(account.avatar_url);
     }
     clearValidationErrors();
+
+    // if (account.password > 6) {
+    //   console.log('CAIU AQUi');
+    //   return;
+    // }
     const userData = {
       name: account.name,
       surname: account.surname,
@@ -126,6 +131,7 @@ const handleRegister = async () => {
           variant="outlined"
           v-model="account.name"
           :error-messages="validationErrors.name"
+          required
         ></v-text-field>
 
         <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
@@ -136,6 +142,7 @@ const handleRegister = async () => {
           variant="outlined"
           v-model="account.surname"
           :error-messages="validationErrors.surname"
+          required
         ></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
@@ -157,6 +164,7 @@ const handleRegister = async () => {
           variant="outlined"
           v-model="account.email"
           :error-messages="validationErrors.email"
+          required
         ></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
@@ -173,7 +181,12 @@ const handleRegister = async () => {
           @click:append-inner="visible = !visible"
           v-model="account.password"
           :error-messages="validationErrors.password"
+          required
         ></v-text-field>
+        <div class="d-none">
+          Sua senha deve ser maior que 6 dígitos, e ter algum dos caracteres especiais "#, -, !, _",
+          e pelo menos um número.
+        </div>
 
         <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">
           Escolha um avatar (opcional):
@@ -208,6 +221,7 @@ const handleRegister = async () => {
           size="large"
           variant="flat"
           block
+          type="submit"
         >
           Criar
         </v-btn>
