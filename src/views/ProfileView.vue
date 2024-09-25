@@ -376,7 +376,7 @@ async function fetchTweets() {
 
 @media (max-width: 600px) {
   .spinner-div {
-    position: fixed;
+    position: absolute;
     top: 50%;
   }
 }
@@ -388,7 +388,7 @@ async function fetchTweets() {
 }
 
 .profile-img {
-  position: fixed;
+  position: absolute;
   top: 17dvh;
 }
 
