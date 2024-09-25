@@ -246,7 +246,7 @@ async function fetchTweets() {
 </script>
 
 <template>
-  <v-app id="app">
+  <v-app class="ma-0" id="app">
     <v-navigation-drawer width="470" class="d-none d-md-flex border-0 pa-0">
       <SideBar :item="item" />
     </v-navigation-drawer>
