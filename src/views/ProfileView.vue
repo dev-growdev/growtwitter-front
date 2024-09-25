@@ -258,7 +258,7 @@ async function fetchTweets() {
     <!-- Modal para editar o perfil -->
     <template>
       <div class="text-center" style="background-color: brown">
-        <v-dialog v-model="editDialog" class="mx-16">
+        <v-dialog v-model="editDialog">
           <v-card class="pa-12 pb-8 profile-card" elevation="8">
             <v-btn icon class="close-btn" @click="editDialog = false">
               <v-icon>mdi-close</v-icon>
@@ -404,6 +404,18 @@ async function fetchTweets() {
 </template>
 
 <style scoped>
+@media (max-width: 600px) {
+  .profile-card {
+    margin: 0 0vw;
+  }
+}
+
+@media (min-width: 600px) {
+  .profile-card {
+    margin: 0 20vw;
+  }
+}
+
 @media (max-width: 600px) {
   .spinner-div {
     position: fixed;
