@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <h3>Desenvolvido agora</h3>
+    <h3>Desenvolvido por: Turma Despertar.dev</h3>
   </footer>
 </template>
 
