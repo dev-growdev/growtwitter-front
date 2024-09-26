@@ -1,8 +1,8 @@
 export interface RegisterAccountValidationType {
-  username: [];
-  name: [];
-  surname: [];
-  email: [];
-  password: [];
-  avatar: [];
+  username: string[];
+  name: string[];
+  surname: string[];
+  email: string[];
+  password: string[];
+  avatar: string[];
 }

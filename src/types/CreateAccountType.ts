@@ -1,5 +1,5 @@
 export interface CreateAccountType {
-  id: number;
+  id?: number;
   username: string;
   name: string;
   surname: string;
