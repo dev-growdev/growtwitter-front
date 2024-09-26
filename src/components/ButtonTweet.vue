@@ -184,11 +184,10 @@ function showMessage(messageText: string, type: string) {
   display: flex;
   align-items: center;
 }
+
 .v-btn.tweet-btn:hover {
   background-color: #357ae8;
 }
-
-
 
 .modal {
   position: fixed;
