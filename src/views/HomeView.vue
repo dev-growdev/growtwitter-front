@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import BackToTop from '@/components/BackToTop.vue';
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
 import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { onMounted, ref, computed, onUnmounted, watch } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 import { isLogged } from '@/utils/isLogged';
 import ButtonTweet from '@/components/ButtonTweet.vue';
+import BackToTop from '@/components/BackToTop.vue';
 
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
@@ -115,7 +115,7 @@ onUnmounted(() => {
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
    
-    <BackToTop/>
+    <BackToTop />
 
     <div class="d-flex d-lg-none">
       <ButtonTweet/>
