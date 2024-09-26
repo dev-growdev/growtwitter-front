@@ -10,6 +10,7 @@ import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 import { isLogged } from '@/utils/isLogged';
+import ButtonTweet from '@/components/ButtonTweet.vue';
 
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
@@ -113,7 +114,13 @@ onUnmounted(() => {
     <ApplicationBar class="d-flex d-lg-none" />
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
+   
+    <BackToTop/>
 
+    <div class="d-flex d-lg-none">
+      <ButtonTweet/>
+    </div>
+    
     <v-main class="mx-0">
       <v-container class="mt-0 pa-0">
         <v-row class="">
