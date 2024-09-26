@@ -98,7 +98,7 @@ export const getUser = async () => {
     return error?.response;
   }
 };
-export const getUserbyId = async (id: number) => {
+export const getUserbyId = async (id: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
@@ -111,7 +111,7 @@ export const getUserbyId = async (id: number) => {
     return error?.response;
   }
 };
-export const getFollowersAndFollowingById = async (id: number) => {
+export const getFollowersAndFollowingById = async (id: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
@@ -124,7 +124,7 @@ export const getFollowersAndFollowingById = async (id: number) => {
     return error?.response;
   }
 };
-export const postFollow = async (followingId: number,followerId : number) => {
+export const postFollow = async (followingId: string,followerId : string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };

@@ -28,7 +28,15 @@ onMounted(() => {
 
 <template>
   <v-app>
-    <v-navigation-drawer width="470" class="border-0 pa-0">
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="left"
+      class="border-0 mt-2"
+      touchless
+      disable-swipe
+    >
       <SideBar :item="item" />
     </v-navigation-drawer>
 
@@ -36,7 +44,7 @@ onMounted(() => {
 
     <v-main class="mx-0 mx-md-4">
       <v-container class="pa-0">
-        <v-row class="border px-4 px-md-0"> 
+        <v-row class="border px-4 px-md-0">
           <v-col class="mx-2 mt-6">
             <h2>O que está acontecendo?</h2>
           </v-col>
@@ -53,7 +61,15 @@ onMounted(() => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="right"
+      class="border-0 pa-2"
+      touchless
+      disable-swipe
+    >
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>

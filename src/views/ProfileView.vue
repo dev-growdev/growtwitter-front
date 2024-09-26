@@ -180,7 +180,7 @@ const handleEdit = async () => {
 const isFollowing = ref<boolean>(false);
 const btnLoading = ref<boolean>(false);
 
-async function getFollowersAndFollowing(id: number) {
+async function getFollowersAndFollowing(id: string) {
   try {
     const response = await getFollowersAndFollowingById(id);
     if (
@@ -199,7 +199,7 @@ async function handleFollow() {
     btnLoading.value = true;
     console.log(anotherUser.value.followers_count);
 
-    const response = await postFollow(route.params.id, item.value.id);
+    const response = await postFollow(route.params.id as string, String(item.value.id));
     console.log(response);
     if (isFollowing.value) {
       anotherUser.value.following_count--;
@@ -214,7 +214,7 @@ async function handleFollow() {
   }
 }
 
-async function getuserbyid(id: number) {
+async function getuserbyid(id: string) {
   try {
     loadingVisible.value = true;
     const response = await getUserbyId(id);
@@ -227,8 +227,8 @@ async function getuserbyid(id: number) {
 }
 
 onMounted(() => {
-  getuserbyid(route.params.id);
-  getFollowersAndFollowing(route.params.id);
+  getuserbyid(route.params.id as string);
+  getFollowersAndFollowing(route.params.id as string);
   handleGetUser();
   fetchTweets();
 });
@@ -247,7 +247,15 @@ async function fetchTweets() {
 
 <template>
   <v-app class="ma-0" id="app">
-    <v-navigation-drawer width="470" class="d-none d-md-flex border-0 pa-0">
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="left"
+      class="border-0 mt-2"
+      touchless
+      disable-swipe
+    >
       <SideBar :item="item" />
     </v-navigation-drawer>
 
@@ -282,7 +290,7 @@ async function fetchTweets() {
                 :placeholder="account.surname.toUpperCase()"
                 prepend-inner-icon="mdi-account-outline"
                 variant="outlined"
-                v-model="account.surname"
+                v-mod el="account.surname"
                 :error-messages="validationErrors.surname"
               ></v-text-field>
 
@@ -359,6 +367,7 @@ async function fetchTweets() {
               <span>Editar</span>
             </button>
             <v-btn
+              v-if="item.id !== anotherUser.id"
               :loading="btnLoading"
               class="d-flex justify-start align-self-start"
               height="32"
@@ -378,14 +387,14 @@ async function fetchTweets() {
               <div class="d-flex ga-4">
                 <p class="text-h7">
                   <span class="font-weight-bold">{{ anotherUser.followers_count ?? '0' }}</span>
-                  seguidores
+                  Seguindo
                 </p>
                 <p class="text-h7">
                   <span class="font-weight-bold">{{ anotherUser.following_count ?? '0' }}</span>
-                  seguindo
+                  Seguidores
                 </p>
                 <p class="text-h7">
-                  <span class="font-weight-bold">{{ tweets.length }}</span> posts
+                  <span class="font-weight-bold">{{ tweets.length }}</span> Posts
                 </p>
               </div>
             </v-list>
@@ -397,7 +406,15 @@ async function fetchTweets() {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer width="455" location="right" class="d-none d-md-flex border-0 pa-2">
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="right"
+      class="border-0 pa-2"
+      touchless
+      disable-swipe
+    >
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
@@ -418,7 +435,7 @@ async function fetchTweets() {
 
 @media (max-width: 600px) {
   .spinner-div {
-    position: fixed;
+    position: absolute;
     top: 50%;
   }
 }
@@ -430,7 +447,7 @@ async function fetchTweets() {
 }
 
 .profile-img {
-  position: fixed;
+  position: absolute;
   top: 17dvh;
 }
 
