@@ -4,7 +4,7 @@ import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
 import { getUser, showPosts } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { onMounted, ref, computed, onUnmounted } from 'vue';
+import { onMounted, ref, computed, onUnmounted, watch } from 'vue';
 import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
@@ -97,18 +97,22 @@ onUnmounted(() => {
         @click:close="clearMessage()"
       ></v-alert>
     </v-model>
-    <v-navigation-drawer width="470" class="border-0 pa-0">
-      <SideBar :item="item" @call-emit="listenEmit" 
-      />
- 
-   
+
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="left"
+      class="border-0 mt-2"
+      touchless
+      disable-swipe
+    >
+      <SideBar :item="item" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
-   
-    
 
     <v-main class="mx-0">
       <v-container class="mt-0 pa-0">
@@ -121,9 +125,16 @@ onUnmounted(() => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="right"
+      class="border-0 pa-2"
+      touchless
+      disable-swipe
+    >
       <ExploreComponent />
-
     </v-navigation-drawer>
   </v-app>
 </template>
