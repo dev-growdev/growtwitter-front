@@ -2,7 +2,7 @@
 import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
-import { postLike } from '@/services/api';
+import { postLike, postRetweet } from '@/services/api';
 import { onMounted, ref } from 'vue';
 
 interface TweetTypeProps {
@@ -12,6 +12,10 @@ interface TweetTypeProps {
 const props = defineProps<TweetTypeProps>();
 const liked = ref(false);
 const artificialLike = ref(0);
+const dropdown = ref(false);
+const retweetModal = ref(false);
+const comment = ref('');
+const retweetLoading = ref(false);
 
 function like() {
   if (liked.value === false) {
@@ -23,6 +27,36 @@ function like() {
   }
 }
 
+const toggleDropdown = () => {
+  dropdown.value = !dropdown.value;
+};
+const handleRetweet = async (id: number) => {
+
+  const response = await postRetweet(id);
+  if (response) {
+    dropdown.value = false;
+  }
+
+
+};
+const handleRetweetWithComment = async (id: number, content: string) => {
+  retweetLoading.value = true;
+  const response = await postRetweet(id, content);
+  if (response) {
+    dropdown.value = false;
+    retweetModal.value = false;
+  }
+
+};
+
+const toggleModalRetweet = () => {
+  retweetModal.value = true;
+  comment.value = '';
+
+};
+
+
+
 async function handlePostLike(id: number) {
   like();
   let resp = await postLike(id);
@@ -33,12 +67,12 @@ async function handlePostLike(id: number) {
 
 onMounted(() => {
   const user = localStorage.getItem('userData');
-  if(user){
+  if (user) {
     liked.value = props.data.likes.some(
-    (like: any) => like.userId == JSON.parse(user).id
-  );
+      (like: any) => like.userId == JSON.parse(user).id
+    );
   }
-  
+
 });
 </script>
 
@@ -51,13 +85,23 @@ onMounted(() => {
         </RouterLink>
 
       </div>
-      <div class="d-block">
+      <div class="tweet-body">
         <div class="tweet-header">
-          <RouterLink :to="`/profile/${data.user.id}`">
-            <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
-          </RouterLink>
+          <div>
+            <RouterLink :to="`/profile/${data.user.id}`">
+              <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+            </RouterLink>
 
-          <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+            <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+          </div>
+          <div style="display: flex; align-items: end; flex-direction: column; position: relative;">
+            <v-btn icon small @click="toggleDropdown"> <v-icon icon="mdi-menu"></v-icon></v-btn>
+            <div v-if="dropdown" class="dropdown">
+              <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
+              <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
+            </div>
+          </div>
+
         </div>
         <p class="tweet-content">{{ data.content }}</p>
         <div class="tweet-actions">
@@ -70,6 +114,36 @@ onMounted(() => {
       </div>
     </v-card-actions>
   </div>
+
+  <v-dialog v-model="retweetModal" max-width="500px">
+    <v-card>
+      <v-card-title>
+        <span class="text-h5">Retweetar com comentário</span>
+      </v-card-title>
+      <v-card-text>
+        <v-textarea v-model="comment" label="Adicionar um comentário..." auto-grow rows="3"></v-textarea>
+        <v-card class="mt-4" outlined>
+          <v-card-text>
+            <div class="d-flex align-center">
+              <v-avatar :image="data.user.avatar_url" size="40"></v-avatar>
+              <div class="ml-3">
+                <div class="font-weight-bold">{{ data.user.name }}</div>
+                <div class="text--secondary">@{{ data.user.username }}</div>
+              </div>
+            </div>
+            <div class="mt-3 ml-13">{{ data.content }}</div>
+          </v-card-text>
+        </v-card>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" @click="retweetModal = false">Cancelar</v-btn>
+        <v-btn :loading="retweetLoading" color="blue darken-1"
+          @click="handleRetweetWithComment(data.id, comment)">Retweet</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
 </template>
 
 <style scoped>
@@ -80,6 +154,37 @@ onMounted(() => {
 
 .card-principal:hover {
   background-color: #f5f8fa;
+}
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ebe8e8;
+  padding: 10px;
+  border-radius: 5px;
+  width: max-content;
+  z-index: 10;
+}
+
+
+
+.tweet-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tweet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
 }
 
 .tweet-header strong {

@@ -44,10 +44,17 @@ function clearMessage() {
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
+const retweets = ref<TweetType[]>([]);
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
 async function fetchTweets() {
+  loadingVisible.value = true;
+  const response = await showPosts(endpoint);
+  loadingVisible.value = false;
+  tweets.value = response.data.data;
+}
+async function fetchReTweets() {
   loadingVisible.value = true;
   const response = await showPosts(endpoint);
   loadingVisible.value = false;
@@ -69,6 +76,7 @@ onMounted(() => {
   isLogged();
   handleGetUser();
   fetchTweets();
+  fetchReTweets();
 });
 
 const windowWidth = ref(window.innerWidth);
@@ -89,38 +97,31 @@ onUnmounted(() => {
 <template>
   <v-app class="ma-0" id="app">
     <v-model class="model-alert">
-      <v-alert
-        v-if="hasMessage"
-        closable
-        class="alert fixed-alert"
-        :text="message"
-        :color="alertType"
-        @click:close="clearMessage()"
-      ></v-alert>
+      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType"
+        @click:close="clearMessage()"></v-alert>
     </v-model>
     <v-navigation-drawer width="470" class="border-0 pa-0">
-      <SideBar :item="item" @call-emit="listenEmit" 
-      />
- 
-   
+      <SideBar :item="item" @call-emit="listenEmit" />
+
+
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
-   
-    <BackToTop/>
+
+    <BackToTop />
 
     <div class="d-flex d-lg-none">
-      <ButtonTweet/>
+      <ButtonTweet />
     </div>
-    
+
     <v-main class="mx-0">
       <v-container class="mt-0 pa-0">
         <v-row class="">
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
-            <ListCard :tweets="tweets" />
+            <ListCard :tweets="tweets" :retweets="retweets" />
           </v-col>
         </v-row>
       </v-container>

@@ -140,7 +140,22 @@ export const postFollow = async (followingId: string,followerId : string) => {
     return error?.response;
   }
 };
+export const postRetweet = async (postId: number, content?: string) => {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+  const data = {
+    postId: postId,
+    content: content
+  };
+  try {
+    const response = await client.post('/retweet/',data, config);
 
+    return response;
+  } catch (error: any) {
+    return error?.response;
+  }
+};
 export async function postLike(postId: number) {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
