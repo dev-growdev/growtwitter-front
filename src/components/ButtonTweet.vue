@@ -63,7 +63,7 @@ function showMessage(messageText: string, type: string) {
     prepend-icon="mdi-feather"
     variant="flat"
   >
-    <div class="text-none mobile-text-none font-weight-regular">Tweetar</div>
+    <div class="text-none mobile-text-none font-weight-regular"> <span class="d-none d-lg-flex">Tweetar</span> </div>
 
     <v-dialog v-model="closeModal" activator="parent" max-width="500" class="full-screen-dialog">
       <template v-slot:default="{ isActive }">
@@ -197,4 +197,24 @@ function showMessage(messageText: string, type: string) {
 .spinner {
   width: 1.5rem;
 }
+
+
+
+@media (max-width: 1279px){
+    .tweet-btn{
+      position: fixed !important;
+      height: 60px !important;
+      border-radius: 50px !important;
+      top: auto;
+      right: 30px;
+      left: auto;
+      bottom: 80px;
+      z-index: 999;
+
+    }
+  }
+
+
+
+
 </style>

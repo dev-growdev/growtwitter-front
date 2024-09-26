@@ -56,18 +56,12 @@
 
   @media (max-width: 1279px){
     .back-to-top{
-      right: 50px;
-      bottom: 80px;
-    }
-  }
-
-  @media (max-width: 960px){
-    .back-to-top{
       top: 40px;
       right: 30px;
       left: auto;
       bottom: auto;
     }
   }
+
   </style>
   
