@@ -36,8 +36,8 @@
   <style scoped>
   .back-to-top {
     position: fixed;
-    bottom: 100px;
-    right: 7px;
+    bottom: 40px ;
+    right: 370px;
     padding: 10px 20px;
     background-color: white;
     color: #4285f4;
@@ -45,7 +45,7 @@
     border-radius: 50px;
     cursor: pointer;
     font-size: 16px;
-    z-index: 999;
+    z-index: 9999;
   }
 
   .back-to-top:hover {
@@ -57,12 +57,13 @@
   @media (max-width: 1279px){
     .back-to-top{
       right: 50px;
+      bottom: 80px;
     }
   }
 
   @media (max-width: 960px){
     .back-to-top{
-      top: 20px;
+      top: 40px;
       right: 30px;
       left: auto;
       bottom: auto;
