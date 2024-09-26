@@ -108,8 +108,8 @@ onUnmounted(() => {
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
    
+    <BackToTop/>
     
-
     <v-main class="mx-0">
       <v-container class="mt-0 pa-0">
         <v-row class="">
