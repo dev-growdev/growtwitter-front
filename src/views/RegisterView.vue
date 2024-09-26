@@ -11,8 +11,6 @@ import axios from 'axios';
 
 const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
-const especialCharNotFound = ref<boolean>(true);
-const passErrorMsg = ref<string>('');
 
 const account = reactive<CreateAccountType>({
   username: '',
@@ -24,9 +22,9 @@ const account = reactive<CreateAccountType>({
 });
 
 const validationErrors = reactive<RegisterAccountValidationType>({
-  username: [],
   name: [],
   surname: [],
+  username: [],
   email: [],
   password: [],
   avatar: []
@@ -77,21 +75,75 @@ const handleRegister = async () => {
     }
     clearValidationErrors();
 
-    if (account.password.length >= 7) {
-      for (let d of account.password) {
-        if (d === '-' || d === '!' || d === '@' || d === '_' || d === '#') {
-          especialCharNotFound.value = true;
-        } else {
-          passErrorMsg.value = "Sua senha deve ter algum dos caracteres especiais '#, -, !, _' ";
-          especialCharNotFound.value = false;
-        }
+    //validações front
+    if (account.name) {
+      //nome
+      if (account.name.length > 255) {
+        validationErrors.name.push('O campo nome não pode ter mais de 255 caracteres.');
+        return;
       }
     } else {
-      passErrorMsg.value = 'Sua senha deve ser maior que 6 dígitos';
-      especialCharNotFound.value = false;
+      validationErrors.name.push('O campo nome é obrigatório.');
+      return;
     }
 
-    if (!especialCharNotFound.value) return;
+    if (account.surname) {
+      //sobrenome
+      if (account.surname.length > 255) {
+        validationErrors.name.push('O campo sobrenome não pode ter mais de 255 caracteres.');
+        return;
+      }
+    } else {
+      validationErrors.surname.push('O campo sobrenome é obrigatório.');
+      return;
+    }
+
+    if (account.username) {
+      //username
+      if (account.username.length < 5) {
+        validationErrors.username.push('O campo nome de usuário deve ter pelo menos 5 caracteres.');
+        return;
+      }
+      if (account.username.length > 30) {
+        validationErrors.username.push(
+          'O campo nome de usuário não pode ter mais de 30 caracteres.'
+        );
+        return;
+      }
+      if (/[ !@#$%&*()\-+]/.test(account.username)) {
+        validationErrors.username.push(
+          'O campo nome de usuário só pode conter letras, números e underlines.'
+        );
+        return;
+      }
+    } else {
+      validationErrors.username.push('O campo nome de usuário é obrigatório.');
+      return;
+    }
+
+    if (account.email) {
+      if (account.email.length > 255) {
+        validationErrors.email.push('O campo email não pode ter mais de 255 caracteres.');
+        return;
+      }
+    } else {
+      validationErrors.email.push('O campo email é obrigátorio.');
+      return;
+    }
+
+    if (account.password.length >= 6) {
+      //senha
+      if (!/[@!\-_#]/.test(account.password)) {
+        validationErrors.password.push(
+          "Sua senha deve ter algum dos caracteres especiais '#, -, !, _, @' "
+        );
+        return;
+      }
+    } else {
+      validationErrors.password.push('Sua senha deve ser maior que 6 dígitos');
+      return;
+    }
+
     const userData = {
       name: account.name,
       surname: account.surname,
@@ -106,15 +158,16 @@ const handleRegister = async () => {
     const response = await register(userData);
 
     loadingVisible.value = false;
-    console.log(passErrorMsg.value);
+
     if (response.status === 201) {
       sessionStorage.setItem('token', response.data.token);
       localStorage.setItem('userData', JSON.stringify(response.data.user));
       router.push('/');
     } else if (response.status === 422) {
-      const errors = response.data.errors;
-      for (const key in errors) {
-        validationErrors[key as keyof RegisterAccountValidationType] = errors[key];
+      console.log(response.data.msg);
+
+      for (const msg in response.data.msg) {
+        if (response.data.msg.includes('email')) validationErrors.email = response.data.msg;
       }
     }
   } catch (error) {
@@ -195,9 +248,6 @@ const handleRegister = async () => {
           v-model="account.password"
           :error-messages="validationErrors.password"
         ></v-text-field>
-        <div class="" v-if="!especialCharNotFound">
-          {{ passErrorMsg }}
-        </div>
 
         <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">
           Escolha um avatar (opcional):
