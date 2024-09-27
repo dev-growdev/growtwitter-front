@@ -10,8 +10,13 @@ interface TweetTypeProps {
 }
 
 const props = defineProps<TweetTypeProps>();
+const showDiv = ref(false);
 const liked = ref(false);
 const artificialLike = ref(0);
+
+function toogleDiv() {
+  showDiv.value = !showDiv.value;
+}
 
 function like() {
   if (liked.value === false) {
@@ -33,12 +38,9 @@ async function handlePostLike(id: number) {
 
 onMounted(() => {
   const user = localStorage.getItem('userData');
-  if(user){
-    liked.value = props.data.likes.some(
-    (like: any) => like.userId == JSON.parse(user).id
-  );
+  if (user) {
+    liked.value = props.data.likes.some((like: any) => like.userId == JSON.parse(user).id);
   }
-  
 });
 </script>
 
@@ -49,7 +51,6 @@ onMounted(() => {
         <RouterLink :to="`/profile/${data.user.id}`">
           <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
         </RouterLink>
-
       </div>
       <div class="d-block">
         <div class="tweet-header">
@@ -61,9 +62,16 @@ onMounted(() => {
         </div>
         <p class="tweet-content">{{ data.content }}</p>
         <div class="tweet-actions">
-          <v-btn icon small>💬</v-btn>
+          <v-btn icon small @click="toogleDiv()">💬{{ data.comments_count }}</v-btn>
+          <div v-if="showDiv">
+            <button>Comentar</button>
+            <div v-for="comment in props.data.comments" :key="comment.id">
+              {{ comment.user.name }} diz: {{ comment.content }}
+            </div>
+          </div>
+
           <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
-            {{ liked ? '❤️' : '🤍' }}
+            {{ data.likes_count + artificialLike ? '❤️' : '🤍' }}
             {{ data.likes_count + artificialLike }}
           </v-btn>
         </div>
