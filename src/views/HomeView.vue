@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import BackToTop from '@/components/BackToTop.vue';
+// import BackToTop from '@/components/BackToTop.vue';
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { getUser, showPosts } from '@/services/api';
+import { getUser, showPosts, getRetweet } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { onMounted, ref, computed, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
-import { isLogged } from '@/utils/isLogged';
+// import { isLogged } from '@/utils/isLogged';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 
 const hasMessage = ref<boolean>(false);
@@ -45,13 +45,14 @@ function clearMessage() {
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
+const retweets = ref<any[]>([])
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
 async function fetchTweets() {
-  loadingVisible.value = true;
+
   const response = await showPosts(endpoint);
-  loadingVisible.value = false;
+
   tweets.value = response.data.data;
 }
 
@@ -66,9 +67,23 @@ async function handleGetUser() {
   item.value = JSON.parse(userData);
 }
 
+async function fetchReTweets() {
+
+  const response = await getRetweet();
+  retweets.value = response.data.data;
+
+}
+
+async function fetchAll() {
+  loadingVisible.value = true;
+  await Promise.all([fetchTweets(), fetchReTweets()]);
+  loadingVisible.value = false;
+}
+
 onMounted(() => {
   handleGetUser();
-  fetchTweets();
+  fetchAll();
+
 });
 
 const windowWidth = ref(window.innerWidth);
