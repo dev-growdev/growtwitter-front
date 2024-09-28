@@ -85,8 +85,8 @@ onMounted(() => {
     if (user) {
       liked.value = props.data.likes.some((like: any) => like.userId == JSON.parse(user).id);
     }
-
-  });
+  }
+});
 </script>
 
 <template>

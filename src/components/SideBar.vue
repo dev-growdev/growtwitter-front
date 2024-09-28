@@ -14,7 +14,7 @@ import ButtonTweet from './ButtonTweet.vue';
 const emit = defineEmits(['callEmit']);
 
 interface SidebarProps {
-  item: UserType;
+  item: Partial<UserType>;
 }
 const handleEmit = () => {
   emit('callEmit');
@@ -48,26 +48,19 @@ async function handleLogout() {
         <div class="d-flex align-center mb-4" style="margin-left: 12px">
           <growtwitterLogo height="50px" width="200px" />
         </div>
-        <RouterLink
-          to="/"
-          class="router-icon text-black font-weight-semibold text-h6 d-flex align-center ga-2"
-        >
+        <RouterLink to="/" class="router-icon text-black font-weight-semibold text-h6 d-flex align-center ga-2">
           <homePageLogo class="img-icon" />
           Página inicial
         </RouterLink>
 
-        <RouterLink
-          to="/explore"
-          class="router-icon text-black font-weight-semibold text-h6 pt-1 d-flex align-center ga-2"
-        >
+        <RouterLink to="/explore"
+          class="router-icon text-black font-weight-semibold text-h6 pt-1 d-flex align-center ga-2">
           <HashTag class="img-icon" />
           Explorar
         </RouterLink>
 
-        <RouterLink
-          :to="`/profile/${item.id}`"
-          class="router-icon text-black font-weight-semibold text-h6 pt-2 d-flex align-center ga-2"
-        >
+        <RouterLink :to="`/profile/${item.id}`"
+          class="router-icon text-black font-weight-semibold text-h6 pt-2 d-flex align-center ga-2">
           <ProfileLogo class="img-icon" />
           Perfil
         </RouterLink>
@@ -92,7 +85,7 @@ async function handleLogout() {
           </ButtonDefault>
         </div>
       </v-list>
-     
+
     </div>
   </div>
 </template>
