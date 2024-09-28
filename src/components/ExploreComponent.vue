@@ -4,7 +4,7 @@ import { items } from '@/utils/ExploreArray';
 </script>
 
 <template>
-  <div class="pt-4 ma-0">
+  <div class="pt-4">
     <div class="pb-4">
       <h2>O que está acontecendo?</h2>
     </div>
