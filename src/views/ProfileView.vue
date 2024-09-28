@@ -8,7 +8,8 @@ import {
   showPosts,
   getUserbyId,
   getFollowersAndFollowingById,
-  postFollow
+  postFollow,
+  getRetweet
 } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
@@ -20,6 +21,7 @@ import axios from 'axios';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import { useRoute } from 'vue-router';
 import ApplicationBar from '@/components/ApplicationBar.vue';
+
 const route = useRoute();
 
 const loadingVisible = ref<boolean>(false);
@@ -225,16 +227,28 @@ async function getuserbyid(id: string) {
     console.log(error);
   }
 }
+const retweets = ref<any[]>([])
+async function fetchReTweets() {
 
+  const response = await getRetweet();
+  retweets.value = response.data.data;
+
+}
+
+async function fetchAll() {
+  loadingVisible.value = true;
+  await Promise.all([fetchTweets(), fetchReTweets()]);
+  loadingVisible.value = false;
+}
 onMounted(() => {
   getuserbyid(route.params.id as string);
   getFollowersAndFollowing(route.params.id as string);
   handleGetUser();
-  fetchTweets();
+  fetchAll();
 });
 
 const tweets = ref<TweetType[]>([]);
-const endpoint = '/posts/' + route.params.id;
+const endpoint = '/posts/';
 
 async function fetchTweets() {
   loadingVisible.value = true;
@@ -349,7 +363,7 @@ async function fetchTweets() {
             </v-list>
           </v-col>
           <v-col cols="12">
-            <ListCard :tweets="tweets" />
+            <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
           </v-col>
         </v-row>
       </v-container>
