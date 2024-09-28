@@ -7,4 +7,13 @@ export interface TweetType {
   user: UserType;
   likes_count: number;
   likes: [];
+  comments_count: number;
+  comments: Array<{
+    id: number;
+    user: {
+      name: string;
+      avatar_url?: string;
+    };
+    content: string;
+  }>;
 }
