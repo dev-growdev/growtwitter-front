@@ -85,17 +85,6 @@ export async function postTweet(content: string) {
   }
 }
 
-export async function postComment(postId: number, content: string) {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-  try {
-    return await client.post('/comment', { postId, content }, config);
-  } catch (error) {
-    return error;
-  }
-}
-
 export const getUser = async () => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -115,7 +104,7 @@ export const getUserbyId = async (id: string) => {
   };
 
   try {
-    const response = await client.get('/users/' + id, config);
+    const response = await client.get('/users/'+id, config);
 
     return response;
   } catch (error: any) {
@@ -128,14 +117,14 @@ export const getFollowersAndFollowingById = async (id: string) => {
   };
 
   try {
-    const response = await client.get('/follow/' + id, config);
+    const response = await client.get('/follow/'+id, config);
 
     return response;
   } catch (error: any) {
     return error?.response;
   }
 };
-export const postFollow = async (followingId: string, followerId: string) => {
+export const postFollow = async (followingId: string,followerId : string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
@@ -144,7 +133,7 @@ export const postFollow = async (followingId: string, followerId: string) => {
     followerId: followerId
   };
   try {
-    const response = await client.post('/follow/', data, config);
+    const response = await client.post('/follow/',data, config);
 
     return response;
   } catch (error: any) {
