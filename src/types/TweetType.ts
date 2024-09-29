@@ -7,4 +7,12 @@ export interface TweetType {
   user: UserType;
   likes_count: number;
   likes: [];
+  comments_count: number;
+  comments: CommentType[];
+}
+export interface CommentType {
+  id: number;
+  user: UserType;
+  content: string;
+  created_at: string;
 }

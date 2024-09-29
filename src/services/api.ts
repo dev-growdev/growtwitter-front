@@ -178,3 +178,13 @@ export async function postLike(postId: number) {
     return false;
   }
 }
+export async function postComment(postId: number, content: string) {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+  try {
+    return await client.post('/comment', { postId, content }, config);
+  } catch (error) {
+    return error;
+  }
+}
