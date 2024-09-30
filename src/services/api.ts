@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getUserToken } from './authentication';
 
-const client = axios.create({
+export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     Accept: 'application/json'
@@ -104,7 +104,7 @@ export const getUserbyId = async (id: string) => {
   };
 
   try {
-    const response = await client.get('/users/'+id, config);
+    const response = await client.get('/users/' + id, config);
 
     return response;
   } catch (error: any) {
@@ -117,14 +117,14 @@ export const getFollowersAndFollowingById = async (id: string) => {
   };
 
   try {
-    const response = await client.get('/follow/'+id, config);
+    const response = await client.get('/follow/' + id, config);
 
     return response;
   } catch (error: any) {
     return error?.response;
   }
 };
-export const postFollow = async (followingId: string,followerId : string) => {
+export const postFollow = async (followingId: string, followerId: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
@@ -133,7 +133,7 @@ export const postFollow = async (followingId: string,followerId : string) => {
     followerId: followerId
   };
   try {
-    const response = await client.post('/follow/',data, config);
+    const response = await client.post('/follow/', data, config);
 
     return response;
   } catch (error: any) {
@@ -149,7 +149,7 @@ export const postRetweet = async (postId: number, content?: string) => {
     content: content
   };
   try {
-    const response = await client.post('/retweet/',data, config);
+    const response = await client.post('/retweet/', data, config);
 
     return response;
   } catch (error: any) {
