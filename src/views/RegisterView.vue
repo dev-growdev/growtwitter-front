@@ -110,7 +110,7 @@ const handleRegister = async () => {
         );
         return;
       }
-      if (/[ !@#$%&*()\-+]/.test(account.username)) {
+      if (/[ !@#$%&*.()\-+]/.test(account.username)) {
         validationErrors.username.push(
           'O campo nome de usuário só pode conter letras, números e underlines.'
         );
@@ -166,9 +166,7 @@ const handleRegister = async () => {
     } else if (response.status === 422) {
       console.log(response.data.msg);
 
-      for (const msg in response.data.msg) {
-        if (response.data.msg.includes('email')) validationErrors.email = response.data.msg;
-      }
+      if (response.data.msg.includes('email')) validationErrors.email = response.data.msg;
     }
   } catch (error) {
     console.log(error);
