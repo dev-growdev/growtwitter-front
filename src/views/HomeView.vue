@@ -11,6 +11,8 @@ import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 // import { isLogged } from '@/utils/isLogged';
 import ButtonTweet from '@/components/ButtonTweet.vue';
+import { getUserId } from '@/services/authentication';
+import type { FollowingPostsRequestType } from '@/types/FollowingPostsRequestType';
 
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
@@ -45,6 +47,7 @@ function clearMessage() {
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
+const following = ref<FollowingPostsRequestType[]>([]);
 const retweets = ref<any[]>([])
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
@@ -54,6 +57,22 @@ async function fetchTweets() {
   const response = await showPosts(endpoint);
 
   tweets.value = response.data.data;
+}
+
+async function fetchFollowingTweets() {
+
+  const userId = getUserId();
+
+const response = await showPosts('follow/' + userId);
+
+console.log(response)
+console.log(response.data.followingsData)
+
+let followingPosts = response.data.forEach((followingResponse: FollowingPostsRequestType) => {
+  return followingResponse.followingsData[1].posts;
+});
+
+following.value = followingPosts;
 }
 
 async function handleGetUser() {
@@ -74,15 +93,21 @@ async function fetchReTweets() {
 
 }
 
-async function fetchAll() {
+async function fetchAllDiscovery() {
   loadingVisible.value = true;
   await Promise.all([fetchTweets(), fetchReTweets()]);
   loadingVisible.value = false;
 }
 
+async function fetchAllFollowing() {
+  loadingVisible.value = true;
+  await Promise.all([fetchFollowingTweets(), fetchReTweets()]);
+  loadingVisible.value = false;
+}
+
 onMounted(() => {
   handleGetUser();
-  fetchAll();
+  fetchAllDiscovery();
 
 });
 
@@ -109,8 +134,6 @@ onUnmounted(() => {
     </v-model>
     <v-navigation-drawer width="470" class="border-0 pa-0">
       <SideBar :item="item" @call-emit="listenEmit" />
-
-
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
@@ -127,8 +150,11 @@ onUnmounted(() => {
       <v-container class="mt-0 pa-0">
         <v-row class="">
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
-            <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
-            <ListCard :tweets="tweets" :retweets="retweets" />
+            <div class="div-page-title d-flex justify-center">
+              <v-btn @click="fetchAllDiscovery"><p class="font-weight-bold pt-6 px-2 text-h6">Descobrir</p></v-btn>
+              <v-btn @click="fetchAllFollowing"><p class="font-weight-bold pt-6 px-2 text-h6">Seguindo</p></v-btn>
+            </div>
+            <ListCard :tweets="following" :retweets="retweets" />
           </v-col>
         </v-row>
       </v-container>
@@ -166,4 +192,5 @@ onUnmounted(() => {
   right: 30%;
   z-index: 9999;
 }
+
 </style>
