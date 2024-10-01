@@ -2,19 +2,30 @@
 import homePageLogo from '@/components/icons/homePageLogo.vue';
 import HashTagLogo from '@/components/icons/hashTagLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
+
+interface iconProps {
+  userId: string | number;
+}
+
+defineProps<iconProps>();
 </script>
 
 <template>
   <v-bottom-navigation grow>
     <v-btn>
-      <homePageLogo class="img-icon" />
-      <RouterLink to="/" />
+      <RouterLink to="/">
+        <homePageLogo class="img-icon" />
+      </RouterLink>
     </v-btn>
     <v-btn>
-      <RouterLink to="/explore"><HashTagLogo class="img-icon" /></RouterLink>
+      <RouterLink to="/explore">
+        <HashTagLogo class="img-icon" />
+      </RouterLink>
     </v-btn>
     <v-btn>
-      <RouterLink to="/profile"><ProfileLogo class="img-icon" /></RouterLink>
+      <RouterLink :to="`/profile/${userId}`">
+        <ProfileLogo class="img-icon" />
+      </RouterLink>
     </v-btn>
   </v-bottom-navigation>
 </template>
