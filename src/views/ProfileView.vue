@@ -226,7 +226,7 @@ const tweets = ref<TweetType[]>([]);
       v-if="!$vuetify.display.mdAndDown"
       permanent
       width="455"
-      location="right"
+      location="left"
       class="border-0"
       touchless
       disable-swipe
