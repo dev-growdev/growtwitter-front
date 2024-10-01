@@ -75,7 +75,7 @@ const handleLogin = async () => {
             ></v-text-field>
 
             <v-text-field
-              :type="visible ? 'text' : 'password'"
+              type="visible ? 'text' : 'password'"
               density="compact"
               placeholder="Digite sua  senha "
               prepend-inner-icon="mdi-lock-outline"
