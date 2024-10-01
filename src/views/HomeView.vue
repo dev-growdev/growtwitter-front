@@ -11,7 +11,10 @@ import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 // import { isLogged } from '@/utils/isLogged';
 import ButtonTweet from '@/components/ButtonTweet.vue';
+import { isLogged } from '@/utils/isLogged';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
@@ -23,9 +26,8 @@ const listenEmit = () => {
 };
 
 function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
 
 async function showMessage(messageText: string, type: string) {
   hasMessage.value = true;
@@ -45,12 +47,11 @@ function clearMessage() {
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
-const retweets = ref<any[]>([])
+const retweets = ref<any[]>([]);
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
 async function fetchTweets() {
-
   const response = await showPosts(endpoint);
 
   tweets.value = response.data.data;
@@ -68,10 +69,8 @@ async function handleGetUser() {
 }
 
 async function fetchReTweets() {
-
   const response = await getRetweet();
   retweets.value = response.data.data;
-
 }
 
 async function fetchAll() {
@@ -81,9 +80,9 @@ async function fetchAll() {
 }
 
 onMounted(() => {
+  isLogged(router);
   handleGetUser();
   fetchAll();
-
 });
 
 const windowWidth = ref(window.innerWidth);
@@ -104,13 +103,17 @@ onUnmounted(() => {
 <template>
   <v-app class="ma-0" id="app">
     <v-model class="model-alert">
-      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType"
-        @click:close="clearMessage()"></v-alert>
+      <v-alert
+        v-if="hasMessage"
+        closable
+        class="alert fixed-alert"
+        :text="message"
+        :color="alertType"
+        @click:close="clearMessage()"
+      ></v-alert>
     </v-model>
     <v-navigation-drawer width="470" class="border-0 pa-0">
       <SideBar :item="item" @call-emit="listenEmit" />
-
-
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
@@ -136,7 +139,6 @@ onUnmounted(() => {
 
     <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
       <ExploreComponent />
-
     </v-navigation-drawer>
   </v-app>
 </template>
