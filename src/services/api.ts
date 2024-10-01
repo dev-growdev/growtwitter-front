@@ -1,5 +1,9 @@
 import axios from 'axios';
 import { getUserToken } from './authentication';
+import { isLogged } from '@/utils/isLogged';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -68,6 +72,7 @@ export async function showPosts(endpoint: string) {
   };
   try {
     const response = await client.get(endpoint, config);
+    if (response.status === 401) isLogged(router);
     return response;
   } catch (error: any) {
     return error?.response;
@@ -79,7 +84,9 @@ export async function postTweet(content: string) {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
   try {
-    return await client.post('/posts', { content }, config);
+    const response = await client.post('/posts', { content }, config);
+    if (response.status === 401) isLogged(router);
+    return response;
   } catch (error) {
     return error;
   }
@@ -195,7 +202,7 @@ export const getProfileData = async (id: string) => {
 
   try {
     const response = await client.get('/profile/' + id, config);
-
+    if (response.status === 401) isLogged(router);
     return response;
   } catch (error: any) {
     return error?.response;

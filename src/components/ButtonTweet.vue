@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
+import { isLogged } from '@/utils/isLogged';
 import { emit } from 'process';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['addTweet']);
+const router = useRouter();
 const content = ref<string>('');
 const isTweeting = ref<boolean>(false);
 const hasMessage = ref<boolean>(false);
@@ -27,11 +30,13 @@ async function handlePostTweet() {
   }
 
   isTweeting.value = true;
-  const res = await postTweet(content.value);
+  const response = await postTweet(content.value);
+  console.log(response);
 
-  if (!res?.data.success) {
+  if (response.status != 201) {
     spinnerLoading.value = false;
     showMessage('Erro ao publicar tweet', 'error');
+    isLogged(router);
     return;
   }
 
@@ -53,7 +58,6 @@ function showMessage(messageText: string, type: string) {
     hasMessage.value = true;
   }, 3000);
 }
-
 </script>
 
 <template>
@@ -63,7 +67,9 @@ function showMessage(messageText: string, type: string) {
     prepend-icon="mdi-feather"
     variant="flat"
   >
-    <div class="text-none mobile-text-none font-weight-regular"> <span class="d-none d-lg-flex">Tweetar</span> </div>
+    <div class="text-none mobile-text-none font-weight-regular">
+      <span class="d-none d-lg-flex">Tweetar</span>
+    </div>
 
     <v-dialog v-model="closeModal" activator="parent" max-width="500" class="full-screen-dialog">
       <template v-slot:default="{ isActive }">
@@ -198,23 +204,16 @@ function showMessage(messageText: string, type: string) {
   width: 1.5rem;
 }
 
-
-
-@media (max-width: 1279px){
-    .tweet-btn{
-      position: fixed !important;
-      height: 60px !important;
-      border-radius: 50px !important;
-      top: auto;
-      right: 30px;
-      left: auto;
-      bottom: 80px;
-      z-index: 999;
-
-    }
+@media (max-width: 1279px) {
+  .tweet-btn {
+    position: fixed !important;
+    height: 60px !important;
+    border-radius: 50px !important;
+    top: auto;
+    right: 30px;
+    left: auto;
+    bottom: 80px;
+    z-index: 999;
   }
-
-
-
-
+}
 </style>
