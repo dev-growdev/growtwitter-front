@@ -55,6 +55,7 @@ async function fetchTweets() {
   const response = await showPosts(endpoint);
 
   tweets.value = response.data.data;
+  if (response.status === 401) isLogged(router);
 }
 
 async function handleGetUser() {
@@ -80,7 +81,6 @@ async function fetchAll() {
 }
 
 onMounted(() => {
-  isLogged(router);
   handleGetUser();
   fetchAll();
 });
