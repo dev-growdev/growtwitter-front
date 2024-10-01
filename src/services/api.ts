@@ -188,3 +188,16 @@ export async function postComment(postId: number, content: string) {
     return error;
   }
 }
+export const getProfileData = async (id: string) => {
+  const config = {
+    headers: { Authorization: `Bearer ${getUserToken()}` }
+  };
+
+  try {
+    const response = await client.get('/profile/'+id, config);
+
+    return response;
+  } catch (error: any) {
+    return error?.response;
+  }
+};
