@@ -116,7 +116,8 @@ onUnmounted(() => {
       <SideBar :item="item" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
-    <ApplicationBar class="d-flex d-lg-none" />
+    <ApplicationBar :userId="item.id" class="d-flex d-lg-none" />
+
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
