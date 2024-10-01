@@ -5,11 +5,8 @@ import ListCard from '@/components/ListCard.vue';
 import {
   edit,
   getUser,
-  showPosts,
-  getUserbyId,
-  getFollowersAndFollowingById,
   postFollow,
-  getRetweet
+  getProfileData
 } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
@@ -21,6 +18,7 @@ import axios from 'axios';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import { useRoute } from 'vue-router';
 import ApplicationBar from '@/components/ApplicationBar.vue';
+
 
 const route = useRoute();
 
@@ -159,7 +157,7 @@ const handleEdit = async () => {
     if (response.status === 201 || response.status === 200) {
       localStorage.setItem('userData', JSON.stringify(response.data.data));
 
-      await fetchTweets();
+      await fetchAll(route.params.id as string);
       handleGetUser();
 
       loadingVisibleModal.value = false;
@@ -182,20 +180,7 @@ const handleEdit = async () => {
 const isFollowing = ref<boolean>(false);
 const btnLoading = ref<boolean>(false);
 
-async function getFollowersAndFollowing(id: string) {
-  try {
-    const response = await getFollowersAndFollowingById(id);
-    if (
-      response.data.followersData.some((follower: any) => follower.followerId === item.value.id)
-    ) {
-      isFollowing.value = true;
-    }
-    anotherUser.value.followers_count = response.data.followings;
-    anotherUser.value.following_count = response.data.followers;
-  } catch (error) {
-    console.log(error);
-  }
-}
+
 async function handleFollow() {
   try {
     btnLoading.value = true;
@@ -216,47 +201,33 @@ async function handleFollow() {
   }
 }
 
-async function getuserbyid(id: string) {
-  try {
-    loadingVisible.value = true;
-    const response = await getUserbyId(id);
-    loadingVisible.value = false;
 
-    anotherUser.value = response.data.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
 const retweets = ref<any[]>([])
-async function fetchReTweets() {
 
-  const response = await getRetweet();
-  retweets.value = response.data.data;
-
-}
-
-async function fetchAll() {
+async function fetchAll(id: string) {
   loadingVisible.value = true;
-  await Promise.all([fetchTweets(), fetchReTweets()]);
+  const response = await getProfileData(id);
+
+  anotherUser.value = response.data.data.user;
+  if (
+    response.data.data.followersData.some((follower: any) => follower.followerId === item.value.id)
+  ) {
+    isFollowing.value = true;
+  }
+  anotherUser.value.followers_count = response.data.data.followings;
+  anotherUser.value.following_count = response.data.data.followers;
+  tweets.value = response.data.data.posts;
+  retweets.value = response.data.data.retweets;
   loadingVisible.value = false;
 }
 onMounted(() => {
-  getuserbyid(route.params.id as string);
-  getFollowersAndFollowing(route.params.id as string);
+
   handleGetUser();
-  fetchAll();
+  fetchAll(route.params.id as string);
 });
 
 const tweets = ref<TweetType[]>([]);
-const endpoint = '/posts/';
 
-async function fetchTweets() {
-  loadingVisible.value = true;
-  const response = await showPosts(endpoint);
-
-  loadingVisible.value = false;
-  tweets.value = response.data.data;
-}
 </script>
 
 <template>
