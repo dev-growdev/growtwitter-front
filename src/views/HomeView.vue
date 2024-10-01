@@ -2,7 +2,7 @@
 // import BackToTop from '@/components/BackToTop.vue';
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { getUser, showPosts, getRetweet } from '@/services/api';
+import { getUser, showPosts, getRetweet, getUserbyId } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
@@ -18,6 +18,26 @@ const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
+const showDiscoverytweets = ref<boolean>(true);
+const showFollowingtweets = ref<boolean>(false);
+
+
+function enableDiscoveryTweets(){
+    showDiscoverytweets.value = true;
+    showFollowingtweets.value = false;
+    
+      console.log("Discovery: " + showDiscoverytweets.value);
+      console.log("Following: " + showFollowingtweets.value);
+  }
+
+function disableDiscoveryTweets(){
+  showDiscoverytweets.value = false;
+  showFollowingtweets.value = true;
+    
+    console.log("Discovery: " + showDiscoverytweets.value);
+    console.log("Following: " + showFollowingtweets.value);
+}
+
 
 const listenEmit = () => {
   showMessage('Tweet publicado com sucesso!', 'success');
@@ -61,18 +81,27 @@ async function fetchTweets() {
 
 async function fetchFollowingTweets() {
 
-  const userId = getUserId();
+  const userId = await getUserId();
+  console.log("ID:" + userId );
 
 const response = await showPosts('follow/' + userId);
 
-console.log(response)
-console.log(response.data.followingsData)
+console.log("Data (formatted):", JSON.stringify(response.data.followingsData, null, 2));
 
-let followingPosts = response.data.forEach((followingResponse: FollowingPostsRequestType) => {
-  return followingResponse.followingsData[1].posts;
+console.log("Data (formatted):", JSON.stringify(response.data.followingsData.posts, null, 2));
+
+let followingPosts = response.data.followingsData.map((followingResponse: FollowingPostsRequestType) => {
+  console.log(followingResponse.posts[0]);
+  return followingResponse.posts[0];
 });
 
+console.log("FOLLOWING POSTS " + JSON.stringify(followingPosts))
+
+
 following.value = followingPosts;
+
+console.log(following.value)
+console.log("FOLLOWING POSTS:", [...following.value][0].content);
 }
 
 async function handleGetUser() {
@@ -94,12 +123,14 @@ async function fetchReTweets() {
 }
 
 async function fetchAllDiscovery() {
+  enableDiscoveryTweets()
   loadingVisible.value = true;
   await Promise.all([fetchTweets(), fetchReTweets()]);
   loadingVisible.value = false;
 }
 
 async function fetchAllFollowing() {
+  disableDiscoveryTweets()
   loadingVisible.value = true;
   await Promise.all([fetchFollowingTweets(), fetchReTweets()]);
   loadingVisible.value = false;
@@ -108,7 +139,6 @@ async function fetchAllFollowing() {
 onMounted(() => {
   handleGetUser();
   fetchAllDiscovery();
-
 });
 
 const windowWidth = ref(window.innerWidth);
@@ -154,7 +184,12 @@ onUnmounted(() => {
               <v-btn @click="fetchAllDiscovery"><p class="font-weight-bold pt-6 px-2 text-h6">Descobrir</p></v-btn>
               <v-btn @click="fetchAllFollowing"><p class="font-weight-bold pt-6 px-2 text-h6">Seguindo</p></v-btn>
             </div>
-            <ListCard :tweets="following" :retweets="retweets" />
+            <div v-if="showDiscoverytweets">
+              <ListCard :tweets="tweets" :retweets="retweets" />
+            </div>
+            <div v-if="showFollowingtweets">
+              <ListCard :tweets="following" :retweets="retweets" />
+            </div>
           </v-col>
         </v-row>
       </v-container>

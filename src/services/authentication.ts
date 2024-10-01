@@ -8,9 +8,9 @@ export function getUserToken() {
 }
 
 export function getUserId() {
-  const userId = localStorage?.getItem('UserData')
+  const userId = sessionStorage?.getItem('userId')
   if(userId){
-    return JSON.parse(userId).id;
+    return JSON.parse(userId);
   }
 }
 
