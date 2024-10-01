@@ -112,11 +112,21 @@ onUnmounted(() => {
         @click:close="clearMessage()"
       ></v-alert>
     </v-model>
-    <v-navigation-drawer width="470" class="border-0 pa-0">
+
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="left"
+      class="border-0"
+      touchless
+      disable-swipe
+    >
       <SideBar :item="item" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
-    <ApplicationBar class="d-flex d-lg-none" />
+    <ApplicationBar :userId="item.id" class="d-flex d-lg-none" />
+
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
@@ -137,7 +147,15 @@ onUnmounted(() => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer width="455" location="right" class="border-0 pa-2">
+    <v-navigation-drawer
+      v-if="!$vuetify.display.mdAndDown"
+      permanent
+      width="455"
+      location="right"
+      class="border-0"
+      touchless
+      disable-swipe
+    >
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
