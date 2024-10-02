@@ -4,10 +4,11 @@ import type { TweetType } from '@/types';
 import CardTweet from './CardTweet.vue';
 import CardRetweet from './CardRetweet.vue';
 import { useRoute } from 'vue-router';
+import type { RetweetType } from '@/types/RetweetType';
 
 interface Props {
   tweets: TweetType[];
-  retweets: any[];
+  retweets: RetweetType[];
   profile?: boolean;
 }
 

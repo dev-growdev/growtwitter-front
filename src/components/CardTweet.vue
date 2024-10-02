@@ -81,7 +81,6 @@ onMounted(() => {
       (like: any) => like.userId == JSON.parse(user).id
     );
   }
-  console.log(user)
 
 });
 </script>

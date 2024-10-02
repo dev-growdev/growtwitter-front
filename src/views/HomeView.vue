@@ -14,6 +14,7 @@ import ButtonTweet from '@/components/ButtonTweet.vue';
 import { getUserId } from '@/services/authentication';
 
 import BackToTop from '@/components/BackToTop.vue';
+import type { RetweetType } from '@/types/RetweetType';
 
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
@@ -69,8 +70,8 @@ function clearMessage() {
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const following = ref<TweetType[]>([]);
-const retweets = ref<any[]>([])
-const followingRetweets = ref<any[]>([])
+const retweets = ref<RetweetType[]>([])
+const followingRetweets = ref<RetweetType[]>([])
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
@@ -125,16 +126,16 @@ async function fetchFollowingReTweets() {
   const response = await showPosts('follow/' + userId);
   const followingPosts = [];
   for (let index = 0; index < response.data.followingsData.length; index++) {
-   for (let i = 0; i < response.data.followingsData[index].posts.length; i++) {
-    for (let j = 0; j < response.data.followingsData[index].posts[i].retweets.length; j++) {
-      followingPosts.push(response.data.followingsData[index].posts[i].retweets[j]);
-    }
-  }
+    console.log(response.data.followingsData[index].following.retweets); 
+    followingPosts.push(response.data.followingsData[index].following.retweets);
+      //pega os retweets dos posts dos seguindo
+      //tem que pegar os posts dos retweets dos seguindo
+
 }
 
-  console.log(followingPosts);
-  
   followingRetweets.value = followingPosts;
+  console.log(JSON.stringify(followingRetweets.value));
+  
 
 }
 
@@ -148,13 +149,10 @@ async function fetchAllDiscovery() {
 async function fetchAllFollowing() {
   disableDiscoveryTweets()
   loadingVisible.value = true;
+  console.log("Retweets:" + JSON.stringify(retweets.value));
   retweets.value = []
   await Promise.all([fetchFollowingTweets(), fetchFollowingReTweets()]);
   loadingVisible.value = false;
-
-  console.log("FOLLOWING", following);
-  console.log("TWEETS", tweets);
-  console.log("followingRetweets", followingRetweets);
 }
 
 onMounted(() => {
@@ -202,8 +200,8 @@ onUnmounted(() => {
         <v-row class="">
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <div class="div-page-title d-flex justify-center">
-              <v-btn @click="fetchAllDiscovery"><p class="font-weight-bold pt-6 px-2 text-h6">Descobrir</p></v-btn>
-              <v-btn @click="fetchAllFollowing"><p class="font-weight-bold pt-6 px-2 text-h6">Seguindo</p></v-btn>
+              <v-btn class="mt-5 mx-2" @click="fetchAllDiscovery"><p class="font-weight-bold text-h6">Descobrir</p></v-btn>
+              <v-btn class="mt-5 mx-2" @click="fetchAllFollowing"><p class="font-weight-bold text-h6">Seguindo</p></v-btn>
             </div>
             <div v-if="showDiscoverytweets">
               <ListCard :tweets="tweets" :retweets="retweets" />

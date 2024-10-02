@@ -1,5 +1,6 @@
 import type { FollowerType } from "./FollowerType";
 import type { FollowingType } from "./FollowingType";
+import type { RetweetType } from "./RetweetType";
 import type { TweetType } from "./TweetType";
 
 export interface FollowingDataType {
@@ -10,5 +11,6 @@ export interface FollowingDataType {
     followerId: number;
     follower: FollowerType[];
     following: FollowingType[];
+    retweets: RetweetType[];
     posts: TweetType[]
 }
