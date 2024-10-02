@@ -12,6 +12,7 @@ const keepConnected = ref<boolean>(false);
 const error = ref<string>('');
 const router = useRouter();
 
+const visible = ref<boolean>(false);
 const loadingVisible = ref<boolean>(false);
 
 const handleLogin = async () => {
@@ -49,13 +50,13 @@ const handleLogin = async () => {
         max-width="900"
         rounded="lg"
       >
-        <v-row class="d-flex align-center ">
-          <v-col cols="12" sm="6" class="text bg-blue rounded py-15" >
+        <v-row class="d-flex align-center">
+          <v-col cols="12" sm="6" class="text bg-blue rounded py-15">
             <v-card-title>Growtwitter</v-card-title>
             <v-card-subtitle class="text-white"
               >Trabalho final do bloco intermediário</v-card-subtitle
             >
-            <v-card-text >
+            <v-card-text>
               O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais
               que buscam uma experiência familiar e poderosa, semelhante ao Twitter, mas com um
               toque único. Seja parte desta comunidade que valoriza a liberdade de expressão, a
@@ -75,7 +76,9 @@ const handleLogin = async () => {
             ></v-text-field>
 
             <v-text-field
-              type="visible ? 'text' : 'password'"
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              @click:append-inner="visible = !visible"
+              :type="visible ? 'text' : 'password'"
               density="compact"
               placeholder="Digite sua  senha "
               prepend-inner-icon="mdi-lock-outline"
