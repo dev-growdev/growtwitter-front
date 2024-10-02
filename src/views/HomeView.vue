@@ -2,7 +2,7 @@
 // import BackToTop from '@/components/BackToTop.vue';
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { getUser, showPosts, getRetweet, getUserbyId } from '@/services/api';
+import { getUser, showPosts, getRetweet} from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
@@ -12,7 +12,6 @@ import ApplicationBar from '@/components/ApplicationBar.vue';
 // import { isLogged } from '@/utils/isLogged';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 import { getUserId } from '@/services/authentication';
-
 import BackToTop from '@/components/BackToTop.vue';
 import type { RetweetType } from '@/types/RetweetType';
 
@@ -22,7 +21,8 @@ const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
 const showDiscoverytweets = ref<boolean>(true);
 const showFollowingtweets = ref<boolean>(false);
-
+const btnEnabled = ref<boolean>(false);
+const value = ref<boolean>(false);
 
 function enableDiscoveryTweets(){
     showDiscoverytweets.value = true;
@@ -96,9 +96,6 @@ async function fetchFollowingTweets() {
 
   
   following.value = followingPosts;
-  
-  // console.log("FOLLOWING", following.value);
-  // console.log("TWEETS", tweets.value);
 
 }
 
@@ -124,35 +121,40 @@ async function fetchFollowingReTweets() {
   const userId = await getUserId();
   
   const response = await showPosts('follow/' + userId);
+  console.log("response: " + JSON.stringify(response));
+  
   const followingPosts = [];
   for (let index = 0; index < response.data.followingsData.length; index++) {
-    console.log(response.data.followingsData[index].following.retweets); 
-    followingPosts.push(response.data.followingsData[index].following.retweets);
-      //pega os retweets dos posts dos seguindo
-      //tem que pegar os posts dos retweets dos seguindo
-
-}
+    for (let i = 0; i < response.data.followingsData[index].following.retweets.length; i++) {
+      followingPosts.push(response.data.followingsData[index].following.retweets[i]);
+  }
+    }
 
   followingRetweets.value = followingPosts;
-  console.log(JSON.stringify(followingRetweets.value));
-  
 
+  console.log("Following Retweers value " + JSON.stringify(followingRetweets.value));
+  
 }
 
 async function fetchAllDiscovery() {
+  btnEnabled.value = false;
   enableDiscoveryTweets()
   loadingVisible.value = true;
   await Promise.all([fetchTweets(), fetchReTweets()]);
   loadingVisible.value = false;
+  btnEnabled.value = true;
+  console.log("Retweets:" + JSON.stringify(retweets.value));
 }
 
 async function fetchAllFollowing() {
+  btnEnabled.value = false;
   disableDiscoveryTweets()
   loadingVisible.value = true;
-  console.log("Retweets:" + JSON.stringify(retweets.value));
-  retweets.value = []
   await Promise.all([fetchFollowingTweets(), fetchFollowingReTweets()]);
   loadingVisible.value = false;
+  btnEnabled.value = true;
+  console.log("Following Retweets:" + followingRetweets.value);
+  console.log("Following tweets:" + following.value);
 }
 
 onMounted(() => {
@@ -200,8 +202,12 @@ onUnmounted(() => {
         <v-row class="">
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <div class="div-page-title d-flex justify-center">
-              <v-btn class="mt-5 mx-2" @click="fetchAllDiscovery"><p class="font-weight-bold text-h6">Descobrir</p></v-btn>
-              <v-btn class="mt-5 mx-2" @click="fetchAllFollowing"><p class="font-weight-bold text-h6">Seguindo</p></v-btn>
+              <v-layout class="layout overflow-visible">
+              <v-bottom-navigation v-model="value" active>
+              <v-btn class=" home-switch-btn mt-5 mx-2" :disabled="!btnEnabled" @click="fetchAllDiscovery"><p class="font-weight-bold text-h6">Descobrir</p></v-btn>
+              <v-btn class=" home-switch-btn mt-5 mx-2" :disabled="!btnEnabled" @click="fetchAllFollowing"><p class="font-weight-bold text-h6">Seguindo</p></v-btn>
+            </v-bottom-navigation>
+            </v-layout>
             </div>
             <div v-if="showDiscoverytweets">
               <ListCard :tweets="tweets" :retweets="retweets" />
@@ -224,6 +230,10 @@ onUnmounted(() => {
 <style scoped>
 .app {
   overflow-x: hidden;
+}
+
+.layout{
+  height: 50px !important;
 }
 
 @media (max-width: 600px) {

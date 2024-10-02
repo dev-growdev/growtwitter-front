@@ -41,7 +41,8 @@ const filteredList = computed(() => {
   const filtered = combinedList.value.filter(item => item.userId === Number(route.params.id));
 
   return filtered;
-});
+}); 
+
 </script>
 
 <template>
