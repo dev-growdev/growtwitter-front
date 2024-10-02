@@ -12,7 +12,8 @@ import ApplicationBar from '@/components/ApplicationBar.vue';
 // import { isLogged } from '@/utils/isLogged';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 import { getUserId } from '@/services/authentication';
-import type { FollowingPostsRequestType } from '@/types/FollowingPostsRequestType';
+
+import BackToTop from '@/components/BackToTop.vue';
 
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
@@ -67,8 +68,9 @@ function clearMessage() {
 
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
-const following = ref<FollowingPostsRequestType[]>([]);
+const following = ref<TweetType[]>([]);
 const retweets = ref<any[]>([])
+const followingRetweets = ref<any[]>([])
 const item = ref<UserType[]>([]);
 const endpoint = '/posts';
 
@@ -82,26 +84,21 @@ async function fetchTweets() {
 async function fetchFollowingTweets() {
 
   const userId = await getUserId();
-  console.log("ID:" + userId );
+  
+  const response = await showPosts('follow/' + userId);
+  const followingPosts = [];
+  for (let index = 0; index < response.data.followingsData.length; index++) {
+   for (let i = 0; i < response.data.followingsData[index].posts.length; i++) {
+    followingPosts.push(response.data.followingsData[index].posts[i]);
+    }
+  }
 
-const response = await showPosts('follow/' + userId);
+  
+  following.value = followingPosts;
+  
+  // console.log("FOLLOWING", following.value);
+  // console.log("TWEETS", tweets.value);
 
-console.log("Data (formatted):", JSON.stringify(response.data.followingsData, null, 2));
-
-console.log("Data (formatted):", JSON.stringify(response.data.followingsData.posts, null, 2));
-
-let followingPosts = response.data.followingsData.map((followingResponse: FollowingPostsRequestType) => {
-  console.log(followingResponse.posts[0]);
-  return followingResponse.posts[0];
-});
-
-console.log("FOLLOWING POSTS " + JSON.stringify(followingPosts))
-
-
-following.value = followingPosts;
-
-console.log(following.value)
-console.log("FOLLOWING POSTS:", [...following.value][0].content);
 }
 
 async function handleGetUser() {
@@ -119,6 +116,25 @@ async function fetchReTweets() {
 
   const response = await getRetweet();
   retweets.value = response.data.data;
+}
+
+async function fetchFollowingReTweets() {
+
+  const userId = await getUserId();
+  
+  const response = await showPosts('follow/' + userId);
+  const followingPosts = [];
+  for (let index = 0; index < response.data.followingsData.length; index++) {
+   for (let i = 0; i < response.data.followingsData[index].posts.length; i++) {
+    for (let j = 0; j < response.data.followingsData[index].posts[i].retweets.length; j++) {
+      followingPosts.push(response.data.followingsData[index].posts[i].retweets[j]);
+    }
+  }
+}
+
+  console.log(followingPosts);
+  
+  followingRetweets.value = followingPosts;
 
 }
 
@@ -132,8 +148,13 @@ async function fetchAllDiscovery() {
 async function fetchAllFollowing() {
   disableDiscoveryTweets()
   loadingVisible.value = true;
-  await Promise.all([fetchFollowingTweets(), fetchReTweets()]);
+  retweets.value = []
+  await Promise.all([fetchFollowingTweets(), fetchFollowingReTweets()]);
   loadingVisible.value = false;
+
+  console.log("FOLLOWING", following);
+  console.log("TWEETS", tweets);
+  console.log("followingRetweets", followingRetweets);
 }
 
 onMounted(() => {
@@ -188,7 +209,7 @@ onUnmounted(() => {
               <ListCard :tweets="tweets" :retweets="retweets" />
             </div>
             <div v-if="showFollowingtweets">
-              <ListCard :tweets="following" :retweets="retweets" />
+              <ListCard :tweets="following" :retweets="followingRetweets" />
             </div>
           </v-col>
         </v-row>

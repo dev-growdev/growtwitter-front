@@ -7,6 +7,7 @@ export interface TweetType {
   user: UserType;
   likes_count: number;
   likes: [];
+  retweets: [];
   comments_count: number;
   comments: CommentType[];
 }
