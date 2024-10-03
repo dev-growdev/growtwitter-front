@@ -10,6 +10,8 @@ import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
+import BackToTop from '@/components/BackToTop.vue';
+
 
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
@@ -17,9 +19,17 @@ const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
 
 const listenEmit = () => {
+  console.log('entrou');
   showMessage('Tweet publicado com sucesso!', 'success');
   fetchTweets();
 };
+
+const handleEmit = () => {
+  console.log('entrou');
+  showMessage('Tweet publicado com sucesso!', 'success');
+  fetchTweets();
+};
+
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -32,8 +42,11 @@ async function showMessage(messageText: string, type: string) {
 
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   hasMessage.value = true;
+  console.log(hasMessage.value);
+  
   await delay(3000);
   hasMessage.value = false;
+  console.log(hasMessage.value);
 }
 
 function clearMessage() {
@@ -120,6 +133,8 @@ onUnmounted(() => {
       <SideBar :item="item" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
+    
+
     <ApplicationBar :userId="item.id" class="d-flex d-lg-none" />
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
@@ -127,7 +142,7 @@ onUnmounted(() => {
     <BackToTop />
 
     <div class="d-flex d-lg-none">
-      <ButtonTweet />
+      <ButtonTweet @add-tweet="handleEmit" />
     </div>
 
     <v-main class="mx-0">
@@ -180,4 +195,11 @@ onUnmounted(() => {
   right: 30%;
   z-index: 9999;
 }
+
+@media (max-width: 1279px){
+    .alert{
+      left: 20%;
+      right: 20%;
+    }
+  } 
 </style>
