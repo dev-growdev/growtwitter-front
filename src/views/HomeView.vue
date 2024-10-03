@@ -88,14 +88,34 @@ async function fetchFollowingTweets() {
   
   const response = await showPosts('follow/' + userId);
   const followingPosts = [];
-  for (let index = 0; index < response.data.followingsData.length; index++) {
-   for (let i = 0; i < response.data.followingsData[index].posts.length; i++) {
-    followingPosts.push(response.data.followingsData[index].posts[i]);
+
+  // for (let index = 0; index < response.data.followingsData.length; index++) {
+   for (let i = 0; i < response.data.followingsData[0].posts.length; i++) {
+    followingPosts.push(response.data.followingsData[0].posts[i]);
+    }
+  // }
+  
+  const response1 = await showPosts('posts/');
+  console.log(response1.data);
+  console.log(followingPosts);
+
+  const tamanhoFollowingPosts = followingPosts.length;
+  for (let i = 0; i < response1.data.data.length; i++) {
+    for (let j = 0; j < tamanhoFollowingPosts; j++) {
+    for (let k = 0; k < response1.data.data[i].retweets.length; k++) {
+      if(response1.data.data[i].retweets[k].userId == followingPosts[j].userId){ 
+        followingPosts.push(response1.data.data[i]) //post
+      }
     }
   }
-
+  }
+  
   
   following.value = followingPosts;
+  console.log("following.value");
+  console.log(following.value);
+
+  
 
 }
 
@@ -121,7 +141,6 @@ async function fetchFollowingReTweets() {
   const userId = await getUserId();
   
   const response = await showPosts('follow/' + userId);
-  console.log("response: " + JSON.stringify(response));
   
   const followingPosts = [];
   for (let index = 0; index < response.data.followingsData.length; index++) {
@@ -129,10 +148,10 @@ async function fetchFollowingReTweets() {
       followingPosts.push(response.data.followingsData[index].following.retweets[i]);
   }
     }
+  
 
   followingRetweets.value = followingPosts;
 
-  console.log("Following Retweers value " + JSON.stringify(followingRetweets.value));
   
 }
 
@@ -143,7 +162,6 @@ async function fetchAllDiscovery() {
   await Promise.all([fetchTweets(), fetchReTweets()]);
   loadingVisible.value = false;
   btnEnabled.value = true;
-  console.log("Retweets:" + JSON.stringify(retweets.value));
 }
 
 async function fetchAllFollowing() {
@@ -151,10 +169,10 @@ async function fetchAllFollowing() {
   disableDiscoveryTweets()
   loadingVisible.value = true;
   await Promise.all([fetchFollowingTweets(), fetchFollowingReTweets()]);
+  // followingRetweets.value = []
   loadingVisible.value = false;
   btnEnabled.value = true;
-  console.log("Following Retweets:" + followingRetweets.value);
-  console.log("Following tweets:" + following.value);
+
 }
 
 onMounted(() => {
