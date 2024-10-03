@@ -9,12 +9,8 @@ import type { UserType } from '@/types';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
-// import { isLogged } from '@/utils/isLogged';
 import ButtonTweet from '@/components/ButtonTweet.vue';
-import { isLogged } from '@/utils/isLogged';
-import { useRouter } from 'vue-router';
 
-const router = useRouter();
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
@@ -55,7 +51,6 @@ async function fetchTweets() {
   const response = await showPosts(endpoint);
 
   tweets.value = response.data.data;
-  if (response.status === 401) isLogged(router);
 }
 
 async function handleGetUser() {
@@ -126,7 +121,6 @@ onUnmounted(() => {
     </v-navigation-drawer>
 
     <ApplicationBar :userId="item.id" class="d-flex d-lg-none" />
-
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
