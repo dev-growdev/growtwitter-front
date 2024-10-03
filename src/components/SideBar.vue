@@ -42,7 +42,7 @@ async function handleLogout() {
 </script>
 
 <template>
-  <div class="d-flex flex-column justify-space-between h-screen px-2 py-4">
+  <div class="d-flex flex-column justify-space-between h-screen px-2 py-4 pr-5">
     <div class="d-flex justify-end">
       <v-list class="d-flex flex-column">
         <div class="d-flex align-center mb-4" style="margin-left: 12px">
