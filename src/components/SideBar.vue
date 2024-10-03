@@ -53,14 +53,12 @@ async function handleLogout() {
           Página inicial
         </RouterLink>
 
-        <RouterLink to="/explore"
-          class="router-icon text-black font-weight-semibold text-h6 pt-1 d-flex align-center ga-2">
+        <RouterLink to="/explore" class="router-icon text-black font-weight-semibold text-h6 pt-1 d-flex align-center ga-2">
           <HashTag class="img-icon" />
           Explorar
         </RouterLink>
 
-        <RouterLink :to="`/profile/${item.id}`"
-          class="router-icon text-black font-weight-semibold text-h6 pt-2 d-flex align-center ga-2">
+        <RouterLink :to="`/profile/${item.id}`" class="router-icon text-black font-weight-semibold text-h6 pt-2 d-flex align-center ga-2">
           <ProfileLogo class="img-icon" />
           Perfil
         </RouterLink>
@@ -74,7 +72,7 @@ async function handleLogout() {
         <v-img max-width="50" class="rounded-circle" :src="item.avatar_url"> </v-img>
 
         <div>
-          <p class="text-black">{{ item.name }}</p>
+          {{ item.name && item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name }}
           <p class="text-black">@{{ item.username }}</p>
         </div>
 
@@ -85,7 +83,6 @@ async function handleLogout() {
           </ButtonDefault>
         </div>
       </v-list>
-
     </div>
   </div>
 </template>
