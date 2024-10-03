@@ -10,6 +10,7 @@ import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
+import BackToTop from '@/components/BackToTop.vue';
 
 
 const hasMessage = ref<boolean>(false);
