@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
-import { isLogged } from '@/utils/isLogged';
 import { emit } from 'process';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['addTweet']);
-const router = useRouter();
 const content = ref<string>('');
 const isTweeting = ref<boolean>(false);
 const hasMessage = ref<boolean>(false);
@@ -36,7 +33,6 @@ async function handlePostTweet() {
   if (response.status != 201) {
     spinnerLoading.value = false;
     showMessage('Erro ao publicar tweet', 'error');
-    isLogged(router);
     return;
   }
 

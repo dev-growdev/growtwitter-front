@@ -1,9 +1,5 @@
 import axios from 'axios';
 import { getUserToken } from './authentication';
-import { isLogged } from '@/utils/isLogged';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -71,9 +67,7 @@ export async function showPosts(endpoint: string) {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
   try {
-    const response = await client.get(endpoint, config);
-    if (response.status === 401) isLogged(router);
-    return response;
+    return await client.get(endpoint, config);
   } catch (error: any) {
     return error?.response;
   }
@@ -85,7 +79,6 @@ export async function postTweet(content: string) {
   };
   try {
     const response = await client.post('/posts', { content }, config);
-    if (response.status === 401) isLogged(router);
     return response;
   } catch (error) {
     return error;
@@ -105,6 +98,7 @@ export const getUser = async () => {
     return error?.response;
   }
 };
+
 export const getUserbyId = async (id: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -118,6 +112,7 @@ export const getUserbyId = async (id: string) => {
     return error?.response;
   }
 };
+
 export const getFollowersAndFollowingById = async (id: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -131,6 +126,7 @@ export const getFollowersAndFollowingById = async (id: string) => {
     return error?.response;
   }
 };
+
 export const postFollow = async (followingId: string, followerId: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -147,6 +143,7 @@ export const postFollow = async (followingId: string, followerId: string) => {
     return error?.response;
   }
 };
+
 export const postRetweet = async (postId: number, content?: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -163,6 +160,7 @@ export const postRetweet = async (postId: number, content?: string) => {
     return error?.response;
   }
 };
+
 export async function getRetweet() {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -174,6 +172,7 @@ export async function getRetweet() {
     return error?.response;
   }
 }
+
 export async function postLike(postId: number) {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -185,6 +184,7 @@ export async function postLike(postId: number) {
     return false;
   }
 }
+
 export async function postComment(postId: number, content: string) {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -195,6 +195,7 @@ export async function postComment(postId: number, content: string) {
     return error;
   }
 }
+
 export const getProfileData = async (id: string) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -202,7 +203,6 @@ export const getProfileData = async (id: string) => {
 
   try {
     const response = await client.get('/profile/' + id, config);
-    if (response.status === 401) isLogged(router);
     return response;
   } catch (error: any) {
     return error?.response;
