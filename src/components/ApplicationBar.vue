@@ -1,39 +1,54 @@
 <script setup lang="ts">
-import homePageLogo from '@/components/icons/homePageLogo.vue';
-import HashTagLogo from '@/components/icons/hashTagLogo.vue';
-import ProfileLogo from '@/components/icons/profileLogo.vue';
-import type { UserType } from '@/types';
+import { useRouter } from 'vue-router';
+import { logout } from '@/services/api';
+import { resetStorage } from '@/services/authentication';
 
-interface iconProps {
-  userId?: UserType;
+const userId = sessionStorage.getItem('userId');
+
+const router = useRouter();
+async function handleLogout() {
+
+  const response = await logout();
+
+  if (response) {
+    resetStorage();
+    router.push('/login');
+  }
+
+
+
 }
 
-defineProps<iconProps>();
 </script>
 
 <template>
-  <v-bottom-navigation grow>
-    <v-btn>
-      <RouterLink to="/">
-        <homePageLogo class="img-icon" />
-      </RouterLink>
+
+  <v-bottom-navigation mode="shift">
+    <v-btn to="/">
+      <v-icon>mdi-home</v-icon>
+      <span>Home</span>
     </v-btn>
-    <v-btn>
-      <RouterLink to="/explore">
-        <HashTagLogo class="img-icon" />
-      </RouterLink>
+
+
+    <v-btn to="/explore">
+      <v-icon>mdi-pound</v-icon>
+
+      <span>Explorar</span>
     </v-btn>
-    <v-btn>
-      <RouterLink :to="`/profile/${userId?.id}`">
-        <ProfileLogo class="img-icon" />
-      </RouterLink>
+
+    <v-btn :to="`/profile/${userId}`">
+      <v-icon>mdi-account</v-icon>
+
+      <span>Perfil</span>
+    </v-btn>
+
+    <v-btn @click="handleLogout">
+      <v-icon>mdi-logout</v-icon>
+
+      <span>Logout</span>
     </v-btn>
   </v-bottom-navigation>
+
 </template>
 
-<style scoped>
-.img-icon {
-  max-width: 16vh;
-  max-height: 25vh;
-}
-</style>
+<style scoped></style>

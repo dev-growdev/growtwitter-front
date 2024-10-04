@@ -26,9 +26,10 @@ onMounted(() => {
   <div class="card-principal rounded-0">
     <v-card-actions class="ga-2">
       <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`">
-          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
-        </RouterLink>
+        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :to="`/profile/${data.user.id}`"
+            :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar></RouterLink>
+
+
 
       </div>
       <div class="tweet-body">
@@ -63,9 +64,7 @@ onMounted(() => {
   transition: background-color 0.3s ease;
 }
 
-.card-principal:hover {
-  background-color: #f5f8fa;
-}
+
 
 .dropdown {
   display: flex;
