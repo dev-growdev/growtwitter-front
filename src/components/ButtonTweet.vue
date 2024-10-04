@@ -2,7 +2,7 @@
 import { postTweet } from '@/services/api';
 import { ref } from 'vue';
 
-const emit = defineEmits(['addTweet']);
+const emit = defineEmits(['addTweet', 'updateKey']);
 const content = ref<string>('');
 const isTweeting = ref<boolean>(false);
 const hasMessage = ref<boolean>(false);
@@ -26,8 +26,7 @@ async function handlePostTweet() {
   }
 
   isTweeting.value = true;
-  const response = await postTweet(content.value);
-  console.log(response);
+  const response: any = await postTweet(content.value);
 
   if (response.status != 201) {
     spinnerLoading.value = false;

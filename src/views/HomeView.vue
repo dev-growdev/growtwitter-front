@@ -10,7 +10,6 @@ import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 import BackToTop from '@/components/BackToTop.vue';
 
-
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
@@ -27,7 +26,6 @@ const handleEmit = () => {
   showMessage('Tweet publicado com sucesso!', 'success');
   fetchAll();
 };
-
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -62,6 +60,7 @@ async function handleGetUser() {
   if (!userData) {
     const response = await getUser();
     item.value = response.data.data;
+
     localStorage.setItem('userData', JSON.stringify(item.value));
     return;
   }
