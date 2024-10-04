@@ -122,7 +122,6 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 
 const handleEdit = async () => {
   try {
-    loadingVisibleModal.value = true;
 
     let avatarUrl = '';
     if (account.avatar_url instanceof File) {
@@ -130,6 +129,43 @@ const handleEdit = async () => {
     }
 
     clearValidationErrors();
+
+    if (account.name) {
+      //nome
+      if (account.name.length > 40) {
+        validationErrors.name.push('O campo nome não pode ter mais de 40 caracteres.');
+        return;
+      }
+    } else {
+      validationErrors.name.push('O campo nome é obrigatório.');
+      return;
+    }
+
+    if (account.surname) {
+      //sobrenome
+      if (account.surname.length > 40) {
+        validationErrors.surname.push('O campo sobrenome não pode ter mais de 40 caracteres.');
+        return;
+      }
+    } else {
+      validationErrors.surname.push('O campo sobrenome é obrigatório.');
+      return;
+    }
+
+    if (account.username) {
+      //username
+      if (account.username.length < 5) {
+        validationErrors.username.push('O campo nome de usuário deve ter pelo menos 5 caracteres.');
+        return;
+      }
+      if (account.username.length > 30) {
+        validationErrors.username.push(
+          'O campo nome de usuário não pode ter mais de 30 caracteres.'
+        );
+        return;
+      }
+
+      loadingVisibleModal.value = true;
 
     const userId = JSON.parse(localStorage.getItem('userData') as string);
 
@@ -144,10 +180,11 @@ const handleEdit = async () => {
     };
 
     const response = await edit(userData);
-
+    console.log(response);
+    
     if (response.status === 201 || response.status === 200) {
       localStorage.setItem('userData', JSON.stringify(response.data.data));
-
+      console.log(response.data.data);
       await fetchAll(route.params.id as string);
       handleGetUser();
 
@@ -161,10 +198,12 @@ const handleEdit = async () => {
         validationErrors[key as keyof RegisterAccountValidationType] = errors[key];
       }
     }
+  }
   } catch (error) {
     console.log(error);
   }
-};
+}
+
 
 // END MODAL
 
