@@ -8,7 +8,7 @@ import ExploreComponent from '@/components/ExploreComponent.vue';
 import { items } from '@/utils/ExploreArray';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 
-const item = ref<UserType[]>([]);
+const item = ref<UserType>();
 
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
@@ -28,32 +28,19 @@ onMounted(() => {
 
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-if="!$vuetify.display.mdAndDown"
-      permanent
-      width="455"
-      location="left"
-      class="border-0"
-      touchless
-      disable-swipe
-    >
-      <SideBar :item="item" />
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
+      <SideBar :item="item!" />
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
 
     <v-main class="mx-0 mx-md-4">
       <v-container class="pa-0">
-        <v-row class="border px-4 px-md-0"> 
+        <v-row class="border px-4 px-md-0">
           <v-col class="mx-2 mt-6">
             <h2>O que está acontecendo?</h2>
           </v-col>
-          <v-col
-            cols="12"
-            class="d-flex flex-column border-t py-4"
-            v-for="(item, index) in items"
-            :key="index"
-          >
+          <v-col cols="12" class="d-flex flex-column border-t py-4" v-for="(item, index) in items" :key="index">
             <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
             <h3>{{ item.content }}</h3>
           </v-col>
@@ -61,15 +48,7 @@ onMounted(() => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer
-      v-if="!$vuetify.display.mdAndDown"
-      permanent
-      width="455"
-      location="right"
-      class="border-0"
-      touchless
-      disable-swipe
-    >
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe>
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>

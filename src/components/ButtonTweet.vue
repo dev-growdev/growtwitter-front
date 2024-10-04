@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
-import { emit } from 'process';
 import { ref } from 'vue';
 
-const emit = defineEmits(['addTweet']);
+const emit = defineEmits(['addTweet', 'updateKey']);
 const content = ref<string>('');
 const isTweeting = ref<boolean>(false);
 const hasMessage = ref<boolean>(false);
@@ -27,8 +26,7 @@ async function handlePostTweet() {
   }
 
   isTweeting.value = true;
-  const response = await postTweet(content.value);
-  console.log(response);
+  const response: any = await postTweet(content.value);
 
   if (response.status != 201) {
     spinnerLoading.value = false;
@@ -57,12 +55,7 @@ function showMessage(messageText: string, type: string) {
 </script>
 
 <template>
-  <v-btn
-    @click="closeModal.value = true"
-    class="pe-2 tweet-btn"
-    prepend-icon="mdi-feather"
-    variant="flat"
-  >
+  <v-btn @click="closeModal = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
     <div class="text-none mobile-text-none font-weight-regular">
       <span class="d-none d-lg-flex">Tweetar</span>
     </div>
@@ -96,28 +89,11 @@ function showMessage(messageText: string, type: string) {
 
           <!-- Modal Footer -->
           <v-card-actions class="my-2 d-flex justify-end">
-            <v-btn
-              class="text-none"
-              rounded="xl"
-              text="Cancel"
-              @click="isActive.value = false"
-            ></v-btn>
+            <v-btn class="text-none" rounded="xl" text="Cancel" @click="isActive.value = false"></v-btn>
 
-            <v-btn
-              class="text-none"
-              color="primary"
-              rounded="xl"
-              text="Tweetar"
-              variant="flat"
-              @click="handlePostTweet"
-              :disabled="isTweeting"
-            >
+            <v-btn class="text-none" color="primary" rounded="xl" text="Tweetar" variant="flat" @click="handlePostTweet" :disabled="isTweeting">
               <p v-if="!spinnerLoading">Tweetar</p>
-              <v-progress-circular
-                class="spinner"
-                v-if="spinnerLoading"
-                indeterminate
-              ></v-progress-circular>
+              <v-progress-circular class="spinner" v-if="spinnerLoading" indeterminate></v-progress-circular>
             </v-btn>
           </v-card-actions>
         </v-card>
