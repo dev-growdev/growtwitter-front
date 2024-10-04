@@ -12,7 +12,6 @@ import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 import BackToTop from '@/components/BackToTop.vue';
 
-
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
@@ -30,7 +29,6 @@ const handleEmit = () => {
   fetchTweets();
 };
 
-
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -43,7 +41,7 @@ async function showMessage(messageText: string, type: string) {
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   hasMessage.value = true;
   console.log(hasMessage.value);
-  
+
   await delay(3000);
   hasMessage.value = false;
   console.log(hasMessage.value);
@@ -57,7 +55,7 @@ function clearMessage() {
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const retweets = ref<any[]>([]);
-const item = ref<UserType[]>([]);
+const item = ref<UserType>();
 const endpoint = '/posts';
 
 async function fetchTweets() {
@@ -71,6 +69,7 @@ async function handleGetUser() {
   if (!userData) {
     const response = await getUser();
     item.value = response.data.data;
+
     localStorage.setItem('userData', JSON.stringify(item.value));
     return;
   }
@@ -111,31 +110,14 @@ onUnmounted(() => {
 <template>
   <v-app class="ma-0" id="app">
     <v-model class="model-alert">
-      <v-alert
-        v-if="hasMessage"
-        closable
-        class="alert fixed-alert"
-        :text="message"
-        :color="alertType"
-        @click:close="clearMessage()"
-      ></v-alert>
+      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
     </v-model>
 
-    <v-navigation-drawer
-      v-if="!$vuetify.display.mdAndDown"
-      permanent
-      width="455"
-      location="left"
-      class="border-0"
-      touchless
-      disable-swipe
-    >
-      <SideBar :item="item" @call-emit="listenEmit" />
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
+      <SideBar :item="item!" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
-    
-
-    <ApplicationBar :userId="item.id" class="d-flex d-lg-none" />
+    <ApplicationBar :user-id="item" class="d-flex d-lg-none" />
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
 
@@ -156,15 +138,7 @@ onUnmounted(() => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer
-      v-if="!$vuetify.display.mdAndDown"
-      permanent
-      width="455"
-      location="right"
-      class="border-0"
-      touchless
-      disable-swipe
-    >
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe>
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
@@ -196,10 +170,10 @@ onUnmounted(() => {
   z-index: 9999;
 }
 
-@media (max-width: 1279px){
-    .alert{
-      left: 20%;
-      right: 20%;
-    }
-  } 
+@media (max-width: 1279px) {
+  .alert {
+    left: 20%;
+    right: 20%;
+  }
+}
 </style>

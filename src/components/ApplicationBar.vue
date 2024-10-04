@@ -2,9 +2,10 @@
 import homePageLogo from '@/components/icons/homePageLogo.vue';
 import HashTagLogo from '@/components/icons/hashTagLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
+import type { UserType } from '@/types';
 
 interface iconProps {
-  userId: string | number;
+  userId?: UserType;
 }
 
 defineProps<iconProps>();
@@ -23,7 +24,7 @@ defineProps<iconProps>();
       </RouterLink>
     </v-btn>
     <v-btn>
-      <RouterLink :to="`/profile/${userId}`">
+      <RouterLink :to="`/profile/${userId?.id}`">
         <ProfileLogo class="img-icon" />
       </RouterLink>
     </v-btn>

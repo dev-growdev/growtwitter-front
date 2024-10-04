@@ -53,7 +53,7 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
-  const nearestTitle = to.meta?.title;
+  const nearestTitle = to.meta?.title as string;
   if (nearestTitle) document.title = nearestTitle;
 });
 
