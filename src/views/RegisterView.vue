@@ -78,8 +78,8 @@ const handleRegister = async () => {
     //validações front
     if (account.name) {
       //nome
-      if (account.name.length > 255) {
-        validationErrors.name.push('O campo nome não pode ter mais de 255 caracteres.');
+      if (account.name.length > 40) {
+        validationErrors.name.push('O campo nome não pode ter mais de 40 caracteres.');
         return;
       }
     } else {
@@ -89,8 +89,8 @@ const handleRegister = async () => {
 
     if (account.surname) {
       //sobrenome
-      if (account.surname.length > 255) {
-        validationErrors.name.push('O campo sobrenome não pode ter mais de 255 caracteres.');
+      if (account.surname.length > 40) {
+        validationErrors.surname.push('O campo sobrenome não pode ter mais de 40 caracteres.');
         return;
       }
     } else {
@@ -122,8 +122,8 @@ const handleRegister = async () => {
     }
 
     if (account.email) {
-      if (account.email.length > 255) {
-        validationErrors.email.push('O campo email não pode ter mais de 255 caracteres.');
+      if (account.email.length > 50) {
+        validationErrors.email.push('O campo email não pode ter mais de 50 caracteres.');
         return;
       }
     } else {
@@ -152,7 +152,7 @@ const handleRegister = async () => {
       username: account.username,
       avatar_url: avatarUrl
     };
-
+    
     loadingVisible.value = true;
 
     const response = await register(userData);
