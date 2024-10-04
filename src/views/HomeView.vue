@@ -1,12 +1,10 @@
 <script setup lang="ts">
-// import BackToTop from '@/components/BackToTop.vue';
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { getUser, showPosts, getRetweet } from '@/services/api';
+import { getUser, getHomeData } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
-import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
@@ -21,13 +19,13 @@ const alertType = ref<string>('');
 const listenEmit = () => {
   console.log('entrou');
   showMessage('Tweet publicado com sucesso!', 'success');
-  fetchTweets();
+  fetchAll();
 };
 
 const handleEmit = () => {
   console.log('entrou');
   showMessage('Tweet publicado com sucesso!', 'success');
-  fetchTweets();
+  fetchAll();
 };
 
 
@@ -43,7 +41,7 @@ async function showMessage(messageText: string, type: string) {
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   hasMessage.value = true;
   console.log(hasMessage.value);
-  
+
   await delay(3000);
   hasMessage.value = false;
   console.log(hasMessage.value);
@@ -58,13 +56,6 @@ const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const retweets = ref<any[]>([]);
 const item = ref<UserType[]>([]);
-const endpoint = '/posts';
-
-async function fetchTweets() {
-  const response = await showPosts(endpoint);
-
-  tweets.value = response.data.data;
-}
 
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
@@ -77,14 +68,12 @@ async function handleGetUser() {
   item.value = JSON.parse(userData);
 }
 
-async function fetchReTweets() {
-  const response = await getRetweet();
-  retweets.value = response.data.data;
-}
 
 async function fetchAll() {
   loadingVisible.value = true;
-  await Promise.all([fetchTweets(), fetchReTweets()]);
+  const response = await getHomeData();
+  tweets.value = response.data.data.posts;
+  retweets.value = response.data.data.retweets;
   loadingVisible.value = false;
 }
 
@@ -110,34 +99,24 @@ onUnmounted(() => {
 
 <template>
   <v-app class="ma-0" id="app">
-    <v-model class="model-alert">
-      <v-alert
-        v-if="hasMessage"
-        closable
-        class="alert fixed-alert"
-        :text="message"
-        :color="alertType"
-        @click:close="clearMessage()"
-      ></v-alert>
-    </v-model>
-
-    <v-navigation-drawer
-      v-if="!$vuetify.display.mdAndDown"
-      permanent
-      width="455"
-      location="left"
-      class="border-0"
-      touchless
-      disable-swipe
-    >
+    <div class="model-alert">
+      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType"
+        @click:close="clearMessage()"></v-alert>
+    </div>
+    <div v-if="loadingVisible" class="spinner-div">
+      <v-progress-circular indeterminate :size="45" :width="9" />
+    </div>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0"
+      touchless disable-swipe>
       <SideBar :item="item" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
-    
 
-    <ApplicationBar :userId="item.id" class="d-flex d-lg-none" />
 
-    <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
+    <ApplicationBar class="d-flex d-lg-none" />
+
+
+
 
     <BackToTop />
 
@@ -156,15 +135,8 @@ onUnmounted(() => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer
-      v-if="!$vuetify.display.mdAndDown"
-      permanent
-      width="455"
-      location="right"
-      class="border-0"
-      touchless
-      disable-swipe
-    >
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0"
+      touchless disable-swipe>
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
@@ -175,17 +147,17 @@ onUnmounted(() => {
   overflow-x: hidden;
 }
 
-@media (max-width: 600px) {
-  .spinner-div {
-    position: fixed;
-    top: 40%;
-  }
-}
+
 
 .spinner-div {
+  display: flex;
+  background-color: #00000050;
   position: absolute;
-  top: 40%;
-  left: 50%;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
 }
 
 .alert {
@@ -196,10 +168,10 @@ onUnmounted(() => {
   z-index: 9999;
 }
 
-@media (max-width: 1279px){
-    .alert{
-      left: 20%;
-      right: 20%;
-    }
-  } 
+@media (max-width: 1279px) {
+  .alert {
+    left: 20%;
+    right: 20%;
+  }
+}
 </style>
