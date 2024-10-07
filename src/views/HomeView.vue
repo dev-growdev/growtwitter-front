@@ -53,7 +53,7 @@ function clearMessage() {
 const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const retweets = ref<any[]>([]);
-const item = ref<UserType[]>([]);
+const item = ref<UserType>();
 
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
@@ -66,7 +66,6 @@ async function handleGetUser() {
   }
   item.value = JSON.parse(userData);
 }
-
 
 async function fetchAll() {
   loadingVisible.value = true;
@@ -99,23 +98,16 @@ onUnmounted(() => {
 <template>
   <v-app class="ma-0" id="app">
     <div class="model-alert">
-      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType"
-        @click:close="clearMessage()"></v-alert>
+      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
     </div>
     <div v-if="loadingVisible" class="spinner-div">
       <v-progress-circular indeterminate :size="45" :width="9" />
     </div>
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0"
-      touchless disable-swipe>
-      <SideBar :item="item" @call-emit="listenEmit" />
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
+      <SideBar :item="item!" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
-
-
     <ApplicationBar class="d-flex d-lg-none" />
-
-
-
 
     <BackToTop />
 
@@ -134,8 +126,7 @@ onUnmounted(() => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0"
-      touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe>
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
@@ -145,8 +136,6 @@ onUnmounted(() => {
 .app {
   overflow-x: hidden;
 }
-
-
 
 .spinner-div {
   display: flex;
