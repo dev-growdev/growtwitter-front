@@ -56,7 +56,7 @@ function showMessage(messageText: string, type: string) {
 </script>
 
 <template>
-  <v-btn @click="closeModal = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
+  <v-btn click="closeModal.value = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
     <div class="text-none mobile-text-none font-weight-regular">
       <span class="d-none d-lg-flex">Tweetar</span>
     </div>
@@ -74,16 +74,8 @@ function showMessage(messageText: string, type: string) {
 
           <!-- Modal Body -->
           <v-card-text>
-            <v-textarea
-              label="O que está acontecendo?"
-              v-model="content"
-              :counter="maxContentLength"
-              :maxlength="maxContentLength"
-              class="mb-2"
-              rows="5"
-              variant="outlined"
-              persistent-counter
-            ></v-textarea>
+            <v-textarea label="O que está acontecendo?" v-model="content" :counter="maxContentLength"
+              :maxlength="maxContentLength" class="mb-2" rows="5" variant="outlined" persistent-counter></v-textarea>
           </v-card-text>
 
           <v-divider class="mt-2"></v-divider>
@@ -92,7 +84,8 @@ function showMessage(messageText: string, type: string) {
           <v-card-actions class="my-2 d-flex justify-end">
             <v-btn class="text-none" rounded="xl" text="Cancel" @click="isActive.value = false"></v-btn>
 
-            <v-btn class="text-none" color="primary" rounded="xl" text="Tweetar" variant="flat" @click="handlePostTweet" :disabled="isTweeting">
+            <v-btn class="text-none" color="primary" rounded="xl" text="Tweetar" variant="flat" @click="handlePostTweet"
+              :disabled="isTweeting">
               <p v-if="!spinnerLoading">Tweetar</p>
               <v-progress-circular class="spinner" v-if="spinnerLoading" indeterminate></v-progress-circular>
             </v-btn>
