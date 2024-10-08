@@ -153,7 +153,7 @@ export const postRetweet = async (postId: number, content?: string) => {
     content: content
   };
   try {
-    const response = await client.post('/retweet/', data, config);
+    const response = await client.post('/retweet', data, config);
 
     return response;
   } catch (error: any) {

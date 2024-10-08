@@ -15,12 +15,14 @@ const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
 
+//alerta que vem da sidebar
 const listenEmit = () => {
   console.log('entrou');
   showMessage('Tweet publicado com sucesso!', 'success');
   fetchAll();
 };
 
+//alerta que vem direto do buttonTweet por conta da responsividade
 const handleEmit = () => {
   console.log('entrou');
   showMessage('Tweet publicado com sucesso!', 'success');
