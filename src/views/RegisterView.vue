@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { register } from '@/services/api';
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import defaultAvatar from '@/assets/default-avatar.png';
 import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
 import router from '@/router';
@@ -11,6 +11,8 @@ import axios from 'axios';
 
 const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
+const attempts = ref<number>(0);
+const attemptsRegister = ref<boolean>(false);
 
 const account = reactive<CreateAccountType>({
   username: '',
@@ -67,6 +69,10 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
   }
 };
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms*1000 ));
+}
+
 const handleRegister = async () => {
   try {
     let avatarUrl = '';
@@ -80,55 +86,47 @@ const handleRegister = async () => {
       //nome
       if (account.name.length > 40) {
         validationErrors.name.push('O campo nome não pode ter mais de 40 caracteres.');
-        return;
       }
     } else {
       validationErrors.name.push('O campo nome é obrigatório.');
-      return;
+
     }
 
     if (account.surname) {
       //sobrenome
       if (account.surname.length > 40) {
         validationErrors.surname.push('O campo sobrenome não pode ter mais de 40 caracteres.');
-        return;
       }
     } else {
       validationErrors.surname.push('O campo sobrenome é obrigatório.');
-      return;
+
     }
 
     if (account.username) {
       //username
       if (account.username.length < 5) {
         validationErrors.username.push('O campo nome de usuário deve ter pelo menos 5 caracteres.');
-        return;
       }
       if (account.username.length > 30) {
         validationErrors.username.push(
           'O campo nome de usuário não pode ter mais de 30 caracteres.'
         );
-        return;
       }
       if (/[ !@#$%&*.()\-+]/.test(account.username)) {
         validationErrors.username.push(
           'O campo nome de usuário só pode conter letras, números e underlines.'
         );
-        return;
       }
     } else {
       validationErrors.username.push('O campo nome de usuário é obrigatório.');
-      return;
     }
 
     if (account.email) {
       if (account.email.length > 50) {
         validationErrors.email.push('O campo email não pode ter mais de 50 caracteres.');
-        return;
       }
     } else {
       validationErrors.email.push('O campo email é obrigátorio.');
-      return;
     }
 
     if (account.password.length >= 6) {
@@ -137,12 +135,18 @@ const handleRegister = async () => {
         validationErrors.password.push(
           "Sua senha deve ter algum dos caracteres especiais '#, -, !, _, @' "
         );
-        return;
       }
     } else {
       validationErrors.password.push('Sua senha deve ser maior que 6 dígitos');
-      return;
     }
+
+    for (const item in validationErrors) {
+      if (validationErrors[item as keyof RegisterAccountValidationType].length > 0) {
+        return; // Se houver erros, sair da função
+      }
+    }
+
+
 
     const userData = {
       name: account.name,
@@ -163,15 +167,38 @@ const handleRegister = async () => {
       sessionStorage.setItem('token', response.data.token);
       localStorage.setItem('userData', JSON.stringify(response.data.user));
       router.push('/');
+      
+      attempts.value++;
+    
+      if(attempts.value >= 1){
+        attemptsRegister.value = true;
+        localStorage.setItem("attemptsRegister", true.toString());
+        await delay(300);
+        localStorage.setItem("attemptsRegister", false.toString())
+        attemptsRegister.value = false;
+      }
+
     } else if (response.status === 422) {
-      console.log(response.data.msg);
 
       if (response.data.msg.includes('email')) validationErrors.email = response.data.msg;
+
     }
   } catch (error) {
     console.log(error);
   }
 };
+
+onMounted(async () => {
+  if(localStorage.getItem("attemptsRegister") == "true"){
+    attemptsRegister.value = true;
+    await delay(300);
+    localStorage.setItem("attemptsRegister", false.toString())
+    attemptsRegister.value = false;
+  }
+  else
+  localStorage.setItem("attemptsRegister", false.toString())
+   attemptsRegister.value = false;
+})
 </script>
 
 <template>
@@ -274,7 +301,7 @@ const handleRegister = async () => {
 
         <v-btn
           @click="handleRegister"
-          :disabled="account.password.length < 4"
+          :disabled="account.password.length < 4  || attemptsRegister"
           class="mb-2"
           color="blue"
           size="large"

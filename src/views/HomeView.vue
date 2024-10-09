@@ -40,7 +40,7 @@ async function showMessage(messageText: string, type: string) {
   hasMessage.value = true;
   console.log(hasMessage.value);
 
-  await delay(3000);
+ await delay(3000);
   hasMessage.value = false;
   console.log(hasMessage.value);
 }
@@ -76,6 +76,7 @@ async function fetchAll() {
 }
 
 onMounted(() => {
+  localStorage.setItem("attemptsVerify", false.toString())
   handleGetUser();
   fetchAll();
 });
