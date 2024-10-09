@@ -86,7 +86,6 @@ const handleRegister = async () => {
       //nome
       if (account.name.length > 40) {
         validationErrors.name.push('O campo nome não pode ter mais de 40 caracteres.');
-        return;
       }
     } else {
       validationErrors.name.push('O campo nome é obrigatório.');
@@ -97,7 +96,6 @@ const handleRegister = async () => {
       //sobrenome
       if (account.surname.length > 40) {
         validationErrors.surname.push('O campo sobrenome não pode ter mais de 40 caracteres.');
-        return;
       }
     } else {
       validationErrors.surname.push('O campo sobrenome é obrigatório.');
@@ -108,19 +106,16 @@ const handleRegister = async () => {
       //username
       if (account.username.length < 5) {
         validationErrors.username.push('O campo nome de usuário deve ter pelo menos 5 caracteres.');
-        return;
       }
       if (account.username.length > 30) {
         validationErrors.username.push(
           'O campo nome de usuário não pode ter mais de 30 caracteres.'
         );
-        return;
       }
       if (/[ !@#$%&*.()\-+]/.test(account.username)) {
         validationErrors.username.push(
           'O campo nome de usuário só pode conter letras, números e underlines.'
         );
-        return;
       }
     } else {
       validationErrors.username.push('O campo nome de usuário é obrigatório.');
@@ -129,7 +124,6 @@ const handleRegister = async () => {
     if (account.email) {
       if (account.email.length > 50) {
         validationErrors.email.push('O campo email não pode ter mais de 50 caracteres.');
-        return;
       }
     } else {
       validationErrors.email.push('O campo email é obrigátorio.');
@@ -141,10 +135,15 @@ const handleRegister = async () => {
         validationErrors.password.push(
           "Sua senha deve ter algum dos caracteres especiais '#, -, !, _, @' "
         );
-        return;
       }
     } else {
       validationErrors.password.push('Sua senha deve ser maior que 6 dígitos');
+    }
+
+    for (const item in validationErrors) {
+      if (validationErrors[item as keyof RegisterAccountValidationType].length > 0) {
+        return; // Se houver erros, sair da função
+      }
     }
 
 
@@ -174,7 +173,7 @@ const handleRegister = async () => {
       if(attempts.value >= 1){
         attemptsRegister.value = true;
         localStorage.setItem("attemptsRegister", true.toString());
-        await delay(40);
+        await delay(300);
         localStorage.setItem("attemptsRegister", false.toString())
         attemptsRegister.value = false;
       }
@@ -192,7 +191,7 @@ const handleRegister = async () => {
 onMounted(async () => {
   if(localStorage.getItem("attemptsRegister") == "true"){
     attemptsRegister.value = true;
-    await delay(60);
+    await delay(300);
     localStorage.setItem("attemptsRegister", false.toString())
     attemptsRegister.value = false;
   }
