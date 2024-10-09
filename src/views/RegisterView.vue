@@ -58,10 +58,7 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
   formData.append('upload_preset', uploadPreset);
 
   try {
-    const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      formData
-    );
+    const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
     return response.data.secure_url;
   } catch (error) {
     console.error('Error uploading to Cloudinary:', error);
@@ -70,7 +67,7 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 };
 
 function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms*1000 ));
+  return new Promise((resolve) => setTimeout(resolve, ms * 1000));
 }
 
 const handleRegister = async () => {
@@ -89,7 +86,6 @@ const handleRegister = async () => {
       }
     } else {
       validationErrors.name.push('O campo nome é obrigatório.');
-
     }
 
     if (account.surname) {
@@ -99,7 +95,6 @@ const handleRegister = async () => {
       }
     } else {
       validationErrors.surname.push('O campo sobrenome é obrigatório.');
-
     }
 
     if (account.username) {
@@ -108,14 +103,10 @@ const handleRegister = async () => {
         validationErrors.username.push('O campo nome de usuário deve ter pelo menos 5 caracteres.');
       }
       if (account.username.length > 30) {
-        validationErrors.username.push(
-          'O campo nome de usuário não pode ter mais de 30 caracteres.'
-        );
+        validationErrors.username.push('O campo nome de usuário não pode ter mais de 30 caracteres.');
       }
       if (/[ !@#$%&*.()\-+]/.test(account.username)) {
-        validationErrors.username.push(
-          'O campo nome de usuário só pode conter letras, números e underlines.'
-        );
+        validationErrors.username.push('O campo nome de usuário só pode conter letras, números e underlines.');
       }
     } else {
       validationErrors.username.push('O campo nome de usuário é obrigatório.');
@@ -132,9 +123,7 @@ const handleRegister = async () => {
     if (account.password.length >= 6) {
       //senha
       if (!/[@!\-_#]/.test(account.password)) {
-        validationErrors.password.push(
-          "Sua senha deve ter algum dos caracteres especiais '#, -, !, _, @' "
-        );
+        validationErrors.password.push("Sua senha deve ter algum dos caracteres especiais '#, -, !, _, @' ");
       }
     } else {
       validationErrors.password.push('Sua senha deve ser maior que 6 dígitos');
@@ -146,8 +135,6 @@ const handleRegister = async () => {
       }
     }
 
-
-
     const userData = {
       name: account.name,
       surname: account.surname,
@@ -156,7 +143,7 @@ const handleRegister = async () => {
       username: account.username,
       avatar_url: avatarUrl
     };
-    
+
     loadingVisible.value = true;
 
     const response = await register(userData);
@@ -167,21 +154,18 @@ const handleRegister = async () => {
       sessionStorage.setItem('token', response.data.token);
       localStorage.setItem('userData', JSON.stringify(response.data.user));
       router.push('/');
-      
+
       attempts.value++;
-    
-      if(attempts.value >= 1){
+
+      if (attempts.value >= 1) {
         attemptsRegister.value = true;
-        localStorage.setItem("attemptsRegister", true.toString());
+        localStorage.setItem('attemptsRegister', true.toString());
         await delay(300);
-        localStorage.setItem("attemptsRegister", false.toString())
+        localStorage.setItem('attemptsRegister', false.toString());
         attemptsRegister.value = false;
       }
-
     } else if (response.status === 422) {
-
       if (response.data.msg.includes('email')) validationErrors.email = response.data.msg;
-
     }
   } catch (error) {
     console.log(error);
@@ -189,16 +173,14 @@ const handleRegister = async () => {
 };
 
 onMounted(async () => {
-  if(localStorage.getItem("attemptsRegister") == "true"){
+  if (localStorage.getItem('attemptsRegister') == 'true') {
     attemptsRegister.value = true;
     await delay(300);
-    localStorage.setItem("attemptsRegister", false.toString())
+    localStorage.setItem('attemptsRegister', false.toString());
     attemptsRegister.value = false;
-  }
-  else
-  localStorage.setItem("attemptsRegister", false.toString())
-   attemptsRegister.value = false;
-})
+  } else localStorage.setItem('attemptsRegister', false.toString());
+  attemptsRegister.value = false;
+});
 </script>
 
 <template>
@@ -207,12 +189,7 @@ onMounted(async () => {
   </BackgroundOverlay>
   <div class="background">
     <div>
-      <v-card
-        class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8"
-        elevation="8"
-        max-width="648"
-        rounded="lg"
-      >
+      <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="648" rounded="lg">
         <h1 class="mt-1 text-center register-title">Criar conta</h1>
         <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
         <v-text-field
@@ -258,9 +235,7 @@ onMounted(async () => {
           required
         ></v-text-field>
 
-        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-          Senha
-        </div>
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">Senha</div>
 
         <v-text-field
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
@@ -274,23 +249,11 @@ onMounted(async () => {
           :error-messages="validationErrors.password"
         ></v-text-field>
 
-        <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">
-          Escolha um avatar (opcional):
-        </div>
+        <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
         <div class="upload-avatar-container">
-          <v-file-input
-            class="d-none"
-            accept="image/png, image/jpeg, image/jpg"
-            label="Avatar"
-            @change="bindCustomAvatar"
-            id="avatar"
-          ></v-file-input>
+          <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar" @change="bindCustomAvatar" id="avatar"></v-file-input>
           <label class="upload-avatar-label mt-3" for="avatar">
-            <v-avatar
-              class="avatar-preview"
-              :image="previewAvatar ?? defaultAvatar"
-              size="75"
-            ></v-avatar>
+            <v-avatar class="avatar-preview" :image="previewAvatar ?? defaultAvatar" size="75"></v-avatar>
           </label>
           <div v-if="validationErrors.avatar.length > 0">
             <p class="error-avatar-message" v-for="error in validationErrors.avatar" :key="error">
@@ -299,23 +262,10 @@ onMounted(async () => {
           </div>
         </div>
 
-        <v-btn
-          @click="handleRegister"
-          :disabled="account.password.length < 4  || attemptsRegister"
-          class="mb-2"
-          color="blue"
-          size="large"
-          variant="flat"
-          block
-          type="submit"
-        >
-          Criar
-        </v-btn>
+        <v-btn @click="handleRegister" :disabled="attemptsRegister" class="mb-2" color="blue" size="large" variant="flat" block type="submit"> Criar </v-btn>
 
         <v-card-text class="text-center">
-          <RouterLink to="/login" class="text-blue text-decoration-none">
-            Já tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
-          </RouterLink>
+          <RouterLink to="/login" class="text-blue text-decoration-none"> Já tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon> </RouterLink>
         </v-card-text>
       </v-card>
     </div>
