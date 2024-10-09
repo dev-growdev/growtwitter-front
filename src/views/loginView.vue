@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { login } from '@/services/api';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import BackgroundOverlay from '@/components/BackgroundOverlay.vue';
@@ -14,6 +14,12 @@ const router = useRouter();
 
 const visible = ref<boolean>(false);
 const loadingVisible = ref<boolean>(false);
+const attempts = ref<number>(0);
+const attemptsVerify = ref<boolean>(false);
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms*1000 ));
+}
 
 const handleLogin = async () => {
   resetStorage();
@@ -34,8 +40,33 @@ const handleLogin = async () => {
     router.push('/');
   }
 
+  attempts.value++;
+
   error.value = response.data.msg;
+  
+  if(attempts.value >= 3){
+    attemptsVerify.value = true;
+    error.value = "Tente novamente em 1 minuto";
+    localStorage.setItem("attemptsVerify", true.toString());
+    await delay(60);
+    localStorage.setItem("attemptsVerify", false.toString())
+    attemptsVerify.value = false;
+  }
+
+
 };
+
+onMounted(async () => {
+  if(localStorage.getItem("attemptsVerify") == "true"){
+    attemptsVerify.value = true;
+    await delay(60);
+    localStorage.setItem("attemptsVerify", false.toString())
+    attemptsVerify.value = false;
+  }
+  else
+  localStorage.setItem("attemptsVerify", false.toString())
+   attemptsVerify.value = false;
+})
 </script>
 
 <template>
@@ -91,7 +122,7 @@ const handleLogin = async () => {
               <input type="checkbox" id="keep-connected" v-model="keepConnected" />
             </div>
 
-            <v-btn @click="handleLogin" class="mb-2" color="blue" size="large" variant="flat" block
+            <v-btn @click="handleLogin" :disabled="attemptsVerify" class="mb-2" color="blue" size="large" variant="flat" block
               >Enviar</v-btn
             >
 
