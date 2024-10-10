@@ -2,7 +2,7 @@
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
 import { getUser, getHomeData } from '@/services/api';
-import type { TweetType } from '@/types/TweetType';
+import type { PaginateRetweetType, PaginateTweetType, TweetType } from '@/types/TweetType';
 import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
 import ExploreComponent from '@/components/ExploreComponent.vue';
@@ -66,20 +66,16 @@ async function handleGetUser() {
   }
   item.value = JSON.parse(userData);
 }
+const page = ref<number>(1);
 
 async function fetchAll() {
   loadingVisible.value = true;
-  const response = await getHomeData();
-  tweets.value = response.data.data.posts;
-  retweets.value = response.data.data.retweets;
+  const response = await getHomeData(page.value);
+  tweets.value = response.data.data.posts.data;
+  retweets.value = response.data.data.retweets.data;
+
   loadingVisible.value = false;
 }
-
-onMounted(() => {
-  localStorage.setItem("attemptsVerify", false.toString())
-  handleGetUser();
-  fetchAll();
-});
 
 const windowWidth = ref(window.innerWidth);
 
@@ -87,8 +83,11 @@ const handleResize = () => {
   windowWidth.value = window.innerWidth;
 };
 
-onMounted(() => {
+onMounted( async () => {
   window.addEventListener('resize', handleResize);
+  localStorage.setItem("attemptsVerify", false.toString())
+  handleGetUser();
+  fetchAll();
 });
 
 onUnmounted(() => {

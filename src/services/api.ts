@@ -208,13 +208,13 @@ export const getProfileData = async (id: string) => {
     return error?.response;
   }
 };
-export const getHomeData = async () => {
+export const getHomeData = async (page: number) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
 
   try {
-    const response = await client.get('/home', config);
+    const response = await client.get('/home?page=' + page, config);
     return response;
   } catch (error: any) {
     return error?.response;
