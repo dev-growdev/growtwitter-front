@@ -133,7 +133,7 @@ onMounted(() => {
           </article>
         </div>
         <div v-if="showDiv" class="mt-2">
-          <div v-for="comment in props.data.comments" :key="comment.id" class="d-flex flex-column mb-4">
+          <div v-for="comment in props.data.comments" :key="comment.id" class="d-flex flex-column pb-4">
             <div class="d-flex ga-2 align-center w-100 mx-2">
               <RouterLink :to="`/profile/${comment.user.id}`">
                 <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
