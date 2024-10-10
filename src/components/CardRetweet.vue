@@ -3,59 +3,47 @@ import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 
-import { onMounted, } from 'vue';
+import { onMounted } from 'vue';
 import CardTweet from './CardTweet.vue';
 
 interface TweetTypeProps {
   data: any;
-  tweet?: TweetType
+  tweet?: TweetType;
 }
 
 const props = defineProps<TweetTypeProps>();
-props
+props;
 
-
-
-onMounted(() => {
-
-
-});
+onMounted(() => {});
 </script>
 
 <template>
   <div class="card-principal rounded-0">
-    <v-card-actions class="ga-2">
+    <v-card-actions class="ma-2 ga-2">
       <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :to="`/profile/${data.user.id}`"
-            :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar></RouterLink>
-
-
-
+        <RouterLink :to="`/profile/${data.user.id}`">
+          <v-avatar :to="`/profile/${data.user.id}`" :image="data.user.avatar_url ?? default_avatar" size="45" />
+        </RouterLink>
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
           <div>
             <RouterLink :to="`/profile/${data.user.id}`">
-              <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+              <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
             </RouterLink>
 
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
-
-
         </div>
-        <div><span>{{ data.content }}</span>
+        <div>
+          <span>{{ data.content }}</span>
           <p class="tweet-content" v-if="tweet">
             <CardTweet :data="tweet" />
           </p>
         </div>
-
       </div>
     </v-card-actions>
   </div>
-
-
-
 </template>
 
 <style scoped>
@@ -64,7 +52,13 @@ onMounted(() => {
   transition: background-color 0.3s ease;
 }
 
+.mouseHover {
+  transition: all 0.2s ease;
+}
 
+.mouseHover:hover {
+  text-decoration: underline;
+}
 
 .dropdown {
   display: flex;
@@ -80,8 +74,6 @@ onMounted(() => {
   z-index: 10;
 }
 
-
-
 .tweet-body {
   display: flex;
   flex-direction: column;
@@ -94,7 +86,6 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
 }
 
 .tweet-header strong {
