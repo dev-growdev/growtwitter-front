@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { register } from '@/services/api';
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import defaultAvatar from '@/assets/default-avatar.png';
 import type { CreateAccountType, RegisterAccountValidationType } from '@/types';
 import router from '@/router';
@@ -11,6 +11,8 @@ import axios from 'axios';
 
 const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
+const attempts = ref<number>(0);
+const attemptsRegister = ref<boolean>(false);
 
 const account = reactive<CreateAccountType>({
   username: '',
@@ -56,16 +58,17 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
   formData.append('upload_preset', uploadPreset);
 
   try {
-    const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      formData
-    );
+    const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
     return response.data.secure_url;
   } catch (error) {
     console.error('Error uploading to Cloudinary:', error);
     throw new Error('Failed to upload avatar');
   }
 };
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms * 1000));
+}
 
 const handleRegister = async () => {
   try {
@@ -80,68 +83,56 @@ const handleRegister = async () => {
       //nome
       if (account.name.length > 40) {
         validationErrors.name.push('O campo nome não pode ter mais de 40 caracteres.');
-        return;
       }
     } else {
       validationErrors.name.push('O campo nome é obrigatório.');
-      return;
     }
 
     if (account.surname) {
       //sobrenome
       if (account.surname.length > 40) {
         validationErrors.surname.push('O campo sobrenome não pode ter mais de 40 caracteres.');
-        return;
       }
     } else {
       validationErrors.surname.push('O campo sobrenome é obrigatório.');
-      return;
     }
 
     if (account.username) {
       //username
       if (account.username.length < 5) {
         validationErrors.username.push('O campo nome de usuário deve ter pelo menos 5 caracteres.');
-        return;
       }
       if (account.username.length > 30) {
-        validationErrors.username.push(
-          'O campo nome de usuário não pode ter mais de 30 caracteres.'
-        );
-        return;
+        validationErrors.username.push('O campo nome de usuário não pode ter mais de 30 caracteres.');
       }
       if (/[ !@#$%&*.()\-+]/.test(account.username)) {
-        validationErrors.username.push(
-          'O campo nome de usuário só pode conter letras, números e underlines.'
-        );
-        return;
+        validationErrors.username.push('O campo nome de usuário só pode conter letras, números e underlines.');
       }
     } else {
       validationErrors.username.push('O campo nome de usuário é obrigatório.');
-      return;
     }
 
     if (account.email) {
       if (account.email.length > 50) {
         validationErrors.email.push('O campo email não pode ter mais de 50 caracteres.');
-        return;
       }
     } else {
       validationErrors.email.push('O campo email é obrigátorio.');
-      return;
     }
 
     if (account.password.length >= 6) {
       //senha
       if (!/[@!\-_#]/.test(account.password)) {
-        validationErrors.password.push(
-          "Sua senha deve ter algum dos caracteres especiais '#, -, !, _, @' "
-        );
-        return;
+        validationErrors.password.push("Sua senha deve ter algum dos caracteres especiais '#, -, !, _, @' ");
       }
     } else {
       validationErrors.password.push('Sua senha deve ser maior que 6 dígitos');
-      return;
+    }
+
+    for (const item in validationErrors) {
+      if (validationErrors[item as keyof RegisterAccountValidationType].length > 0) {
+        return; // Se houver erros, sair da função
+      }
     }
 
     const userData = {
@@ -152,7 +143,7 @@ const handleRegister = async () => {
       username: account.username,
       avatar_url: avatarUrl
     };
-    
+
     loadingVisible.value = true;
 
     const response = await register(userData);
@@ -163,15 +154,33 @@ const handleRegister = async () => {
       sessionStorage.setItem('token', response.data.token);
       localStorage.setItem('userData', JSON.stringify(response.data.user));
       router.push('/');
-    } else if (response.status === 422) {
-      console.log(response.data.msg);
 
+      attempts.value++;
+
+      if (attempts.value >= 1) {
+        attemptsRegister.value = true;
+        localStorage.setItem('attemptsRegister', true.toString());
+        await delay(300);
+        localStorage.setItem('attemptsRegister', false.toString());
+        attemptsRegister.value = false;
+      }
+    } else if (response.status === 422) {
       if (response.data.msg.includes('email')) validationErrors.email = response.data.msg;
     }
   } catch (error) {
     console.log(error);
   }
 };
+
+onMounted(async () => {
+  if (localStorage.getItem('attemptsRegister') == 'true') {
+    attemptsRegister.value = true;
+    await delay(300);
+    localStorage.setItem('attemptsRegister', false.toString());
+    attemptsRegister.value = false;
+  } else localStorage.setItem('attemptsRegister', false.toString());
+  attemptsRegister.value = false;
+});
 </script>
 
 <template>
@@ -180,12 +189,7 @@ const handleRegister = async () => {
   </BackgroundOverlay>
   <div class="background">
     <div>
-      <v-card
-        class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8"
-        elevation="8"
-        max-width="648"
-        rounded="lg"
-      >
+      <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="648" rounded="lg">
         <h1 class="mt-1 text-center register-title">Criar conta</h1>
         <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
         <v-text-field
@@ -231,9 +235,7 @@ const handleRegister = async () => {
           required
         ></v-text-field>
 
-        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-          Senha
-        </div>
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">Senha</div>
 
         <v-text-field
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
@@ -247,23 +249,11 @@ const handleRegister = async () => {
           :error-messages="validationErrors.password"
         ></v-text-field>
 
-        <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">
-          Escolha um avatar (opcional):
-        </div>
+        <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
         <div class="upload-avatar-container">
-          <v-file-input
-            class="d-none"
-            accept="image/png, image/jpeg, image/jpg"
-            label="Avatar"
-            @change="bindCustomAvatar"
-            id="avatar"
-          ></v-file-input>
+          <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar" @change="bindCustomAvatar" id="avatar"></v-file-input>
           <label class="upload-avatar-label mt-3" for="avatar">
-            <v-avatar
-              class="avatar-preview"
-              :image="previewAvatar ?? defaultAvatar"
-              size="75"
-            ></v-avatar>
+            <v-avatar class="avatar-preview" :image="previewAvatar ?? defaultAvatar" size="75"></v-avatar>
           </label>
           <div v-if="validationErrors.avatar.length > 0">
             <p class="error-avatar-message" v-for="error in validationErrors.avatar" :key="error">
@@ -272,23 +262,10 @@ const handleRegister = async () => {
           </div>
         </div>
 
-        <v-btn
-          @click="handleRegister"
-          :disabled="account.password.length < 4"
-          class="mb-2"
-          color="blue"
-          size="large"
-          variant="flat"
-          block
-          type="submit"
-        >
-          Criar
-        </v-btn>
+        <v-btn @click="handleRegister" :disabled="attemptsRegister" class="mb-2" color="blue" size="large" variant="flat" block type="submit"> Criar </v-btn>
 
         <v-card-text class="text-center">
-          <RouterLink to="/login" class="text-blue text-decoration-none">
-            Já tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
-          </RouterLink>
+          <RouterLink to="/login" class="text-blue text-decoration-none"> Já tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon> </RouterLink>
         </v-card-text>
       </v-card>
     </div>
