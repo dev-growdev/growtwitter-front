@@ -8,13 +8,51 @@ export const client = axios.create({
   }
 });
 
+async function getCsfrToken() {
+  await client.get('http://localhost:8000/sanctum/csrf-cookie', {
+    withCredentials: true
+  });
+}
+
+function getCookie(cookieName: string) {
+  const name = cookieName + '=';
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+}
+
 export const login = async (email: string, password: string) => {
   try {
-    const response = await client.post('/login', {
-      email,
-      password
-    });
+    await getCsfrToken();
+
+    const config = {
+      headers: {
+        'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
+      },
+      withCredentials: true
+    };
+    
+
+    const response = await client.post(
+      '/login',
+      {
+        email,
+        password
+      },
+      config
+    );
+
     sessionStorage.setItem('userId', response.data.data.user.id);
+
     return response;
   } catch (error: any) {
     return error?.response;
