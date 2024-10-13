@@ -174,8 +174,7 @@ const handleRegister = async () => {
 
 onMounted(async () => {
   if (localStorage.getItem('attemptsRegister') == 'true') {
-    attemptsRegister.value = true;
-    await delay(300);
+    attemptsRegister.value = true;;
     localStorage.setItem('attemptsRegister', false.toString());
     attemptsRegister.value = false;
   } else localStorage.setItem('attemptsRegister', false.toString());
