@@ -69,7 +69,7 @@ async function handleLogout() {
     </div>
     <div>
       <v-list class="d-flex align-center justify-end ga-4">
-        <v-img max-width="50" class="rounded-circle" :src="item.avatar_url"> </v-img>
+        <v-img max-width="50" max-height="50" aspect-ratio="1" cover class="rounded-circle" :src="item.avatar_url" />
 
         <div>
           {{ item.name && item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name }}
