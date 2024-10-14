@@ -122,7 +122,7 @@ const idU = Number(sessionStorage.getItem('userId'));
         <div class="d-flex align-center justify-space-between w-100">
           <div>
             <RouterLink :to="`/profile/${data.user.id}`">
-              <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+              <strong class="mouseHover">{{ data.user.name }}</strong> <span style="color: #657786;">@{{ data.user.username }}</span>
             </RouterLink>
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
             <p class="tweet-content">{{ data.content }}</p>

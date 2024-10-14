@@ -44,11 +44,13 @@ const idU = Number(sessionStorage.getItem('userId'));
       <div class="tweet-body">
         <div class="tweet-header">
           <div>
-            <RouterLink :to="`/profile/${data.user.id}`">
-              <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
-            </RouterLink>
-
-            <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+            <div>
+              <RouterLink :to="`/profile/${data.user.id}`">
+                <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+              </RouterLink>
+              <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+              <p class="tweet-content">{{ data.content }}</p>
+            </div>
           </div>
           <div style="display: flex; align-items: end; flex-direction: column; position: relative">
             <v-btn v-if="data.user.id === idU" icon small @click="toggleDropdown"> <v-icon icon="mdi-dots-horizontal"></v-icon></v-btn>
@@ -58,7 +60,6 @@ const idU = Number(sessionStorage.getItem('userId'));
           </div>
         </div>
         <div>
-          <span>{{ data.content }}</span>
           <p class="tweet-content" v-if="tweet">
             <CardTweet :data="tweet" />
           </p>
