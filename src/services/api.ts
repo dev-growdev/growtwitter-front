@@ -194,26 +194,25 @@ export async function postComment(postId: number, content: string) {
   }
 }
 
-export const getProfileData = async (id: string) => {
+export const getProfileData = async (id: string, page:number) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
 
   try {
-    const response = await client.get('/profile/' + id, config);
+    const response = await client.get('/profile/' + id + '?page=' + page, config);
     return response;
   } catch (error: any) {
     return error?.response;
   }
 };
-
-export const getHomeData = async () => {
+export const getHomeData = async (page: number) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
 
   try {
-    const response = await client.get('/home', config);
+    const response = await client.get('/home?page=' + page, config);
     return response;
   } catch (error: any) {
     return error?.response;
