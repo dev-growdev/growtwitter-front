@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button v-show="showButton" @click="scrollToTop" class="back-to-top">
+    <button v-show="showButton" @click="scrollToTop" class="back-to-top" aria-label="Scroll to top">
       <i class="fas fa-arrow-up"></i>
     </button>
   </div>

@@ -99,10 +99,12 @@ onUnmounted(() => {
 <template>
   <v-app class="ma-0" id="app">
     <div class="model-alert">
-      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()"></v-alert>
+      <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()" role="alert"
+        aria-live="assertive"
+        aria-atomic="true"></v-alert>
     </div>
-    <div v-if="loadingVisible" class="spinner-div">
-      <v-progress-circular indeterminate :size="45" :width="9" />
+    <div v-if="loadingVisible" class="spinner-div" role="status" aria-live="polite">
+      <v-progress-circular indeterminate :size="45" :width="9" aria-label="Loading"/>
     </div>
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
       <SideBar :item="item!" @call-emit="listenEmit" />

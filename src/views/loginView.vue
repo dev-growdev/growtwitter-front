@@ -80,10 +80,13 @@ onMounted(async () => {
         elevation="8"
         max-width="900"
         rounded="lg"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="login-card-title"
       >
         <v-row class="d-flex align-center">
           <v-col cols="12" sm="6" class="text bg-blue rounded py-15">
-            <v-card-title>Growtwitter</v-card-title>
+            <v-card-title id="login-card-title">Growtwitter</v-card-title>
             <v-card-subtitle class="text-white"
               >Trabalho final do bloco intermediário</v-card-subtitle
             >
@@ -104,6 +107,8 @@ onMounted(async () => {
               prepend-inner-icon="mdi-email-outline"
               variant="outlined"
               v-model="email"
+              aria-label="Endereço de e-mail"
+              aria-required="true"
             ></v-text-field>
 
             <v-text-field
@@ -115,14 +120,16 @@ onMounted(async () => {
               prepend-inner-icon="mdi-lock-outline"
               variant="outlined"
               v-model="password"
+              aria-label="Senha"
+              aria-required="true"
             ></v-text-field>
 
             <div class="keep-connected-container pa-5">
               <label for="keep-connected">Permanecer conectado:</label>
-              <input type="checkbox" id="keep-connected" v-model="keepConnected" />
+              <input type="checkbox" id="keep-connected" v-model="keepConnected" aria-label="Permanecer conectado" />
             </div>
 
-            <v-btn @click="handleLogin" :disabled="attemptsVerify" class="mb-2" color="blue" size="large" variant="flat" block
+            <v-btn @click="handleLogin" :disabled="attemptsVerify" class="mb-2" color="blue" size="large" variant="flat" block  aria-label="Enviar"
               >Enviar</v-btn
             >
 
@@ -132,7 +139,7 @@ onMounted(async () => {
               </RouterLink>
             </v-card-text>
             <v-card-text
-              ><span class="error-message" v-if="error">{{ error }}</span></v-card-text
+              ><span class="error-message" v-if="error" aria-live="polite">{{ error }}</span></v-card-text
             >
           </v-col>
         </v-row>
