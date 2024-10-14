@@ -19,9 +19,8 @@ let itsMe = myUserData.id != props.data.id;
 
 async function handleFollow() {
   try {
-    btnLoading.value = true;
-
     if (itsMe) {
+      btnLoading.value = true;
       const response = await postFollow(String(props.data.id), myUserData.id);
 
       if (response.data.msg === 'Seguido com sucesso') {
@@ -77,10 +76,9 @@ section {
 
 .dropdown {
   top: 0;
-  left: -140%;
+  left: 0%;
   max-width: 300px;
   min-width: 225px;
-  z-index: 999;
 }
 
 #followingSpan {

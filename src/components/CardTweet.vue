@@ -4,8 +4,8 @@ import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import { deleteTweet, postComment, postLike, postRetweet } from '@/services/api';
 import { onMounted, ref } from 'vue';
-import ModalSeeProfile from './ModalSeeProfile.vue';
 import IconComment from './icons/IconComment.vue';
+import ModalSeeProfile from '@/components/ModalSeeProfile.vue';
 
 interface TweetTypeProps {
   data: TweetType;
