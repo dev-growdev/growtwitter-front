@@ -18,6 +18,9 @@ const comment = ref('');
 const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
+const me = ref(JSON.parse(localStorage.getItem('userData') || '{}'));
+const localComments = ref([...props.data.comments]);
+const localCommentsCount = ref(props.data.comments_count);
 
 function like() {
   if (liked.value === false) {
@@ -31,7 +34,25 @@ function like() {
 
 async function handleSubmit(id: number) {
   await postComment(id, commentInput.value);
-  window.location.reload();
+  localComments.value.push({
+    id: Math.floor(Math.random() * 10000),
+    user: {
+      id: id,
+      avatar_url: me.value.avatar_url,
+      name: me.value.name,
+      username: me.value.username,
+      surname: '',
+      email: '',
+      password: '',
+      following_count: 0,
+      followers_count: 0
+    },
+    content: commentInput.value,
+    created_at: new Date().toISOString()
+  });
+  localCommentsCount.value++;
+  commentInput.value = '';
+
 }
 const toogleDiv = () => {
   showDiv.value = !showDiv.value;
@@ -115,15 +136,15 @@ onMounted(() => {
         </div>
         <p class="tweet-content">{{ data.content }}</p>
         <div class="tweet-actions">
-          <v-btn icon small @click="toogleDiv()"  aria-label="View comments">💬{{ data.comments_count }}</v-btn>
-          <v-btn icon small class="btn-like" @click="handlePostLike(data.id)" aria-label="liked ? 'Unlike' : 'Like'">
+          <v-btn icon small @click="toogleDiv()">💬{{ localCommentsCount }}</v-btn>
+          <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
             {{ liked ? '❤️' : '🤍' }}
             {{ data.likes_count + artificialLike }}
           </v-btn>
         </div>
         <div v-if="showDiv">
           <hr>
-          <div v-for="comment in props.data.comments" :key="comment.id">
+          <div v-for="comment in localComments" :key="comment.id">
 
             <div style="display: flex; align-items: center; justify-content: end; width: 100%; margin: 5px 0;">
               <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
