@@ -4,6 +4,7 @@ import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import { postComment, postLike, postRetweet } from '@/services/api';
 import { onMounted, ref } from 'vue';
+import ModalSeeProfile from './ModalSeeProfile.vue';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -40,13 +41,10 @@ const toggleDropdown = () => {
   dropdown.value = !dropdown.value;
 };
 const handleRetweet = async (id: number) => {
-
   const response = await postRetweet(id);
   if (response) {
     dropdown.value = false;
   }
-
-
 };
 const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
@@ -55,16 +53,12 @@ const handleRetweetWithComment = async (id: number, content: string) => {
     dropdown.value = false;
     retweetModal.value = false;
   }
-
 };
 
 const toggleModalRetweet = () => {
   retweetModal.value = true;
   comment.value = '';
-
 };
-
-
 
 async function handlePostLike(id: number) {
   like();
@@ -77,25 +71,19 @@ async function handlePostLike(id: number) {
 onMounted(() => {
   const user = localStorage.getItem('userData');
   if (user) {
-    liked.value = props.data.likes.some(
-      (like: any) => like.userId == JSON.parse(user).id
-    );
+    liked.value = props.data.likes.some((like: any) => like.userId == JSON.parse(user).id);
   }
-
 });
 </script>
 
 <template>
   <div class="card-principal rounded-0">
-
-    
     <v-card-actions class="ga-2">
-      <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :image="data.user.avatar_url ?? default_avatar"
-            size="50"></v-avatar></RouterLink>
-
-
-
+      <div class="profileModal d-block align-self-start">
+        <RouterLink :to="`/profile/${data.user.id}`">
+          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+        </RouterLink>
+        <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="props.data.user" />
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
@@ -106,14 +94,13 @@ onMounted(() => {
 
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
-          <div style="display: flex; align-items: end; flex-direction: column; position: relative;">
+          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
             <v-btn icon small @click="toggleDropdown"> <v-icon icon="mdi-menu"></v-icon></v-btn>
             <div v-if="dropdown" class="dropdown">
               <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
               <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
             </div>
           </div>
-
         </div>
         <p class="tweet-content">{{ data.content }}</p>
         <div class="tweet-actions">
@@ -124,10 +111,9 @@ onMounted(() => {
           </v-btn>
         </div>
         <div v-if="showDiv">
-          <hr>
+          <hr />
           <div v-for="comment in props.data.comments" :key="comment.id">
-
-            <div style="display: flex; align-items: center; justify-content: end; width: 100%; margin: 5px 0;">
+            <div style="display: flex; align-items: center; justify-content: end; width: 100%; margin: 5px 0">
               <RouterLink :to="`/profile/${comment.user.id}`">
                 <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="25"></v-avatar>
               </RouterLink>
@@ -139,13 +125,9 @@ onMounted(() => {
                 <span> ·</span> <span>{{ tempoDesdeCriacao(comment.created_at) }}</span>
               </div>
             </div>
-            <div style="font-size: 12px; width: 100%; text-align: end; font-weight: bold;">{{
-              comment.content }}</div>
-
-
+            <div style="font-size: 12px; width: 100%; text-align: end; font-weight: bold">{{ comment.content }}</div>
           </div>
           <form @submit.prevent="handleSubmit(data.id)">
-
             <div class="text-box">
               <div class="box-container">
                 <textarea placeholder="Comentar" v-model="commentInput"></textarea>
@@ -153,20 +135,20 @@ onMounted(() => {
                 <div class="formatting">
                   <button type="submit" class="send" title="Send">
                     <svg fill="none" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" stroke="#ffffff"
-                        d="M12 5L12 20"></path>
-                      <path stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" stroke="#ffffff"
-                        d="M7 9L11.2929 4.70711C11.6262 4.37377 11.7929 4.20711 12 4.20711C12.2071 4.20711 12.3738 4.37377 12.7071 4.70711L17 9">
-                      </path>
+                      <path stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" stroke="#ffffff" d="M12 5L12 20"></path>
+                      <path
+                        stroke-linejoin="round"
+                        stroke-linecap="round"
+                        stroke-width="2.5"
+                        stroke="#ffffff"
+                        d="M7 9L11.2929 4.70711C11.6262 4.37377 11.7929 4.20711 12 4.20711C12.2071 4.20711 12.3738 4.37377 12.7071 4.70711L17 9"
+                      ></path>
                     </svg>
                   </button>
                 </div>
-
               </div>
             </div>
-
           </form>
-
         </div>
       </div>
     </v-card-actions>
@@ -195,20 +177,25 @@ onMounted(() => {
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" @click="retweetModal = false">Cancelar</v-btn>
-        <v-btn :loading="retweetLoading" color="blue darken-1"
-          @click="handleRetweetWithComment(data.id, comment)">Retweet</v-btn>
+        <v-btn :loading="retweetLoading" color="blue darken-1" @click="handleRetweetWithComment(data.id, comment)">Retweet</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-
 </template>
 
 <style scoped>
+.profileModalChild {
+  display: none;
+}
+
+.profileModal:hover .profileModalChild {
+  display: flex;
+}
+
 .card-principal {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
 }
-
 
 .dropdown {
   display: flex;
@@ -224,8 +211,6 @@ onMounted(() => {
   z-index: 10;
 }
 
-
-
 .tweet-body {
   display: flex;
   flex-direction: column;
@@ -238,7 +223,6 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
 }
 
 .tweet-header strong {
@@ -288,8 +272,6 @@ onMounted(() => {
   outline: none;
   caret-color: #0a84ff;
 }
-
-
 
 .text-box .formatting button {
   width: 30px;
