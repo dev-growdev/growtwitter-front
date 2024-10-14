@@ -13,13 +13,14 @@ interface TweetTypeProps {
 const props = defineProps<TweetTypeProps>();
 const liked = ref(false);
 const artificialLike = ref(0);
-const dropdown = ref(false);
+const reTweetDrop = ref(false);
+const tweetDrop = ref(false);
 const retweetModal = ref(false);
 const comment = ref('');
 const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
-
+const userID = Number(sessionStorage.getItem('userId'));
 function like() {
   if (liked.value === false) {
     artificialLike.value++;
@@ -39,14 +40,18 @@ const toogleDiv = () => {
   showDiv.value = !showDiv.value;
 };
 
-const toggleDropdown = () => {
-  dropdown.value = !dropdown.value;
+const toggleReTweetDrop = () => {
+  reTweetDrop.value = !reTweetDrop.value;
+};
+
+const toggleTweetDrop = () => {
+  tweetDrop.value = !tweetDrop.value;
 };
 
 const handleRetweet = async (id: number) => {
   const response = await postRetweet(id);
   if (response) {
-    dropdown.value = false;
+    reTweetDrop.value = false;
   }
 };
 
@@ -54,7 +59,7 @@ const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
   const response = await postRetweet(id, content);
   if (response) {
-    dropdown.value = false;
+    reTweetDrop.value = false;
     retweetModal.value = false;
   }
 };
@@ -102,11 +107,10 @@ onMounted(() => {
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
           <div style="display: flex; align-items: end; flex-direction: column; position: relative">
-            <v-btn icon small @click="toggleDropdown"> <v-icon icon="mdi-menu"></v-icon></v-btn>
-            <div v-if="dropdown" class="dropdown">
-              <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
-              <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
-              <v-btn v-if="yourProfile" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
+            <v-btn @click="toggleTweetDrop" icon="mdi-dots-vertical"> </v-btn>
+            <div v-if="tweetDrop" class="delTweet">
+              <v-btn v-if="userID === data.user.id" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
+              <v-btn v-else icon="mdi-alert"> denunciar</v-btn>
             </div>
           </div>
         </div>
@@ -117,6 +121,13 @@ onMounted(() => {
             {{ liked ? '❤️' : '🤍' }}
             {{ data.likes_count + artificialLike }}
           </v-btn>
+          <v-btn @click="toggleReTweetDrop" icon="mdi-repeat"> </v-btn>
+          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+            <div v-if="reTweetDrop" class="dropdown">
+              <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
+              <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
+            </div>
+          </div>
         </div>
         <div v-if="showDiv">
           <hr />
@@ -200,9 +211,23 @@ onMounted(() => {
 .dropdown {
   display: flex;
   flex-direction: column;
+  left: 0;
   position: absolute;
+  background-color: white;
+  border: 1px solid #ebe8e8;
+  padding: 10px;
+  border-radius: 5px;
+  width: max-content;
+  z-index: 10;
+}
+
+.delTweet {
+  background-color: #026eda;
+  display: flex;
+  flex-direction: column;
   top: 50px;
-  right: 0;
+  right: 0px;
+  position: absolute;
   background-color: white;
   border: 1px solid #ebe8e8;
   padding: 10px;
