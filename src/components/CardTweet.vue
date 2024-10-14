@@ -4,6 +4,7 @@ import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import { deleteTweet, postComment, postLike, postRetweet } from '@/services/api';
 import { onMounted, ref } from 'vue';
+import IconComment from './icons/IconComment.vue';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -111,20 +112,27 @@ const idU = Number(sessionStorage.getItem('userId'));
 
 <template>
   <div class="card-principal rounded-0">
-    <v-card-actions class="ga-2">
+    <v-card-actions class="ma-2 ga-2">
       <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar></RouterLink>
+        <RouterLink :to="`/profile/${data.user.id}`">
+          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" />
+        </RouterLink>
       </div>
-      <div class="tweet-body">
-        <div class="tweet-header">
+      <div class="d-flex flex-column justify-space-between w-100">
+        <div class="d-flex align-center justify-space-between w-100">
           <div>
             <RouterLink :to="`/profile/${data.user.id}`">
-              <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+              <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
             </RouterLink>
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+            <p class="tweet-content">{{ data.content }}</p>
           </div>
-          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
-            <v-btn icon small @click="toggleDropdown"> <v-icon icon="mdi-menu"></v-icon></v-btn>
+
+          <div class="d-flex flex-column align-start position-relative">
+            <v-btn icon small @click="toggleDropdown">
+              <v-icon icon="mdi-menu" />
+            </v-btn>
+
             <div v-if="dropdown" class="dropdown">
               <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
               <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
@@ -132,29 +140,51 @@ const idU = Number(sessionStorage.getItem('userId'));
             </div>
           </div>
         </div>
-        <p class="tweet-content">{{ data.content }}</p>
-        <div class="tweet-actions">
-          <v-btn icon small @click="toogleDiv()">💬{{ localCommentsCount }}</v-btn>
-          <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
-            {{ liked ? '❤️' : '🤍' }}
-            {{ data.likes_count + artificialLike }}
-          </v-btn>
+        <div class="d-flex ga-1">
+          <article class="align-center text-center">
+            <v-btn icon class="btn-comment" @click="toogleDiv()">
+              <IconComment class="icon-comment" />
+              <span>
+                {{ localCommentsCount }}
+              </span>
+            </v-btn>
+          </article>
+
+          <article class="d-flex">
+            <v-btn icon v-if="!liked" class="btn-like d-flex align-center ga-0" @click="handlePostLike(data.id)">
+              <v-icon icon="mdi-cards-heart-outline" />
+              <span>
+                {{ data.likes_count + artificialLike }}
+              </span>
+            </v-btn>
+
+            <v-btn icon v-if="liked" class="btn-like d-flex align-center ga-0" @click="handlePostLike(data.id)">
+              <v-icon icon="mdi-cards-heart" color="#f91880" />
+              <span>
+                {{ data.likes_count + artificialLike }}
+              </span>
+            </v-btn>
+          </article>
         </div>
-        <div v-if="showDiv">
-          <hr />
-          <div v-for="comment in localComments" :key="comment.id">
-            <div style="display: flex; align-items: center; justify-content: end; width: 100%; margin: 5px 0">
+        <div v-if="showDiv" class="mt-2">
+          <div v-for="comment in localComments" :key="comment.id" class="d-flex flex-column pb-4">
+            <div class="d-flex ga-2 align-center w-100 mx-2">
               <RouterLink :to="`/profile/${comment.user.id}`">
-                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="25"></v-avatar>
+                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
               </RouterLink>
               <div>
-                <RouterLink :to="`/profile/${comment.user.id}`">
-                  <strong>{{ comment.user.name }}</strong> <span>@{{ comment.user.username }}</span>
-                </RouterLink>
-                <span> ·</span> <span>{{ tempoDesdeCriacao(comment.created_at) }}</span>
+                <div>
+                  <RouterLink :to="`/profile/${comment.user.id}`">
+                    <span class="mouseHover font-weight-bold">{{ comment.user.name }}</span> <span style="color: #657786">@{{ comment.user.username }}</span>
+                  </RouterLink>
+
+                  <span style="color: #657786"> ·</span> <span style="color: #657786">{{ tempoDesdeCriacao(comment.created_at) }}</span>
+                </div>
+                <div class="d-flex align-center w-100 mt-0 text-h7">
+                  {{ comment.content }}
+                </div>
               </div>
             </div>
-            <div style="font-size: 12px; width: 100%; text-align: end; font-weight: bold">{{ comment.content }}</div>
           </div>
           <form @submit.prevent="handleSubmit(data.id)">
             <div class="text-box">
@@ -192,9 +222,9 @@ const idU = Number(sessionStorage.getItem('userId'));
         <v-card class="mt-4" outlined>
           <v-card-text>
             <div class="d-flex align-center">
-              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45"></v-avatar>
               <div class="ml-3">
-                <div class="font-weight-bold">{{ data.user.name }}</div>
+                <div class="mouseHover font-weight-bold">{{ data.user.name }}</div>
                 <div class="text--secondary">@{{ data.user.username }}</div>
               </div>
             </div>
@@ -212,6 +242,46 @@ const idU = Number(sessionStorage.getItem('userId'));
 </template>
 
 <style scoped>
+.icon-comment {
+  fill: #808080 !important;
+}
+
+.btn-comment:hover {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4;
+}
+
+.btn-comment:hover .icon-comment {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4 !important;
+}
+
+.btn-like {
+  text-transform: none !important;
+  user-select: none;
+  cursor: pointer;
+}
+
+.btn-like:hover {
+  color: #f91880 !important;
+}
+
+.btn-like:hover .mdi-cards-heart-outline {
+  color: #f91880 !important;
+}
+
+.mdi-cards-heart-outline {
+  color: #808080;
+}
+
+.mouseHover {
+  transition: all 0.2s ease;
+}
+
+.mouseHover:hover {
+  text-decoration: underline;
+}
+
 .card-principal {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
@@ -257,15 +327,6 @@ const idU = Number(sessionStorage.getItem('userId'));
 .tweet-content {
   overflow-wrap: break-word;
   word-break: break-word;
-}
-
-.v-btn {
-  text-transform: none !important;
-}
-
-.btn-like:hover {
-  filter: drop-shadow(1px 1px 1px red);
-  color: rgb(135, 0, 0);
 }
 
 .text-box {

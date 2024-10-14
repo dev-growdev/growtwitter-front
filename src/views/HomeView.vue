@@ -17,7 +17,6 @@ const alertType = ref<string>('');
 
 const listenEmit = () => {
   page.value = 0;
-  console.log('entrou');
   load({
     done: () => {
       console.log("Carregamento completo");
@@ -48,11 +47,9 @@ async function showMessage(messageText: string, type: string) {
 
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   hasMessage.value = true;
-  console.log(hasMessage.value);
 
  await delay(3000);
   hasMessage.value = false;
-  console.log(hasMessage.value);
 }
 
 function clearMessage() {
