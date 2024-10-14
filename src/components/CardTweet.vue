@@ -242,6 +242,46 @@ const idU = Number(sessionStorage.getItem('userId'));
 </template>
 
 <style scoped>
+.icon-comment {
+  fill: #808080 !important;
+}
+
+.btn-comment:hover {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4;
+}
+
+.btn-comment:hover .icon-comment {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4 !important;
+}
+
+.btn-like {
+  text-transform: none !important;
+  user-select: none;
+  cursor: pointer;
+}
+
+.btn-like:hover {
+  color: #f91880 !important;
+}
+
+.btn-like:hover .mdi-cards-heart-outline {
+  color: #f91880 !important;
+}
+
+.mdi-cards-heart-outline {
+  color: #808080;
+}
+
+.mouseHover {
+  transition: all 0.2s ease;
+}
+
+.mouseHover:hover {
+  text-decoration: underline;
+}
+
 .card-principal {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
