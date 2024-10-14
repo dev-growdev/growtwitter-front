@@ -181,7 +181,6 @@ const handleEdit = async () => {
       };
 
       const response = await edit(userData);
-      console.log(response);
 
       if (response.status === 201 || response.status === 200) {
         localStorage.setItem('userData', JSON.stringify(response.data.data));
