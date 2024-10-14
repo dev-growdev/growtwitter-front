@@ -232,3 +232,16 @@ export const deleteTweet = async (postID: number) => {
     console.log(error);
   }
 };
+
+export const deleteRetweet = async (retweetID: number) => {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${getUserToken()}` }
+    };
+
+    const response = await client.delete(`/retweet/${retweetID}`, config);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
