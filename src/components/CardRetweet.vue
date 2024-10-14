@@ -3,34 +3,36 @@ import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 
-import { onMounted, } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardTweet from './CardTweet.vue';
+import { deleteRetweet } from '@/services/api';
 
 interface TweetTypeProps {
   data: any;
-  tweet?: TweetType
+  tweet?: TweetType;
 }
-
 const props = defineProps<TweetTypeProps>();
-props
 
+const reTweetDrop = ref(false);
+const userID = Number(sessionStorage.getItem('userId'));
 
+const toggleReTweetDrop = () => {
+  reTweetDrop.value = !reTweetDrop.value;
+};
 
-onMounted(() => {
+const handleDeleteReTweet = async (reTweetID: number) => {
+  const response = await deleteRetweet(reTweetID);
+  window.location.reload();
+};
 
-
-});
+onMounted(() => {});
 </script>
 
 <template>
   <div class="card-principal rounded-0">
     <v-card-actions class="ga-2">
       <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :to="`/profile/${data.user.id}`"
-            :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar></RouterLink>
-
-
-
+        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :to="`/profile/${data.user.id}`" :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar></RouterLink>
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
@@ -38,24 +40,25 @@ onMounted(() => {
             <RouterLink :to="`/profile/${data.user.id}`">
               <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
             </RouterLink>
-
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
 
-
+          <div v-if="userID === data.user.id" style="display: flex; align-items: end; flex-direction: column; position: relative">
+            <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical" size="small"></v-btn>
+            <div v-if="reTweetDrop" class="delTweet">
+              <v-btn small @click="handleDeleteReTweet(data.id)">Apagar</v-btn>
+            </div>
+          </div>
         </div>
-        <div><span>{{ data.content }}</span>
+        <div>
+          <span>{{ data.content }}</span>
           <p class="tweet-content" v-if="tweet">
             <CardTweet :data="tweet" />
           </p>
         </div>
-
       </div>
     </v-card-actions>
   </div>
-
-
-
 </template>
 
 <style scoped>
@@ -63,8 +66,6 @@ onMounted(() => {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
 }
-
-
 
 .dropdown {
   display: flex;
@@ -80,7 +81,20 @@ onMounted(() => {
   z-index: 10;
 }
 
-
+.delTweet {
+  background-color: #026eda;
+  display: flex;
+  flex-direction: column;
+  top: 50px;
+  right: 0px;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ebe8e8;
+  padding: 10px;
+  border-radius: 5px;
+  width: max-content;
+  z-index: 10;
+}
 
 .tweet-body {
   display: flex;
@@ -94,7 +108,6 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
 }
 
 .tweet-header strong {
