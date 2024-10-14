@@ -38,7 +38,7 @@ const filteredList = computed(() => {
     return combinedList.value;
   }
   const filtered = combinedList.value.filter(item => item.userId === Number(route.params.id));
-
+  
   return filtered;
 });
 </script>
@@ -46,9 +46,13 @@ const filteredList = computed(() => {
 <template>
   <div class="pt-4">
     <div v-for="item in filteredList" :key="item.id">
-      <CardRetweet v-if="item.type === 'retweet'" :data="item"
-        :tweet="item.post" />
-      <CardTweet v-else :data="item" />
-    </div>
+          <CardRetweet v-if="item.type === 'retweet'" :data="item"
+          :tweet="item.post" /> 
+          
+          <CardTweet v-if="item.type === 'tweet'"   :data="item" />
+    </div> 
   </div>
 </template>
+
+
+

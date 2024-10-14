@@ -2,7 +2,7 @@
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
 import { getUser, getHomeData } from '@/services/api';
-import type { PaginateRetweetType, PaginateTweetType, TweetType } from '@/types/TweetType';
+import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
 import ExploreComponent from '@/components/ExploreComponent.vue';
@@ -16,15 +16,25 @@ const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
 
 const listenEmit = () => {
+  page.value = 0;
   console.log('entrou');
+  load({
+    done: () => {
+      console.log("Carregamento completo");
+    }
+  });
   showMessage('Tweet publicado com sucesso!', 'success');
-  fetchAll();
 };
 
 const handleEmit = () => {
+  page.value = 0;
   console.log('entrou');
+  load({
+  done: () => {
+    console.log("Carregamento completo");
+  }
+});
   showMessage('Tweet publicado com sucesso!', 'success');
-  fetchAll();
 };
 
 function delay(ms: number) {
@@ -50,7 +60,6 @@ function clearMessage() {
   hasMessage.value = false;
 }
 
-const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const retweets = ref<any[]>([]);
 const item = ref<UserType>();
@@ -77,7 +86,7 @@ const handleResize = () => {
 
 
 
-async function load({ done }) {
+async function load({ done }:any) {
   page.value++;
   const response = await getHomeData(page.value)
     tweets.value.push(...response.data.data.posts.data);
