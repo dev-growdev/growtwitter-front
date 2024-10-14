@@ -2,11 +2,12 @@
 import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
-import { postComment, postLike, postRetweet } from '@/services/api';
+import { deleteTweet, postComment, postLike, postRetweet } from '@/services/api';
 import { onMounted, ref } from 'vue';
 
 interface TweetTypeProps {
   data: TweetType;
+  yourProfile?: boolean;
 }
 
 const props = defineProps<TweetTypeProps>();
@@ -52,23 +53,23 @@ async function handleSubmit(id: number) {
   });
   localCommentsCount.value++;
   commentInput.value = '';
-
 }
+
 const toogleDiv = () => {
   showDiv.value = !showDiv.value;
 };
+
 const toggleDropdown = () => {
   dropdown.value = !dropdown.value;
 };
-const handleRetweet = async (id: number) => {
 
+const handleRetweet = async (id: number) => {
   const response = await postRetweet(id);
   if (response) {
     dropdown.value = false;
   }
-
-
 };
+
 const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
   const response = await postRetweet(id, content);
@@ -76,16 +77,19 @@ const handleRetweetWithComment = async (id: number, content: string) => {
     dropdown.value = false;
     retweetModal.value = false;
   }
+};
 
+const handleDeleteTweet = async (postID: number) => {
+  const response = await deleteTweet(postID);
+  console.log(response);
+
+  window.location.reload();
 };
 
 const toggleModalRetweet = () => {
   retweetModal.value = true;
   comment.value = '';
-
 };
-
-
 
 async function handlePostLike(id: number) {
   like();
@@ -98,11 +102,8 @@ async function handlePostLike(id: number) {
 onMounted(() => {
   const user = localStorage.getItem('userData');
   if (user) {
-    liked.value = props.data.likes.some(
-      (like: any) => like.userId == JSON.parse(user).id
-    );
+    liked.value = props.data.likes.some((like: any) => like.userId == JSON.parse(user).id);
   }
-
 });
 </script>
 
@@ -112,9 +113,6 @@ onMounted(() => {
       <div class="d-block align-self-start">
         <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :image="data.user.avatar_url ?? default_avatar"
             size="50"></v-avatar></RouterLink>
-
-
-
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
@@ -122,7 +120,6 @@ onMounted(() => {
             <RouterLink :to="`/profile/${data.user.id}`">
               <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
             </RouterLink>
-
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
           <div style="display: flex; align-items: end; flex-direction: column; position: relative;">
@@ -130,9 +127,9 @@ onMounted(() => {
             <div v-if="dropdown" class="dropdown">
               <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
               <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
+              <v-btn v-if="yourProfile" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
             </div>
           </div>
-
         </div>
         <p class="tweet-content">{{ data.content }}</p>
         <div class="tweet-actions">
@@ -145,7 +142,6 @@ onMounted(() => {
         <div v-if="showDiv">
           <hr>
           <div v-for="comment in localComments" :key="comment.id">
-
             <div style="display: flex; align-items: center; justify-content: end; width: 100%; margin: 5px 0;">
               <RouterLink :to="`/profile/${comment.user.id}`">
                 <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="25"></v-avatar>
@@ -154,21 +150,15 @@ onMounted(() => {
                 <RouterLink :to="`/profile/${comment.user.id}`">
                   <strong>{{ comment.user.name }}</strong> <span>@{{ comment.user.username }}</span>
                 </RouterLink>
-
                 <span> ·</span> <span>{{ tempoDesdeCriacao(comment.created_at) }}</span>
               </div>
             </div>
-            <div style="font-size: 12px; width: 100%; text-align: end; font-weight: bold;">{{
-              comment.content }}</div>
-
-
+            <div style="font-size: 12px; width: 100%; text-align: end; font-weight: bold;">{{ comment.content }}</div>
           </div>
           <form @submit.prevent="handleSubmit(data.id)">
-
             <div class="text-box">
               <div class="box-container">
                 <textarea placeholder="Comentar" v-model="commentInput"></textarea>
-
                 <div class="formatting">
                   <button type="submit" class="send" title="Send">
                     <svg fill="none" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -180,12 +170,9 @@ onMounted(() => {
                     </svg>
                   </button>
                 </div>
-
               </div>
             </div>
-
           </form>
-
         </div>
       </div>
     </v-card-actions>
@@ -219,7 +206,6 @@ onMounted(() => {
       </v-card-actions>
     </v-card>
   </v-dialog>
-
 </template>
 
 <style scoped>
@@ -227,7 +213,6 @@ onMounted(() => {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
 }
-
 
 .dropdown {
   display: flex;
@@ -243,8 +228,6 @@ onMounted(() => {
   z-index: 10;
 }
 
-
-
 .tweet-body {
   display: flex;
   flex-direction: column;
@@ -257,7 +240,6 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
 }
 
 .tweet-header strong {
@@ -286,7 +268,6 @@ onMounted(() => {
 .text-box {
   width: 100%;
   height: fit-content;
-
   padding: 8px;
 }
 
@@ -307,8 +288,6 @@ onMounted(() => {
   outline: none;
   caret-color: #0a84ff;
 }
-
-
 
 .text-box .formatting button {
   width: 30px;
