@@ -19,6 +19,9 @@ const comment = ref('');
 const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
+const me = ref(JSON.parse(localStorage.getItem('userData') || '{}'));
+const localComments = ref([...props.data.comments]);
+const localCommentsCount = ref(props.data.comments_count);
 
 function like() {
   if (liked.value === false) {
@@ -32,7 +35,24 @@ function like() {
 
 async function handleSubmit(id: number) {
   await postComment(id, commentInput.value);
-  window.location.reload();
+  localComments.value.push({
+    id: Math.floor(Math.random() * 10000),
+    user: {
+      id: id,
+      avatar_url: me.value.avatar_url,
+      name: me.value.name,
+      username: me.value.username,
+      surname: '',
+      email: '',
+      password: '',
+      following_count: 0,
+      followers_count: 0
+    },
+    content: commentInput.value,
+    created_at: new Date().toISOString()
+  });
+  localCommentsCount.value++;
+  commentInput.value = '';
 }
 const toogleDiv = () => {
   showDiv.value = !showDiv.value;
@@ -111,7 +131,7 @@ onMounted(() => {
             <v-btn icon class="btn-comment" @click="toogleDiv()">
               <IconComment class="icon-comment" />
               <span>
-                {{ data.comments_count }}
+                {{ localCommentsCount }}
               </span>
             </v-btn>
           </article>
@@ -133,7 +153,7 @@ onMounted(() => {
           </article>
         </div>
         <div v-if="showDiv" class="mt-2">
-          <div v-for="comment in props.data.comments" :key="comment.id" class="d-flex flex-column pb-4">
+          <div v-for="comment in localComments" :key="comment.id" class="d-flex flex-column pb-4">
             <div class="d-flex ga-2 align-center w-100 mx-2">
               <RouterLink :to="`/profile/${comment.user.id}`">
                 <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
