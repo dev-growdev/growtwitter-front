@@ -234,7 +234,7 @@ const retweets = ref<any[]>([]);
 
 async function fetchAll(id: string) {
   loadingVisible.value = true;
-  const response = await getProfileData(id);
+  const response = await getProfileData(id, 1);
 
   anotherUser.value = response.data.data.user;
   if (response.data.data.followersData.some((follower: any) => follower.followerId === item.value.id)) {
@@ -246,13 +246,40 @@ async function fetchAll(id: string) {
   retweets.value = response.data.data.retweets;
   loadingVisible.value = false;
 }
+
+const page = ref<number>(0);
+
+
+async function load({ done }:any) {
+  page.value++;
+  const response = await getProfileData(route.params.id as string, page.value);
+  console.log("load ", response);
+  
+  anotherUser.value = response.data.data.user;
+  
+  if (response.data.data.followersData.data.some((follower: any) => follower.followerId === item.value.id)) {
+    isFollowing.value = true;
+  }
+
+  anotherUser.value.followers_count = response.data.data.followings;
+  anotherUser.value.following_count = response.data.data.followers;
+  
+  tweets.value.push(...response.data.data.posts.data);
+  retweets.value.push(...response.data.data.retweets.data)
+  
+    console.log(tweets.value);
+    console.log(retweets.value);
+    
+    done("ok");
+  }
+
+
+
 onMounted(() => {
   handleGetUser();
-  fetchAll(route.params.id as string);
 });
 onBeforeRouteUpdate((to, from, next) => {
   handleGetUser();
-  fetchAll(to.params.id as string);
   next();
 });
 const tweets = ref<TweetType[]>([]);
@@ -362,7 +389,11 @@ const tweets = ref<TweetType[]>([]);
             </v-list>
           </v-col>
           <v-col cols="12">
-            <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
+            <v-infinite-scroll color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+                <div>
+                  <ListCard :tweets="tweets" :retweets="retweets"  :profile="true"/>
+                </div>
+            </v-infinite-scroll>
           </v-col>
         </v-row>
       </v-container>
