@@ -2,12 +2,13 @@
 import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
-import { postComment, postLike, postRetweet } from '@/services/api';
+import { deleteTweet, postComment, postLike, postRetweet } from '@/services/api';
 import { onMounted, ref } from 'vue';
 import IconComment from './icons/IconComment.vue';
 
 interface TweetTypeProps {
   data: TweetType;
+  yourProfile?: boolean;
 }
 
 const props = defineProps<TweetTypeProps>();
@@ -54,18 +55,22 @@ async function handleSubmit(id: number) {
   localCommentsCount.value++;
   commentInput.value = '';
 }
+
 const toogleDiv = () => {
   showDiv.value = !showDiv.value;
 };
+
 const toggleDropdown = () => {
   dropdown.value = !dropdown.value;
 };
+
 const handleRetweet = async (id: number) => {
   const response = await postRetweet(id);
   if (response) {
     dropdown.value = false;
   }
 };
+
 const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
   const response = await postRetweet(id, content);
@@ -73,6 +78,13 @@ const handleRetweetWithComment = async (id: number, content: string) => {
     dropdown.value = false;
     retweetModal.value = false;
   }
+};
+
+const handleDeleteTweet = async (postID: number) => {
+  const response = await deleteTweet(postID);
+  console.log(response);
+
+  window.location.reload();
 };
 
 const toggleModalRetweet = () => {
@@ -94,6 +106,8 @@ onMounted(() => {
     liked.value = props.data.likes.some((like: any) => like.userId == JSON.parse(user).id);
   }
 });
+
+const idU = Number(sessionStorage.getItem('userId'));
 </script>
 
 <template>
@@ -110,7 +124,6 @@ onMounted(() => {
             <RouterLink :to="`/profile/${data.user.id}`">
               <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
             </RouterLink>
-
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
             <p class="tweet-content">{{ data.content }}</p>
           </div>
@@ -123,6 +136,7 @@ onMounted(() => {
             <div v-if="dropdown" class="dropdown">
               <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
               <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
+              <v-btn v-if="data.user.id === idU" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
             </div>
           </div>
         </div>
@@ -176,7 +190,6 @@ onMounted(() => {
             <div class="text-box">
               <div class="box-container">
                 <textarea placeholder="Comentar" v-model="commentInput"></textarea>
-
                 <div class="formatting">
                   <button type="submit" class="send" title="Send">
                     <svg fill="none" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -234,46 +247,6 @@ onMounted(() => {
   transition: background-color 0.3s ease;
 }
 
-.icon-comment {
-  fill: #808080 !important;
-}
-
-.btn-comment:hover {
-  color: #2c8cd4 !important;
-  fill: #2c8cd4;
-}
-
-.btn-comment:hover .icon-comment {
-  color: #2c8cd4 !important;
-  fill: #2c8cd4 !important;
-}
-
-.btn-like {
-  text-transform: none !important;
-  user-select: none;
-  cursor: pointer;
-}
-
-.btn-like:hover {
-  color: #f91880 !important;
-}
-
-.btn-like:hover .mdi-cards-heart-outline {
-  color: #f91880 !important;
-}
-
-.mdi-cards-heart-outline {
-  color: #808080;
-}
-
-.mouseHover {
-  transition: all 0.2s ease;
-}
-
-.mouseHover:hover {
-  text-decoration: underline;
-}
-
 .dropdown {
   display: flex;
   flex-direction: column;
@@ -286,6 +259,13 @@ onMounted(() => {
   border-radius: 5px;
   width: max-content;
   z-index: 10;
+}
+
+.tweet-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .tweet-header {

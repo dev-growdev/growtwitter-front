@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { getUserToken } from './authentication';
-
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -8,6 +7,7 @@ export const client = axios.create({
   }
 });
 
+// Login - Register - Methods
 export const login = async (email: string, password: string) => {
   try {
     const response = await client.post('/login', {
@@ -20,7 +20,6 @@ export const login = async (email: string, password: string) => {
     return error?.response;
   }
 };
-
 export async function logout() {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
@@ -31,7 +30,6 @@ export async function logout() {
     return error?.reponse;
   }
 }
-
 export async function register(userData: any) {
   try {
     return await client.post('/users', userData);
@@ -196,27 +194,53 @@ export async function postComment(postId: number, content: string) {
   }
 }
 
-export const getProfileData = async (id: string) => {
+export const getProfileData = async (id: string, page:number) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
 
   try {
-    const response = await client.get('/profile/' + id, config);
+    const response = await client.get('/profile/' + id + '?page=' + page, config);
     return response;
   } catch (error: any) {
     return error?.response;
   }
 };
-export const getHomeData = async () => {
+export const getHomeData = async (page: number) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
 
   try {
-    const response = await client.get('/home', config);
+    const response = await client.get('/home?page=' + page, config);
     return response;
   } catch (error: any) {
     return error?.response;
+  }
+};
+
+export const deleteTweet = async (postID: number) => {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${getUserToken()}` }
+    };
+
+    const response = await client.delete(`/posts/${postID}`, config);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteRetweet = async (retweetID: number) => {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${getUserToken()}` }
+    };
+
+    const response = await client.delete(`/retweet/${retweetID}`, config);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -3,8 +3,9 @@ import type { TweetType } from '@/types';
 import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardTweet from './CardTweet.vue';
+import { deleteRetweet } from '@/services/api';
 
 interface TweetTypeProps {
   data: any;
@@ -15,6 +16,21 @@ const props = defineProps<TweetTypeProps>();
 props;
 
 onMounted(() => {});
+
+const dropdown = ref(false);
+
+const toggleDropdown = () => {
+  dropdown.value = !dropdown.value;
+};
+
+const handleDeleteRetweet = async (retweetID: number) => {
+  const response = await deleteRetweet(retweetID);
+  console.log(response);
+
+  window.location.reload();
+};
+
+const idU = Number(sessionStorage.getItem('userId'));
 </script>
 
 <template>
@@ -33,6 +49,12 @@ onMounted(() => {});
             </RouterLink>
 
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+          </div>
+          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+            <v-btn v-if="data.user.id === idU" icon small @click="toggleDropdown"> <v-icon icon="mdi-dots-horizontal"></v-icon></v-btn>
+            <div v-if="dropdown" class="dropdown">
+              <v-btn small @click="handleDeleteRetweet(data.id)"><v-icon icon="mdi-delete"></v-icon>Apagar</v-btn>
+            </div>
           </div>
         </div>
         <div>
