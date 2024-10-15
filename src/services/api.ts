@@ -222,9 +222,7 @@ export async function getHomeData(page: number) {
 
 export async function deleteTweet(postID: number) {
   try {
-    const config = {
-      headers: { Authorization: `Bearer ${getUserToken()}` }
-    };
+    const config = await configMyRequest();
 
     const response = await client.delete(`/posts/${postID}`, config);
     console.log(response);
@@ -235,9 +233,7 @@ export async function deleteTweet(postID: number) {
 
 export async function deleteRetweet(retweetID: number) {
   try {
-    const config = {
-      headers: { Authorization: `Bearer ${getUserToken()}` }
-    };
+    const config = await configMyRequest();
 
     const response = await client.delete(`/retweet/${retweetID}`, config);
     console.log(response);
