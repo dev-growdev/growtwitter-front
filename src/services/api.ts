@@ -11,7 +11,7 @@ export const client = axios.create({
 });
 
 // Login - Register - Methods
-export async function login (email: string, password: string) {
+export async function login(email: string, password: string) {
   try {
     const config = await configMyRequest(false);
 
@@ -30,7 +30,7 @@ export async function login (email: string, password: string) {
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
 export async function logout() {
   try {
@@ -70,7 +70,6 @@ export async function doGet(url: string) {
 
     return response?.data;
   } catch (error) {
-    console.log(error);
     return [];
   }
 }
@@ -107,7 +106,7 @@ export async function getUser() {
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
 export async function getUserbyId(id: string) {
   try {
@@ -224,10 +223,9 @@ export async function deleteTweet(postID: number) {
   try {
     const config = await configMyRequest();
 
-    const response = await client.delete(`/posts/${postID}`, config);
-    console.log(response);
-  } catch (error) {
-    console.log(error);
+    await client.delete(`/posts/${postID}`, config);
+  } catch (error: any) {
+    return error?.response;
   }
 }
 
@@ -235,9 +233,8 @@ export async function deleteRetweet(retweetID: number) {
   try {
     const config = await configMyRequest();
 
-    const response = await client.delete(`/retweet/${retweetID}`, config);
-    console.log(response);
-  } catch (error) {
-    console.log(error);
+    await client.delete(`/retweet/${retweetID}`, config);
+  } catch (error: any) {
+    return error?.response;
   }
 }
