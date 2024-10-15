@@ -58,7 +58,7 @@ onMounted(() => {});
           <p class="tweet-content" v-if="tweet">
             <CardTweet :data="tweet" isaReTweet="true" />
           </p>
-          <div v-else class="d-flex justify-center"><p class="bg-blue-grey-lighten-3 pa-5 lg-w-75 d-flex justify-center rounded-lg">Esse tweet foi excluido pelo autor.</p></div>
+          <div v-else class="d-flex justify-center w-100"><p class="bg-blue-lighten-5 pa-5 w-75 d-flex justify-center rounded-lg">Esse tweet foi excluido pelo autor.</p></div>
         </div>
       </div>
     </v-card-actions>
