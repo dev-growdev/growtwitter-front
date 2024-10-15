@@ -88,11 +88,9 @@ async function load({ done }:any) {
 
   if(continueLoading.value == true){
   const response = await getHomeData(page.value)
-console.log(response.data.data.posts.last_page);
 
   if(response.data.data.posts.last_page <= page.value){
       continueLoading.value = false
-      console.log(continueLoading.value);
       
     }
 
