@@ -28,7 +28,9 @@ const item = ref<UserType>({
   avatar_url: defaultAvatar,
   id: 0,
   followers_count: 0,
-  following_count: 0
+  following_count: 0,
+  posts_count: 0,
+  retweets_count: 0
 });
 
 const anotherUser = ref<UserType>({
@@ -40,7 +42,9 @@ const anotherUser = ref<UserType>({
   avatar_url: defaultAvatar,
   id: 0,
   followers_count: 0,
-  following_count: 0
+  following_count: 0,
+  posts_count: 0,
+  retweets_count: 0
 });
 
 const editDialog = ref<boolean>(false);
@@ -63,6 +67,7 @@ async function handleGetUser() {
   account.email = item.value.email;
   account.password = item.value.password;
   account.id = item.value.id;
+  myPosts.value = item.value.posts_count;
 }
 
 // MODAL
@@ -268,11 +273,13 @@ onBeforeRouteUpdate((to, from, next) => {
   next();
 });
 const tweets = ref<TweetType[]>([]);
+const myPosts = ref<number>(0);
 </script>
 
 <template>
   <v-app class="ma-0" id="app">
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0"
+      touchless disable-swipe>
       <SideBar :item="item" />
     </v-navigation-drawer>
 
@@ -292,38 +299,24 @@ const tweets = ref<TweetType[]>([]);
             <div>
               <h1 class="mt-1 text-center">Editar perfil</h1>
               <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-              <v-text-field
-                density="compact"
-                :placeholder="account.name.toUpperCase()"
-                prepend-inner-icon="mdi-account-outline"
-                variant="outlined"
-                v-model="account.name"
-                :error-messages="validationErrors.name"
-              ></v-text-field>
+              <v-text-field density="compact" :placeholder="account.name.toUpperCase()"
+                prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.name"
+                :error-messages="validationErrors.name"></v-text-field>
 
               <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
-              <v-text-field
-                density="compact"
-                :placeholder="account.surname.toUpperCase()"
-                prepend-inner-icon="mdi-account-outline"
-                variant="outlined"
-                v-model="account.surname"
-                :error-messages="validationErrors.surname"
-              ></v-text-field>
+              <v-text-field density="compact" :placeholder="account.surname.toUpperCase()"
+                prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.surname"
+                :error-messages="validationErrors.surname"></v-text-field>
 
               <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
-              <v-text-field
-                density="compact"
-                :placeholder="account.username"
-                prepend-inner-icon="mdi-account-outline"
-                variant="outlined"
-                v-model="account.username"
-                :error-messages="validationErrors.username"
-              ></v-text-field>
+              <v-text-field density="compact" :placeholder="account.username" prepend-inner-icon="mdi-account-outline"
+                variant="outlined" v-model="account.username"
+                :error-messages="validationErrors.username"></v-text-field>
 
               <div class="mt-1 text-center text-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
               <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
-                <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar" @change="bindCustomAvatar" id="avatar"></v-file-input>
+                <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
+                  @change="bindCustomAvatar" id="avatar"></v-file-input>
                 <label class="upload-avatar-label" for="avatar">
                   <v-avatar :image="previewAvatar ?? item.avatar_url" size="75"></v-avatar>
                 </label>
@@ -334,7 +327,8 @@ const tweets = ref<TweetType[]>([]);
                 </div>
               </div>
 
-              <v-btn @click="handleEdit" class="mb-2" color="blue" size="large" variant="flat" block :disabled="loadingVisibleModal">
+              <v-btn @click="handleEdit" class="mb-2" color="blue" size="large" variant="flat" block
+                :disabled="loadingVisibleModal">
                 <span v-if="!loadingVisibleModal"> Editar Perfil </span>
                 <div class="d-flex justify-center" v-if="loadingVisibleModal">
                   <v-progress-circular indeterminate color="white" :size="20" :width="3" />
@@ -351,20 +345,23 @@ const tweets = ref<TweetType[]>([]);
         <v-row class="border ga-4">
           <v-col class="pa-0 ma-0">
             <v-img class="bg-grey" height="215" aspect-ratio="16/9" cover />
-            <img class="profile-img mx-4 rounded-circle border-md" width="100" height="100" :src="anotherUser.avatar_url ?? default_avatar" alt="" />
+            <img class="profile-img mx-4 rounded-circle border-md" width="100" height="100"
+              :src="anotherUser.avatar_url ?? default_avatar" alt="" />
           </v-col>
           <v-col cols="12" class="d-flex flex-row justify-end ga-2 py-4 py-md-0 px-4">
             <button v-if="item.id === anotherUser.id" @click="editDialog = true">
               <span>Editar</span>
             </button>
-            <v-btn v-if="item.id !== anotherUser.id" :loading="btnLoading" class="d-flex justify-start align-self-start" height="32" @click="handleFollow">
+            <v-btn v-if="item.id !== anotherUser.id" :loading="btnLoading" class="d-flex justify-start align-self-start"
+              height="32" @click="handleFollow">
               <span>{{ isFollowing ? 'Seguindo' : 'Seguir' }}</span>
             </v-btn>
           </v-col>
           <v-col class="py-0 px-4">
             <v-list class="py-0">
               <div class="d-flex flex-column">
-                <span class="text-h4 font-weight-bold">{{ anotherUser.name && anotherUser.name.length > 20 ? anotherUser.name.substring(0, 20) : anotherUser.name }} {{ anotherUser.surname }}</span>
+                <span class="text-h4 font-weight-bold">{{ anotherUser.name && anotherUser.name.length > 20 ?
+                  anotherUser.name.substring(0, 20) : anotherUser.name }} {{ anotherUser.surname }}</span>
                 <span class="text-h6">@{{ anotherUser.username }}</span>
               </div>
               <div class="d-flex ga-4">
@@ -377,7 +374,7 @@ const tweets = ref<TweetType[]>([]);
                   Seguidores
                 </p>
                 <p class="text-h7">
-                  <span class="font-weight-bold">{{ tweets.length }}</span> Posts
+                  <span class="font-weight-bold">{{ anotherUser.posts_count + anotherUser.retweets_count }}</span> Posts
                 </p>
               </div>
             </v-list>
@@ -393,7 +390,8 @@ const tweets = ref<TweetType[]>([]);
       </v-container>
     </v-main>
 
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0"
+      touchless disable-swipe>
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
