@@ -94,6 +94,7 @@ onMounted(() => {});
 }
 
 .delTweet {
+  text-transform: none !important;
   background-color: #026eda;
   display: flex;
   flex-direction: column;

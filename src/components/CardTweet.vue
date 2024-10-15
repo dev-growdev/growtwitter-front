@@ -72,7 +72,7 @@ const toggleTweetDrop = () => {
 };
 
 const handleRetweet = async (id: number) => {
-  const response = await postRetweet(id);
+  const response = await postRetweet(id); //por emit
   if (response) {
     reTweetDrop.value = false;
   }
@@ -80,7 +80,7 @@ const handleRetweet = async (id: number) => {
 
 const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
-  const response = await postRetweet(id, content);
+  const response = await postRetweet(id, content); //por emit
   if (response) {
     reTweetDrop.value = false;
     retweetModal.value = false;
@@ -88,9 +88,13 @@ const handleRetweetWithComment = async (id: number, content: string) => {
 };
 
 const handleDeleteTweet = async (postID: number) => {
-  const response = await deleteTweet(postID);
+  const confirmationDelete = window.confirm('Deseja realmente deletar?');
+  if (confirmationDelete) {
+    const response = await deleteTweet(postID);
 
-  window.location.reload();
+    window.location.reload(); // por emit
+  }
+  return;
 };
 
 const toggleModalRetweet = () => {
@@ -136,8 +140,8 @@ const idU = Number(sessionStorage.getItem('userId'));
           <div v-if="!isaReTweet" style="display: flex; align-items: end; flex-direction: column; position: relative">
             <v-btn @click="toggleTweetDrop" icon="mdi-dots-vertical"> </v-btn>
             <div v-if="tweetDrop" class="delTweet">
-              <v-btn v-if="userID === data.user.id" @click="handleDeleteTweet(data.id)">Apagar</v-btn>
-              <v-btn v-else>Denunciar</v-btn>
+              <v-btn class="text-none" v-if="userID === data.user.id" @click="handleDeleteTweet(data.id)">Apagar</v-btn>
+              <v-btn class="text-none" v-else>Denunciar</v-btn>
             </div>
           </div>
         </div>
