@@ -85,7 +85,7 @@ onMounted(async () => {
           <v-col cols="12" sm="6" class="text bg-blue rounded py-15">
             <v-card-title>Growtwitter</v-card-title>
             <v-card-subtitle class="text-white"
-              >Trabalho final do bloco intermediário</v-card-subtitle
+              >Trabalho final do curso despertar.dev</v-card-subtitle
             >
             <v-card-text>
               O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais

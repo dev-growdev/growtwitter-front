@@ -29,3 +29,4 @@ coverage
 *.tsbuildinfo
 .env
 .prettierrc.json
+src/services/CookiesRequestService.ts
