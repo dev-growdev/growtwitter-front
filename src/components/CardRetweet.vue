@@ -6,6 +6,7 @@ import { tempoDesdeCriacao } from '@/utils/PastTime';
 import { onMounted, ref } from 'vue';
 import CardTweet from './CardTweet.vue';
 import { deleteRetweet } from '@/services/api';
+import ModalSeeProfile from '@/components/ModalSeeProfile.vue';
 
 interface TweetTypeProps {
   data: any;
@@ -37,9 +38,12 @@ const idU = Number(sessionStorage.getItem('userId'));
   <div class="card-principal rounded-0">
     <v-card-actions class="ma-2 ga-2">
       <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`">
-          <v-avatar :to="`/profile/${data.user.id}`" :image="data.user.avatar_url ?? default_avatar" size="45" />
-        </RouterLink>
+        <div class="profileModal d-block align-self-start">
+          <RouterLink :to="`/profile/${data.user.id}`">
+            <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+          </RouterLink>
+          <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="props.data.user" />
+        </div>
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
@@ -70,6 +74,14 @@ const idU = Number(sessionStorage.getItem('userId'));
 </template>
 
 <style scoped>
+.profileModalChild {
+  display: none;
+}
+
+.profileModal:hover .profileModalChild {
+  display: flex;
+}
+
 .card-principal {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
