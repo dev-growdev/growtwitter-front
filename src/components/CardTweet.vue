@@ -8,6 +8,7 @@ import { onMounted, ref } from 'vue';
 interface TweetTypeProps {
   data: TweetType;
   yourProfile?: boolean;
+  isaReTweet?: boolean;
 }
 
 const props = defineProps<TweetTypeProps>();
@@ -106,11 +107,11 @@ onMounted(() => {
 
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
-          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+          <div v-if="!isaReTweet" style="display: flex; align-items: end; flex-direction: column; position: relative">
             <v-btn @click="toggleTweetDrop" icon="mdi-dots-vertical"> </v-btn>
             <div v-if="tweetDrop" class="delTweet">
-              <v-btn v-if="userID === data.user.id" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
-              <v-btn v-else icon="mdi-alert"> denunciar</v-btn>
+              <v-btn v-if="userID === data.user.id" @click="handleDeleteTweet(data.id)">Apagar</v-btn>
+              <v-btn v-else>Denunciar</v-btn>
             </div>
           </div>
         </div>
