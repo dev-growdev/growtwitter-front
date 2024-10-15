@@ -56,7 +56,7 @@ onMounted(() => {});
         <div>
           <span>{{ data.content }}</span>
           <p class="tweet-content" v-if="tweet">
-            <CardTweet :data="tweet" isaReTweet="true" />
+            <CardTweet :data="tweet" :isaReTweet="true" />
           </p>
           <div v-else class="d-flex justify-center w-100"><p class="bg-blue-lighten-5 pa-5 w-75 d-flex justify-center rounded-lg">Esse tweet foi excluido pelo autor.</p></div>
         </div>

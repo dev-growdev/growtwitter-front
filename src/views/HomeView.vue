@@ -19,7 +19,7 @@ const listenEmit = () => {
   page.value = 0;
   load({
     done: () => {
-      console.log("Carregamento completo");
+      console.log('Carregamento completo');
     }
   });
   showMessage('Tweet publicado com sucesso!', 'success');
@@ -29,10 +29,10 @@ const handleEmit = () => {
   page.value = 0;
   console.log('entrou');
   load({
-  done: () => {
-    console.log("Carregamento completo");
-  }
-});
+    done: () => {
+      console.log('Carregamento completo');
+    }
+  });
   showMessage('Tweet publicado com sucesso!', 'success');
 };
 
@@ -48,7 +48,7 @@ async function showMessage(messageText: string, type: string) {
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   hasMessage.value = true;
 
- await delay(3000);
+  await delay(3000);
   hasMessage.value = false;
 }
 
@@ -74,27 +74,31 @@ async function handleGetUser() {
 }
 const page = ref<number>(0);
 
-
 const windowWidth = ref(window.innerWidth);
 
 const handleResize = () => {
   windowWidth.value = window.innerWidth;
 };
 
-
-
-async function load({ done }:any) {
+async function load({ done }: any) {
   page.value++;
-  const response = await getHomeData(page.value)
-    tweets.value.push(...response.data.data.posts.data);
-    retweets.value.push(...response.data.data.retweets.data)
-    done("ok");
-  }
+  const response = await getHomeData(page.value);
+  tweets.value.push(...response.data.data.posts.data);
+  retweets.value.push(...response.data.data.retweets.data);
+  done('ok');
+}
 
+async function loadForRTandDel() {
+  tweets.value = [];
+  retweets.value = [];
+  const response = await getHomeData(1);
+  tweets.value.push(...response.data.data.posts.data);
+  retweets.value.push(...response.data.data.retweets.data);
+}
 
-onMounted( async () => {
+onMounted(async () => {
   window.addEventListener('resize', handleResize);
-  localStorage.setItem("attemptsVerify", false.toString())
+  localStorage.setItem('attemptsVerify', false.toString());
   handleGetUser();
 });
 
@@ -128,12 +132,10 @@ onUnmounted(() => {
             <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
 
             <v-infinite-scroll color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
-                <div>
-                  <ListCard :tweets="tweets" :retweets="retweets" />
-                </div>
-
+              <div>
+                <ListCard :tweets="tweets" :retweets="retweets" @pass-for-list="loadForRTandDel" />
+              </div>
             </v-infinite-scroll>
-
           </v-col>
         </v-row>
       </v-container>

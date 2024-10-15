@@ -11,8 +11,10 @@ interface TweetTypeProps {
   yourProfile?: boolean;
   isaReTweet?: boolean;
 }
-
 const props = defineProps<TweetTypeProps>();
+
+const listCardEmits = defineEmits(['reloadHome']);
+
 const liked = ref(false);
 const artificialLike = ref(0);
 const reTweetDrop = ref(false);
@@ -72,29 +74,31 @@ const toggleTweetDrop = () => {
 };
 
 const handleRetweet = async (id: number) => {
-  const response = await postRetweet(id); //por emit
+  const response = await postRetweet(id);
   if (response) {
+    listCardEmits('reloadHome');
     reTweetDrop.value = false;
   }
 };
 
 const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
-  const response = await postRetweet(id, content); //por emit
+  const response = await postRetweet(id, content);
   if (response) {
+    listCardEmits('reloadHome');
     reTweetDrop.value = false;
     retweetModal.value = false;
   }
 };
 
 const handleDeleteTweet = async (postID: number) => {
-  const confirmationDelete = window.confirm('Deseja realmente deletar?');
-  if (confirmationDelete) {
-    const response = await deleteTweet(postID);
-
-    window.location.reload(); // por emit
+  // const confirmationDelete = window.confirm('Deseja realmente deletar?');
+  const response = await deleteTweet(postID);
+  if (response) {
+    listCardEmits('reloadHome');
+    return console.log('foi');
   }
-  return;
+  return console.log('n foi');
 };
 
 const toggleModalRetweet = () => {

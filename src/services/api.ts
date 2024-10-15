@@ -194,7 +194,7 @@ export async function postComment(postId: number, content: string) {
   }
 }
 
-export const getProfileData = async (id: string, page:number) => {
+export const getProfileData = async (id: string, page: number) => {
   const config = {
     headers: { Authorization: `Bearer ${getUserToken()}` }
   };
@@ -226,7 +226,10 @@ export const deleteTweet = async (postID: number) => {
     };
 
     const response = await client.delete(`/posts/${postID}`, config);
-    console.log(response);
+    if (response.status != 200) {
+      return false;
+    }
+    return true;
   } catch (error) {
     console.log(error);
   }

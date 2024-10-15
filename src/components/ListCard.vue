@@ -11,6 +11,8 @@ interface Props {
   profile?: boolean;
 }
 
+const listCardEmits = defineEmits(['passForList']);
+
 const props = defineProps<Props>();
 
 const combinedList = computed(() => {
@@ -46,8 +48,8 @@ const filteredList = computed(() => {
     <div v-for="item in filteredList" :key="item.id">
       <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="props.tweets.find((tweet) => tweet.id == item.postId)" />
       <div v-else>
-        <CardTweet v-if="profile" :data="item" :yourProfile="true" />
-        <CardTweet v-else :data="item" />
+        <CardTweet v-if="profile" :data="item" :yourProfile="true" @reloadHome="listCardEmits('passForList')" />
+        <CardTweet v-else :data="item" @reloadHome="listCardEmits('passForList')" />
       </div>
     </div>
   </div>
