@@ -43,11 +43,10 @@ const filteredList = computed(() => {
 
 <template>
   <div class="pt-4">
-    <div v-for="item in filteredList" :key="item.id">
+    <div v-for="(item, index) in filteredList" :key="index"> <!-- filteredList.value.length +1 -->
           <CardRetweet v-if="item.type === 'retweet'" :data="item"
           :tweet="item.post" /> 
-          
-          <CardTweet v-if="item.type === 'tweet'"   :data="item" />
+          <CardTweet v-if="item.type === 'tweet'" :data="item" />
     </div> 
   </div>
 </template>

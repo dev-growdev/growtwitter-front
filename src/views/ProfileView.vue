@@ -245,10 +245,16 @@ async function fetchAll(id: string) {
 }
 
 const page = ref<number>(0);
+const continueLoading = ref<boolean>(true);
 
 async function load({ done }: any) {
   page.value++;
-  const response = await getProfileData(route.params.id as string, page.value);
+  if(continueLoading.value == true){
+    const response = await getProfileData(route.params.id as string, page.value);
+
+    if(response.data.data.posts.last_page <= page.value){
+      continueLoading.value = false
+    }
 
   anotherUser.value = response.data.data.user;
 
@@ -261,6 +267,7 @@ async function load({ done }: any) {
 
   tweets.value.push(...response.data.data.posts.data);
   retweets.value.push(...response.data.data.retweets.data);
+}
 
   done('ok');
 }
@@ -380,11 +387,17 @@ const myPosts = ref<number>(0);
             </v-list>
           </v-col>
           <v-col cols="12">
-            <v-infinite-scroll color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+            <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
               <div>
                 <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
               </div>
             </v-infinite-scroll>
+
+              <div v-else >
+                <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
+              </div>
+
+
           </v-col>
         </v-row>
       </v-container>
