@@ -43,17 +43,18 @@ onMounted(() => {});
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
 
-          <div v-if="userID === data.user.id" style="display: flex; align-items: end; flex-direction: column; position: relative">
-            <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical" size="small"></v-btn>
+          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+            <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical"></v-btn>
             <div v-if="reTweetDrop" class="delTweet">
-              <v-btn small @click="handleDeleteReTweet(data.id)">Apagar</v-btn>
+              <v-btn v-if="userID === data.user.id" @click="handleDeleteReTweet(data.id)">Apagar</v-btn>
+              <v-btn v-else>Denunciar</v-btn>
             </div>
           </div>
         </div>
         <div>
           <span>{{ data.content }}</span>
           <p class="tweet-content" v-if="tweet">
-            <CardTweet :data="tweet" />
+            <CardTweet :data="tweet" isaReTweet="true" />
           </p>
         </div>
       </div>
