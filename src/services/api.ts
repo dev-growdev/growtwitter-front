@@ -2,6 +2,7 @@ import axios from 'axios';
 import { configMyRequest } from './CookiesRequestService';
 import type { UserDataType } from '@/types/UserDataType';
 
+import { getUserToken } from './authentication';
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -9,7 +10,8 @@ export const client = axios.create({
   }
 });
 
-export const login = async (email: string, password: string) => {
+// Login - Register - Methods
+export async function login (email: string, password: string) {
   try {
     const config = await configMyRequest(false);
 
@@ -43,12 +45,8 @@ export async function logout() {
 export async function register(userData: UserDataType) {
   try {
     const config = await configMyRequest(false);
-    
-    return await client.post(
-      '/users',
-      userData,
-      config
-    );
+
+    return await client.post('/users', userData, config);
   } catch (error: any) {
     return error?.response;
   }
@@ -99,7 +97,7 @@ export async function postTweet(content: string) {
   }
 }
 
-export const getUser = async () => {
+export async function getUser() {
   try {
     const config = await configMyRequest();
 
@@ -111,7 +109,7 @@ export const getUser = async () => {
   }
 };
 
-export const getUserbyId = async (id: string) => {
+export async function getUserbyId(id: string) {
   try {
     const config = await configMyRequest();
 
@@ -121,9 +119,9 @@ export const getUserbyId = async (id: string) => {
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const getFollowersAndFollowingById = async (id: string) => {
+export async function getFollowersAndFollowingById(id: string) {
   try {
     const config = await configMyRequest();
 
@@ -133,9 +131,9 @@ export const getFollowersAndFollowingById = async (id: string) => {
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const postFollow = async (followingId: string, followerId: string) => {
+export async function postFollow(followingId: string, followerId: string) {
   try {
     const config = await configMyRequest();
 
@@ -150,9 +148,9 @@ export const postFollow = async (followingId: string, followerId: string) => {
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const postRetweet = async (postId: number, content?: string) => {
+export async function postRetweet(postId: number, content?: string) {
   try {
     const config = await configMyRequest();
 
@@ -166,7 +164,7 @@ export const postRetweet = async (postId: number, content?: string) => {
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
 export async function getRetweet() {
   try {
@@ -200,23 +198,50 @@ export async function postComment(postId: number, content: string) {
   }
 }
 
-export const getProfileData = async (id: string) => {
+export async function getProfileData(id: string, page: number) {
   try {
     const config = await configMyRequest();
+    const response = await client.get('/profile/' + id + '?page=' + page, config);
 
-    const response = await client.get('/profile/' + id, config);
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
-export const getHomeData = async () => {
+}
+
+export async function getHomeData(page: number) {
   try {
     const config = await configMyRequest();
+    const response = await client.get('/home?page=' + page, config);
 
-    const response = await client.get('/home', config);
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
+}
+
+export async function deleteTweet(postID: number) {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${getUserToken()}` }
+    };
+
+    const response = await client.delete(`/posts/${postID}`, config);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteRetweet(retweetID: number) {
+  try {
+    const config = {
+      headers: { Authorization: `Bearer ${getUserToken()}` }
+    };
+
+    const response = await client.delete(`/retweet/${retweetID}`, config);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
