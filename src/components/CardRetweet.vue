@@ -30,9 +30,11 @@ onMounted(() => {});
 
 <template>
   <div class="card-principal rounded-0">
-    <v-card-actions class="ga-2">
+    <v-card-actions class="ma-2 ga-2">
       <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :to="`/profile/${data.user.id}`" :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar></RouterLink>
+        <RouterLink :to="`/profile/${data.user.id}`">
+          <v-avatar :to="`/profile/${data.user.id}`" :image="data.user.avatar_url ?? default_avatar" size="45" />
+        </RouterLink>
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
@@ -66,6 +68,14 @@ onMounted(() => {});
 .card-principal {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
+}
+
+.mouseHover {
+  transition: all 0.2s ease;
+}
+
+.mouseHover:hover {
+  text-decoration: underline;
 }
 
 .dropdown {

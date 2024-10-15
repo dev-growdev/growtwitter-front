@@ -8,4 +8,6 @@ export interface UserType {
   avatar_url: string;
   following_count: number;
   followers_count: number;
+  posts_count: number
+  retweets_count: number
 }

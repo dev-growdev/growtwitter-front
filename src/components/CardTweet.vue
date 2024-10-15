@@ -4,6 +4,7 @@ import default_avatar from '@/assets/default-avatar.png';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import { deleteTweet, postComment, postLike, postRetweet } from '@/services/api';
 import { onMounted, ref } from 'vue';
+import IconComment from './icons/IconComment.vue';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -22,6 +23,10 @@ const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
 const userID = Number(sessionStorage.getItem('userId'));
+const me = ref(JSON.parse(localStorage.getItem('userData') || '{}'));
+const localComments = ref([...props.data.comments]);
+const localCommentsCount = ref(props.data.comments_count);
+
 function like() {
   if (liked.value === false) {
     artificialLike.value++;
@@ -34,7 +39,24 @@ function like() {
 
 async function handleSubmit(id: number) {
   await postComment(id, commentInput.value);
-  window.location.reload();
+  localComments.value.push({
+    id: Math.floor(Math.random() * 10000),
+    user: {
+      id: id,
+      avatar_url: me.value.avatar_url,
+      name: me.value.name,
+      username: me.value.username,
+      surname: '',
+      email: '',
+      password: '',
+      following_count: 0,
+      followers_count: 0
+    },
+    content: commentInput.value,
+    created_at: new Date().toISOString()
+  });
+  localCommentsCount.value++;
+  commentInput.value = '';
 }
 
 const toogleDiv = () => {
@@ -90,22 +112,26 @@ onMounted(() => {
     liked.value = props.data.likes.some((like: any) => like.userId == JSON.parse(user).id);
   }
 });
+
+const idU = Number(sessionStorage.getItem('userId'));
 </script>
 
 <template>
   <div class="card-principal rounded-0">
-    <v-card-actions class="ga-2">
+    <v-card-actions class="ma-2 ga-2">
       <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar></RouterLink>
+        <RouterLink :to="`/profile/${data.user.id}`">
+          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" />
+        </RouterLink>
       </div>
-      <div class="tweet-body">
-        <div class="tweet-header">
+      <div class="d-flex flex-column justify-space-between w-100">
+        <div class="d-flex align-center justify-space-between w-100">
           <div>
             <RouterLink :to="`/profile/${data.user.id}`">
-              <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+              <strong class="mouseHover">{{ data.user.name }}</strong> <span style="color: #657786">@{{ data.user.username }}</span>
             </RouterLink>
-
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+            <p class="tweet-content">{{ data.content }}</p>
           </div>
           <div v-if="!isaReTweet" style="display: flex; align-items: end; flex-direction: column; position: relative">
             <v-btn @click="toggleTweetDrop" icon="mdi-dots-vertical"> </v-btn>
@@ -115,43 +141,64 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <p class="tweet-content">{{ data.content }}</p>
-        <div class="tweet-actions">
-          <v-btn icon small @click="toogleDiv()">💬{{ data.comments_count }}</v-btn>
-          <v-btn icon small class="btn-like" @click="handlePostLike(data.id)">
-            {{ liked ? '❤️' : '🤍' }}
-            {{ data.likes_count + artificialLike }}
-          </v-btn>
-          <v-btn @click="toggleReTweetDrop" icon="mdi-repeat"> </v-btn>
-          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
-            <div v-if="reTweetDrop" class="dropdown">
-              <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
-              <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
-            </div>
-          </div>
-        </div>
-        <div v-if="showDiv">
-          <hr />
-          <div v-for="comment in props.data.comments" :key="comment.id">
-            <div style="display: flex; align-items: center; justify-content: end; width: 100%; margin: 5px 0">
-              <RouterLink :to="`/profile/${comment.user.id}`">
-                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="25"></v-avatar>
-              </RouterLink>
-              <div>
-                <RouterLink :to="`/profile/${comment.user.id}`">
-                  <strong>{{ comment.user.name }}</strong> <span>@{{ comment.user.username }}</span>
-                </RouterLink>
+        <div class="d-flex ga-1">
+          <article class="align-center text-center">
+            <v-btn icon class="btn-comment" @click="toogleDiv()">
+              <IconComment class="icon-comment" />
+              <span>
+                {{ localCommentsCount }}
+              </span>
+            </v-btn>
+          </article>
 
-                <span> ·</span> <span>{{ tempoDesdeCriacao(comment.created_at) }}</span>
+          <article class="d-flex">
+            <v-btn icon v-if="!liked" class="btn-like d-flex align-center ga-0" @click="handlePostLike(data.id)">
+              <v-icon icon="mdi-cards-heart-outline" />
+              <span>
+                {{ data.likes_count + artificialLike }}
+              </span>
+            </v-btn>
+
+            <v-btn icon v-if="liked" class="btn-like d-flex align-center ga-0" @click="handlePostLike(data.id)">
+              <v-icon icon="mdi-cards-heart" color="#f91880" />
+              <span>
+                {{ data.likes_count + artificialLike }}
+              </span>
+            </v-btn>
+
+            <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+              <v-btn @click="toggleReTweetDrop" icon="mdi-repeat-variant" class="btn-reTweet"> </v-btn>
+              <div v-if="reTweetDrop" class="dropdown">
+                <v-btn @click="handleRetweet(data.id)">Retweetar</v-btn>
+                <v-btn @click="toggleModalRetweet">Retweetar com comentário</v-btn>
               </div>
             </div>
-            <div style="font-size: 12px; width: 100%; text-align: end; font-weight: bold">{{ comment.content }}</div>
+          </article>
+        </div>
+        <div v-if="showDiv" class="mt-2">
+          <div v-for="comment in localComments" :key="comment.id" class="d-flex flex-column pb-4">
+            <div class="d-flex ga-2 align-center w-100 mx-2">
+              <RouterLink :to="`/profile/${comment.user.id}`">
+                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
+              </RouterLink>
+              <div>
+                <div>
+                  <RouterLink :to="`/profile/${comment.user.id}`">
+                    <span class="mouseHover font-weight-bold">{{ comment.user.name }}</span> <span style="color: #657786">@{{ comment.user.username }}</span>
+                  </RouterLink>
+
+                  <span style="color: #657786"> ·</span> <span style="color: #657786">{{ tempoDesdeCriacao(comment.created_at) }}</span>
+                </div>
+                <div class="d-flex align-center w-100 mt-0 text-h7">
+                  {{ comment.content }}
+                </div>
+              </div>
+            </div>
           </div>
           <form @submit.prevent="handleSubmit(data.id)">
             <div class="text-box">
               <div class="box-container">
                 <textarea placeholder="Comentar" v-model="commentInput"></textarea>
-
                 <div class="formatting">
                   <button type="submit" class="send" title="Send">
                     <svg fill="none" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -184,9 +231,9 @@ onMounted(() => {
         <v-card class="mt-4" outlined>
           <v-card-text>
             <div class="d-flex align-center">
-              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45"></v-avatar>
               <div class="ml-3">
-                <div class="font-weight-bold">{{ data.user.name }}</div>
+                <div class="mouseHover font-weight-bold">{{ data.user.name }}</div>
                 <div class="text--secondary">@{{ data.user.username }}</div>
               </div>
             </div>
@@ -204,6 +251,58 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.icon-comment {
+  fill: #808080 !important;
+}
+
+.btn-comment:hover {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4;
+}
+
+.btn-comment:hover .icon-comment {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4 !important;
+}
+
+.btn-like {
+  text-transform: none !important;
+  user-select: none;
+  cursor: pointer;
+}
+
+.btn-reTweet {
+  text-transform: none !important;
+  user-select: none;
+  cursor: pointer;
+  color: #808080;
+}
+
+.btn-reTweet:hover {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4 !important;
+}
+
+.btn-like:hover {
+  color: #f91880 !important;
+}
+
+.btn-like:hover .mdi-cards-heart-outline {
+  color: #f91880 !important;
+}
+
+.mdi-cards-heart-outline {
+  color: #808080;
+}
+
+.mouseHover {
+  transition: all 0.2s ease;
+}
+
+.mouseHover:hover {
+  text-decoration: underline;
+}
+
 .card-principal {
   border-top: 1px solid #ebe8e8;
   transition: background-color 0.3s ease;
@@ -212,7 +311,8 @@ onMounted(() => {
 .dropdown {
   display: flex;
   flex-direction: column;
-  left: 0;
+  left: -100px;
+  top: 50px;
   position: absolute;
   background-color: white;
   border: 1px solid #ebe8e8;
@@ -265,19 +365,9 @@ onMounted(() => {
   word-break: break-word;
 }
 
-.v-btn {
-  text-transform: none !important;
-}
-
-.btn-like:hover {
-  filter: drop-shadow(1px 1px 1px red);
-  color: rgb(135, 0, 0);
-}
-
 .text-box {
   width: 100%;
   height: fit-content;
-
   padding: 8px;
 }
 

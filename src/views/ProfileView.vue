@@ -14,7 +14,6 @@ import ExploreComponent from '@/components/ExploreComponent.vue';
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 
-
 const route = useRoute();
 
 const loadingVisible = ref<boolean>(false);
@@ -29,7 +28,9 @@ const item = ref<UserType>({
   avatar_url: defaultAvatar,
   id: 0,
   followers_count: 0,
-  following_count: 0
+  following_count: 0,
+  posts_count: 0,
+  retweets_count: 0
 });
 
 const anotherUser = ref<UserType>({
@@ -41,7 +42,9 @@ const anotherUser = ref<UserType>({
   avatar_url: defaultAvatar,
   id: 0,
   followers_count: 0,
-  following_count: 0
+  following_count: 0,
+  posts_count: 0,
+  retweets_count: 0
 });
 
 const editDialog = ref<boolean>(false);
@@ -64,6 +67,7 @@ async function handleGetUser() {
   account.email = item.value.email;
   account.password = item.value.password;
   account.id = item.value.id;
+  myPosts.value = item.value.posts_count;
 }
 
 // MODAL
@@ -123,7 +127,6 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 
 const handleEdit = async () => {
   try {
-
     let avatarUrl = '';
     if (account.avatar_url instanceof File) {
       avatarUrl = await uploadToCloudinary(account.avatar_url);
@@ -160,9 +163,7 @@ const handleEdit = async () => {
         return;
       }
       if (account.username.length > 30) {
-        validationErrors.username.push(
-          'O campo nome de usuário não pode ter mais de 30 caracteres.'
-        );
+        validationErrors.username.push('O campo nome de usuário não pode ter mais de 30 caracteres.');
         return;
       }
 
@@ -184,7 +185,6 @@ const handleEdit = async () => {
 
       if (response.status === 201 || response.status === 200) {
         localStorage.setItem('userData', JSON.stringify(response.data.data));
-        console.log(response.data.data);
         await fetchAll(route.params.id as string);
         handleGetUser();
 
@@ -202,8 +202,7 @@ const handleEdit = async () => {
   } catch (error) {
     console.log(error);
   }
-}
-
+};
 
 // END MODAL
 
@@ -213,10 +212,8 @@ const btnLoading = ref<boolean>(false);
 async function handleFollow() {
   try {
     btnLoading.value = true;
-    console.log(anotherUser.value.followers_count);
+    await postFollow(route.params.id as string, String(item.value.id));
 
-    const response = await postFollow(route.params.id as string, String(item.value.id));
-    console.log(response);
     if (isFollowing.value) {
       anotherUser.value.following_count--;
       isFollowing.value = false;
@@ -234,7 +231,7 @@ const retweets = ref<any[]>([]);
 
 async function fetchAll(id: string) {
   loadingVisible.value = true;
-  const response = await getProfileData(id);
+  const response = await getProfileData(id, 1);
 
   anotherUser.value = response.data.data.user;
   if (response.data.data.followersData.some((follower: any) => follower.followerId === item.value.id)) {
@@ -246,16 +243,37 @@ async function fetchAll(id: string) {
   retweets.value = response.data.data.retweets;
   loadingVisible.value = false;
 }
+
+const page = ref<number>(0);
+
+async function load({ done }: any) {
+  page.value++;
+  const response = await getProfileData(route.params.id as string, page.value);
+
+  anotherUser.value = response.data.data.user;
+
+  if (response.data.data.followersData.data.some((follower: any) => follower.followerId === item.value.id)) {
+    isFollowing.value = true;
+  }
+
+  anotherUser.value.followers_count = response.data.data.followings;
+  anotherUser.value.following_count = response.data.data.followers;
+
+  tweets.value.push(...response.data.data.posts.data);
+  retweets.value.push(...response.data.data.retweets.data);
+
+  done('ok');
+}
+
 onMounted(() => {
   handleGetUser();
-  fetchAll(route.params.id as string);
 });
 onBeforeRouteUpdate((to, from, next) => {
   handleGetUser();
-  fetchAll(to.params.id as string);
   next();
 });
 const tweets = ref<TweetType[]>([]);
+const myPosts = ref<number>(0);
 </script>
 
 <template>
@@ -356,13 +374,17 @@ const tweets = ref<TweetType[]>([]);
                   Seguidores
                 </p>
                 <p class="text-h7">
-                  <span class="font-weight-bold">{{ tweets.length }}</span> Posts
+                  <span class="font-weight-bold">{{ anotherUser.posts_count + anotherUser.retweets_count }}</span> Posts
                 </p>
               </div>
             </v-list>
           </v-col>
           <v-col cols="12">
-            <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
+            <v-infinite-scroll color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+              <div>
+                <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
+              </div>
+            </v-infinite-scroll>
           </v-col>
         </v-row>
       </v-container>
