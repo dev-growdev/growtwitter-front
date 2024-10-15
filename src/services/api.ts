@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { configMyRequest } from './CookiesRequestService';
+import type { UserDataType } from '@/types/UserDataType';
+
 import { getUserToken } from './authentication';
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -8,41 +11,51 @@ export const client = axios.create({
 });
 
 // Login - Register - Methods
-export const login = async (email: string, password: string) => {
+export async function login(email: string, password: string) {
   try {
-    const response = await client.post('/login', {
-      email,
-      password
-    });
+    const config = await configMyRequest(false);
+
+    const response = await client.post(
+      '/login',
+      {
+        email,
+        password
+      },
+      config
+    );
+
     sessionStorage.setItem('userId', response.data.data.user.id);
+
     return response;
-  } catch (error: any) {
-    return error?.response;
-  }
-};
-export async function logout() {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-  try {
-    return await client.delete('/logout', config);
-  } catch (error: any) {
-    return error?.reponse;
-  }
-}
-export async function register(userData: any) {
-  try {
-    return await client.post('/users', userData);
   } catch (error: any) {
     return error?.response;
   }
 }
 
-export async function edit(userData: any) {
+export async function logout() {
   try {
-    const config = {
-      headers: { Authorization: `Bearer ${getUserToken()}` }
-    };
+    const config = await configMyRequest();
+
+    return await client.delete('/logout', config);
+  } catch (error: any) {
+    return error?.reponse;
+  }
+}
+
+export async function register(userData: UserDataType) {
+  try {
+    const config = await configMyRequest(false);
+
+    return await client.post('/users', userData, config);
+  } catch (error: any) {
+    return error?.response;
+  }
+}
+
+export async function edit(userData: UserDataType) {
+  try {
+    const config = await configMyRequest();
+
     return await client.put(`/users/${userData.id}`, userData, config);
   } catch (error: any) {
     return error?.response;
@@ -51,20 +64,20 @@ export async function edit(userData: any) {
 
 export async function doGet(url: string) {
   try {
-    const response = await client.get(url);
+    const config = await configMyRequest();
+
+    const response = await client.get(url, config);
 
     return response?.data;
   } catch (error) {
-    console.log(error);
     return [];
   }
 }
 
 export async function showPosts(endpoint: string) {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
   try {
+    const config = await configMyRequest();
+
     return await client.get(endpoint, config);
   } catch (error: any) {
     return error?.response;
@@ -72,98 +85,90 @@ export async function showPosts(endpoint: string) {
 }
 
 export async function postTweet(content: string) {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
   try {
+    const config = await configMyRequest();
+
     const response = await client.post('/posts', { content }, config);
+
     return response;
   } catch (error) {
     return error;
   }
 }
 
-export const getUser = async () => {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-
+export async function getUser() {
   try {
+    const config = await configMyRequest();
+
     const response = await client.get('/users', config);
 
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const getUserbyId = async (id: string) => {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-
+export async function getUserbyId(id: string) {
   try {
+    const config = await configMyRequest();
+
     const response = await client.get('/users/' + id, config);
 
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const getFollowersAndFollowingById = async (id: string) => {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-
+export async function getFollowersAndFollowingById(id: string) {
   try {
+    const config = await configMyRequest();
+
     const response = await client.get('/follow/' + id, config);
 
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const postFollow = async (followingId: string, followerId: string) => {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-  const data = {
-    followingId: followingId,
-    followerId: followerId
-  };
+export async function postFollow(followingId: string, followerId: string) {
   try {
+    const config = await configMyRequest();
+
+    const data = {
+      followingId: followingId,
+      followerId: followerId
+    };
+
     const response = await client.post('/follow/', data, config);
 
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const postRetweet = async (postId: number, content?: string) => {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-  const data = {
-    postId: postId,
-    content: content
-  };
+export async function postRetweet(postId: number, content?: string) {
   try {
+    const config = await configMyRequest();
+
+    const data = {
+      postId: postId,
+      content: content
+    };
     const response = await client.post('/retweet', data, config);
 
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
 export async function getRetweet() {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
   try {
+    const config = await configMyRequest();
+
     const response = await client.get(`/retweet`, config);
     return response;
   } catch (error: any) {
@@ -172,10 +177,9 @@ export async function getRetweet() {
 }
 
 export async function postLike(postId: number) {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
   try {
+    const config = await configMyRequest();
+
     await client.post('/likes', { postId }, config);
     return true;
   } catch (error) {
@@ -184,63 +188,53 @@ export async function postLike(postId: number) {
 }
 
 export async function postComment(postId: number, content: string) {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
   try {
+    const config = await configMyRequest();
+
     return await client.post('/comment', { postId, content }, config);
   } catch (error) {
     return error;
   }
 }
 
-export const getProfileData = async (id: string, page:number) => {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
-
+export async function getProfileData(id: string, page: number) {
   try {
+    const config = await configMyRequest();
     const response = await client.get('/profile/' + id + '?page=' + page, config);
+
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
-export const getHomeData = async (page: number) => {
-  const config = {
-    headers: { Authorization: `Bearer ${getUserToken()}` }
-  };
+}
 
+export async function getHomeData(page: number) {
   try {
+    const config = await configMyRequest();
     const response = await client.get('/home?page=' + page, config);
+
     return response;
   } catch (error: any) {
     return error?.response;
   }
-};
+}
 
-export const deleteTweet = async (postID: number) => {
+export async function deleteTweet(postID: number) {
   try {
-    const config = {
-      headers: { Authorization: `Bearer ${getUserToken()}` }
-    };
+    const config = await configMyRequest();
 
-    const response = await client.delete(`/posts/${postID}`, config);
-    console.log(response);
-  } catch (error) {
-    console.log(error);
+    await client.delete(`/posts/${postID}`, config);
+  } catch (error: any) {
+    return error?.response;
   }
-};
+}
 
-export const deleteRetweet = async (retweetID: number) => {
+export async function deleteRetweet(retweetID: number) {
   try {
-    const config = {
-      headers: { Authorization: `Bearer ${getUserToken()}` }
-    };
+    const config = await configMyRequest();
 
-    const response = await client.delete(`/retweet/${retweetID}`, config);
-    console.log(response);
-  } catch (error) {
-    console.log(error);
+    await client.delete(`/retweet/${retweetID}`, config);
+  } catch (error: any) {
+    return error?.response;
   }
-};
+}
