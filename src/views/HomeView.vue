@@ -99,7 +99,11 @@ async function load({ done }: any) {
 }
 
 async function loadForRTandDel() {
-  //função para dar load nos tweets apos rt ou del usar ela no list card
+  const response = await getHomeData(page.value);
+  tweets.value = [];
+  retweets.value = [];
+  tweets.value.push(...response.data.data.posts.data);
+  retweets.value.push(...response.data.data.retweets.data);
 }
 
 onMounted(async () => {
