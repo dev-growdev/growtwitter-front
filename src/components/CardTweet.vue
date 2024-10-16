@@ -79,6 +79,8 @@ const toggleTweetDrop = () => {
 const handleRetweet = async (id: number) => {
   const response = await postRetweet(id);
   if (response) {
+    console.log('cai no retweet');
+
     listCardEmits('reloadHome');
     reTweetDrop.value = false;
   }
