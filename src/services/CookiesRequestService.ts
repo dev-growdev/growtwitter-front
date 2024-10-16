@@ -3,7 +3,7 @@ import { getUserToken } from './authentication';
 
 export async function getCsfrToken() {
   // TODO: Mudar url para apontar para o banco utilizado
-  await axios.get('https://growtwitter-api-a7e1ec26613a.herokuapp.com/sanctum/csrf-cookie', {
+  await axios.get(import.meta.env.VITE_API_URL_CORS, {
     headers: {
       Accept: 'application/json'
     },

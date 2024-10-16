@@ -2,7 +2,6 @@ import axios from 'axios';
 import { configMyRequest } from './CookiesRequestService';
 import type { UserDataType } from '@/types/UserDataType';
 
-import { getUserToken } from './authentication';
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
