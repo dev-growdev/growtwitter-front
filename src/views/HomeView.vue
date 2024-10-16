@@ -91,9 +91,11 @@ async function load({ done }: any) {
 async function loadForRTandDel() {
   tweets.value = [];
   retweets.value = [];
-  const response = await getHomeData(1);
-  tweets.value.push(...response.data.data.posts.data);
-  retweets.value.push(...response.data.data.retweets.data);
+  load({
+    done: () => {
+      console.log('Carregamento completo');
+    }
+  });
 }
 
 onMounted(async () => {
