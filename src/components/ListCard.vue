@@ -45,6 +45,7 @@ const filteredList = computed(() => {
 
 <template>
   <div class="pt-4">
+    <p>LITAGEM:</p>
     <div v-for="item in filteredList" :key="item.id">
       <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="props.tweets.find((tweet) => tweet.id == item.postId)" />
       <div v-else>
