@@ -52,8 +52,11 @@ async function handleSubmit(id: number) {
       email: '',
       password: '',
       following_count: 0,
-      followers_count: 0
+      followers_count: 0,
+      posts_count: 0,
+      retweets_count: 0
     },
+
     content: commentInput.value,
     created_at: new Date().toISOString()
   });

@@ -80,11 +80,21 @@ const handleResize = () => {
   windowWidth.value = window.innerWidth;
 };
 
+const continueLoading = ref<boolean>(true);
+
 async function load({ done }: any) {
   page.value++;
-  const response = await getHomeData(page.value);
-  tweets.value.push(...response.data.data.posts.data);
-  retweets.value.push(...response.data.data.retweets.data);
+
+  if (continueLoading.value == true) {
+    const response = await getHomeData(page.value);
+
+    if (response.data.data.posts.last_page <= page.value) {
+      continueLoading.value = false;
+    }
+
+    tweets.value.push(...response.data.data.posts.data);
+    retweets.value.push(...response.data.data.retweets.data);
+  }
   done('ok');
 }
 
@@ -133,11 +143,15 @@ onUnmounted(() => {
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
 
-            <v-infinite-scroll color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+            <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
               <div>
-                <ListCard :tweets="tweets" :retweets="retweets" @pass-for-list="loadForRTandDel" />
+                <ListCard :tweets="tweets" :retweets="retweets" />
               </div>
             </v-infinite-scroll>
+
+            <div v-else>
+              <ListCard :tweets="tweets" :retweets="retweets" />
+            </div>
           </v-col>
         </v-row>
       </v-container>
