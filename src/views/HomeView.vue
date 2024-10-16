@@ -99,13 +99,7 @@ async function load({ done }: any) {
 }
 
 async function loadForRTandDel() {
-  tweets.value = [];
-  retweets.value = [];
-  load({
-    done: () => {
-      console.log('Carregamento completo');
-    }
-  });
+  //função para dar load nos tweets apos rt ou del usar ela no list card
 }
 
 onMounted(async () => {
@@ -145,12 +139,12 @@ onUnmounted(() => {
 
             <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
               <div>
-                <ListCard :tweets="tweets" :retweets="retweets" />
+                <ListCard :tweets="tweets" :retweets="retweets" @pass-for-list="loadForRTandDel" />
               </div>
             </v-infinite-scroll>
 
             <div v-else>
-              <ListCard :tweets="tweets" :retweets="retweets" />
+              <ListCard :tweets="tweets" :retweets="retweets" @pass-for-list="loadForRTandDel" />
             </div>
           </v-col>
         </v-row>
