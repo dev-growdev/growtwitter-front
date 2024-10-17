@@ -11,12 +11,12 @@ interface TweetTypeProps {
   data: any;
   tweet?: TweetType;
 }
-const props = defineProps<TweetTypeProps>();
+defineProps<TweetTypeProps>();
 
-const listEmit = defineEmits(['toListCard']);
+const cardToList = defineEmits(['toListCard']);
 
-function toLc(id: number, isTweet: boolean) {
-  listEmit('toListCard', {
+function toList(id: number, isTweet: boolean) {
+  cardToList('toListCard', {
     id,
     isTweet
   });
@@ -31,7 +31,7 @@ const toggleReTweetDrop = () => {
 
 const handleDeleteReTweet = async (reTweetID: number) => {
   const response = await deleteRetweet(reTweetID);
-  toLc(reTweetID, false);
+  toList(reTweetID, false);
   //
 };
 

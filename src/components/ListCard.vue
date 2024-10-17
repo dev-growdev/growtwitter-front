@@ -10,25 +10,25 @@ interface Props {
   retweets: any[];
   profile?: boolean;
 }
+
 interface Dados {
   id: number;
   isTweet: boolean;
 }
-const dados = ref<Dados | null>(null);
+const dados = ref<Dados>();
 
 function receber(dadosP: Dados) {
   dados.value = dadosP;
 }
 
 watch(dados, () => {
-  console.log(`DADOS DO EMMIT: ${JSON.stringify(dados.value)}`);
-  toLc();
+  toHome(); //enviando os dados recebidos do cardTweet ou cardRetweet para home.
 });
 
-const listEmit = defineEmits(['toListCard']);
+const listToHome = defineEmits(['toListCard']);
 
-function toLc() {
-  listEmit('toListCard', dados.value);
+function toHome() {
+  listToHome('toListCard', dados.value);
 }
 
 const props = defineProps<Props>();
@@ -63,7 +63,6 @@ const filteredList = computed(() => {
 
 <template>
   <div class="pt-4">
-    <p>LITAGEM:</p>
     <div v-for="item in filteredList" :key="item.id">
       <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="props.tweets.find((tweet) => tweet.id == item.postId)" @toListCard="receber" />
       <div v-else>
