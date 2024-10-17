@@ -34,6 +34,8 @@ const handleResize = () => {
 
 const listenEmit = () => {
   page.value = 0;
+  tweets.value = [];
+  retweets.value = [];
   load({
     done: () => {
       console.log('Carregamento completo');
@@ -44,6 +46,8 @@ const listenEmit = () => {
 
 const handleEmit = () => {
   page.value = 0;
+  tweets.value = [];
+  retweets.value = [];
   console.log('entrou');
   load({
     done: () => {
