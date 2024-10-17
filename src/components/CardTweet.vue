@@ -50,7 +50,11 @@ async function handleSubmit(id: number) {
       following_count: 0,
       followers_count: 0,
       posts_count: 0,
-      retweets_count: 0
+      retweets_count: 0,
+      followers: [],
+      followings: [],
+      posts: [],
+      retweets: []
     },
 
     content: commentInput.value,
@@ -116,14 +120,14 @@ const idU = Number(sessionStorage.getItem('userId'));
 
 <template>
   <div class="card-principal rounded-0">
-    <v-card-actions class="ma-2 ga-2">
+    <v-card-actions>
       <div class="profileModal d-block align-self-start">
         <RouterLink :to="`/profile/${data.user.id}`">
           <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
         </RouterLink>
         <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="props.data.user" />
       </div>
-      <div class="d-flex flex-column justify-space-between w-100">
+      <div class="d-flex flex-column justify-space-between w-100 ml-2">
         <div class="d-flex align-center justify-space-between w-100">
           <div>
             <RouterLink :to="`/profile/${data.user.id}`">
@@ -173,11 +177,15 @@ const idU = Number(sessionStorage.getItem('userId'));
         </div>
         <div v-if="showDiv" class="mt-2">
           <div v-for="comment in localComments" :key="comment.id" class="d-flex flex-column pb-4">
-            <div class="d-flex ga-2 align-center w-100 mx-2">
-              <RouterLink :to="`/profile/${comment.user.id}`">
-                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
-              </RouterLink>
-              <div>
+            <div class="d-flex align-center w-100 mx-2">
+              <div class="profileModal mx-2">
+                <RouterLink :to="`/profile/${comment.user.id}`">
+                  <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
+                </RouterLink>
+                <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="comment.user" />
+              </div>
+
+              <div class="mx-2">
                 <div>
                   <RouterLink :to="`/profile/${comment.user.id}`">
                     <span class="mouseHover font-weight-bold">{{ comment.user.name }}</span> <span style="color: #657786">@{{ comment.user.username }}</span>
