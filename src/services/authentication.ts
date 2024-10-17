@@ -10,3 +10,10 @@ export function resetStorage() {
   localStorage.removeItem('token');
   sessionStorage.removeItem('token');
 }
+
+export function getUserId() {
+  const userId = sessionStorage?.getItem('userId')
+  if(userId){
+    return JSON.parse(userId);
+  }
+}
