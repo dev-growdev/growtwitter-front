@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { UserType } from '../types/UserType';
 import default_avatar from '@/assets/default-avatar.png';
 import { postFollow } from '@/services/api';
 import { RouterLink } from 'vue-router';
 
 interface ModalTypeProps {
-  data: UserType;
+  data: Partial<UserType>;
 }
 
 const props = defineProps<ModalTypeProps>();
@@ -39,30 +39,79 @@ async function handleFollow() {
     console.log({ success: false, msg: 'Não foi possível seguir o usuário' });
   }
 }
+
+onMounted(() => {
+  if (props.data.followers) {
+    if (props.data.followers.some((follower: any) => follower.followerId === myUserData.id)) {
+      isFollowing.value = true;
+    }
+  }
+});
 </script>
 
 <template>
-  <div class="flex flex-col align-end position-relative">
-    <section class="d-flex flex-row justify-space-between position-absolute bg-grey-lighten-4 ga-2 pa-4 rounded-lg dropdown" style="min-width: 220px; max-width: 300px">
-      <article class="d-block align-start">
-        <RouterLink :to="`/profile/${data.id}`"><v-avatar :image="data.avatar_url ?? default_avatar" size="75"></v-avatar></RouterLink>
+  <div class="mainDiv flex flex-col align-end position-relative">
+    <section class="d-flex flex-column justify-space-between position-absolute bg-grey-lighten-5 ga-2 pa-4 rounded-lg dropdown" style="min-width: 320px; max-width: 380px">
+      <div>
+        <article class="d-block align-start">
+          <div class="d-flex justify-space-between align-center">
+            <RouterLink :to="`/profile/${data.id}`">
+              <v-avatar :image="data.avatar_url ?? default_avatar" size="75" />
+            </RouterLink>
+            <v-btn
+              id="followingSpan"
+              v-if="data.id !== myUserData.id && isFollowing === true"
+              :loading="btnLoading"
+              class="followingBtn rounded-xl justify-self-center"
+              height="32"
+              @click="handleFollow()"
+            >
+              Seguindo
+            </v-btn>
+            <v-btn
+              id="followingSpan"
+              v-if="data.id !== myUserData.id && isFollowing === false"
+              :loading="btnLoading"
+              class="followBtn rounded-xl justify-self-center"
+              height="40"
+              width="80"
+              @click="handleFollow()"
+            >
+              Seguir
+            </v-btn>
+          </div>
 
-        <div>
-          <RouterLink :to="`/profile/${props.data.id}`" class="text-blue-darken-1 font-weight-bold text-h6" v-if="itsMe">
-            {{ props.data.name }}
-          </RouterLink>
-          <RouterLink :to="`/profile/${props.data.id}`" class="text-blue-darken-1 font-weight-bold text-h6" v-if="!itsMe">
-            {{ props.data.name }}
-            <span class="text-grey-darken-1 text-subtitle-2 font-weight-regular">(Você)</span>
-          </RouterLink>
-        </div>
-        <span class="text-grey-darken-1 font-weight-regular">@{{ props.data.username }}</span>
-      </article>
-      <article class="d-flex justify-center align-top">
-        <v-btn id="followingSpan" v-if="data.id !== myUserData.id" :loading="btnLoading" class="bg-black rounded-xl" height="32" @click="handleFollow()">
-          {{ isFollowing ? 'Seguindo' : 'Seguir' }}
-        </v-btn>
-      </article>
+          <div class="d-flex flex-column mt-2">
+            <RouterLink :to="`/profile/${props.data.id}`" class="text-grey-darken-4 font-weight-bold text-h6" v-if="itsMe">
+              {{ props.data.name }}
+            </RouterLink>
+            <RouterLink :to="`/profile/${props.data.id}`" class="text-grey-darken-4 font-weight-bold text-h6" v-if="!itsMe">
+              {{ props.data.name }}
+              <span class="text-grey-darken-1 text-subtitle-2 font-weight-regular">(Você)</span>
+            </RouterLink>
+            <RouterLink :to="`/profile/${props.data.id}`">
+              <span class="text-grey-darken-1 font-weight-regular">@{{ props.data.username }}</span>
+            </RouterLink>
+          </div>
+        </article>
+      </div>
+
+      <div>
+        <article class="d-flex justify-start ga-6">
+          <p v-if="props.data.followers">
+            <span class="font-weight-bold">
+              {{ props.data.followers?.length }}
+            </span>
+            Seguidores
+          </p>
+          <p v-if="props.data.followings">
+            <span class="font-weight-bold">
+              {{ props.data.followings?.length }}
+            </span>
+            Seguindo
+          </p>
+        </article>
+      </div>
     </section>
   </div>
 </template>
@@ -74,9 +123,27 @@ section {
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
+.followingBtn {
+  background-color: black;
+  color: white;
+}
+
+.followingBtn:hover {
+  background-color: red;
+}
+
+.followBtn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.followBtn:hover {
+  background-color: #2182d1;
+}
+
 .dropdown {
   top: 0;
-  left: 0%;
+  left: -25%;
   max-width: 300px;
   min-width: 225px;
 }
