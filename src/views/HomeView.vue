@@ -16,15 +16,24 @@ const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
 
 const listenEmit = () => {
-  console.log('entrou');
+  page.value = 0;
+  load({
+    done: () => {
+      console.log("Carregamento completo");
+    }
+  });
   showMessage('Tweet publicado com sucesso!', 'success');
-  fetchAll();
 };
 
 const handleEmit = () => {
+  page.value = 0;
   console.log('entrou');
+  load({
+  done: () => {
+    console.log("Carregamento completo");
+  }
+});
   showMessage('Tweet publicado com sucesso!', 'success');
-  fetchAll();
 };
 
 function delay(ms: number) {
@@ -38,11 +47,9 @@ async function showMessage(messageText: string, type: string) {
 
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   hasMessage.value = true;
-  console.log(hasMessage.value);
 
  await delay(3000);
   hasMessage.value = false;
-  console.log(hasMessage.value);
 }
 
 function clearMessage() {
@@ -50,7 +57,6 @@ function clearMessage() {
   hasMessage.value = false;
 }
 
-const loadingVisible = ref<boolean>(false);
 const tweets = ref<TweetType[]>([]);
 const retweets = ref<any[]>([]);
 const item = ref<UserType>();
@@ -66,20 +72,8 @@ async function handleGetUser() {
   }
   item.value = JSON.parse(userData);
 }
+const page = ref<number>(0);
 
-async function fetchAll() {
-  loadingVisible.value = true;
-  const response = await getHomeData();
-  tweets.value = response.data.data.posts;
-  retweets.value = response.data.data.retweets;
-  loadingVisible.value = false;
-}
-
-onMounted(() => {
-  localStorage.setItem("attemptsVerify", false.toString())
-  handleGetUser();
-  fetchAll();
-});
 
 const windowWidth = ref(window.innerWidth);
 
@@ -87,8 +81,30 @@ const handleResize = () => {
   windowWidth.value = window.innerWidth;
 };
 
-onMounted(() => {
+const continueLoading = ref<boolean>(true);
+
+async function load({ done }:any) {
+  page.value++;
+
+  if(continueLoading.value == true){
+  const response = await getHomeData(page.value)
+
+  if(response.data.data.posts.last_page <= page.value){
+      continueLoading.value = false
+      
+    }
+
+    tweets.value.push(...response.data.data.posts.data);
+    retweets.value.push(...response.data.data.retweets.data)
+  }
+    done("ok");
+  }
+
+
+onMounted( async () => {
   window.addEventListener('resize', handleResize);
+  localStorage.setItem("attemptsVerify", false.toString())
+  handleGetUser();
 });
 
 onUnmounted(() => {
@@ -103,9 +119,13 @@ onUnmounted(() => {
         aria-live="assertive"
         aria-atomic="true"></v-alert>
     </div>
+<<<<<<< HEAD
     <div v-if="loadingVisible" class="spinner-div" role="status" aria-live="polite">
       <v-progress-circular indeterminate :size="45" :width="9" aria-label="Loading"/>
     </div>
+=======
+
+>>>>>>> develop
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
       <SideBar :item="item!" @call-emit="listenEmit" />
     </v-navigation-drawer>
@@ -123,7 +143,17 @@ onUnmounted(() => {
         <v-row class="">
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
-            <ListCard :tweets="tweets" :retweets="retweets" />
+            
+            <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+              <div>
+                <ListCard :tweets="tweets" :retweets="retweets" />
+              </div>
+            </v-infinite-scroll>
+
+              <div v-else >
+                <ListCard :tweets="tweets" :retweets="retweets"  />
+              </div>
+
           </v-col>
         </v-row>
       </v-container>
