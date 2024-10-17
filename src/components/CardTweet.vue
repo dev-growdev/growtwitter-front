@@ -10,29 +10,17 @@ import ModalSeeProfile from '@/components/ModalSeeProfile.vue';
 interface TweetTypeProps {
   data: TweetType;
   yourProfile?: boolean;
-  isaReTweet?: boolean;
 }
+
 const props = defineProps<TweetTypeProps>();
-
-const cardToList = defineEmits(['toListCard']);
-
-function toList(id: number, isTweet: boolean) {
-  cardToList('toListCard', {
-    id,
-    isTweet
-  });
-}
-
 const liked = ref(false);
 const artificialLike = ref(0);
-const reTweetDrop = ref(false);
-const tweetDrop = ref(false);
+const dropdown = ref(false);
 const retweetModal = ref(false);
 const comment = ref('');
 const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
-const userID = Number(sessionStorage.getItem('userId'));
 const me = ref(JSON.parse(localStorage.getItem('userData') || '{}'));
 const localComments = ref([...props.data.comments]);
 const localCommentsCount = ref(props.data.comments_count);
@@ -80,18 +68,14 @@ const toogleDiv = () => {
   showDiv.value = !showDiv.value;
 };
 
-const toggleReTweetDrop = () => {
-  reTweetDrop.value = !reTweetDrop.value;
-};
-
-const toggleTweetDrop = () => {
-  tweetDrop.value = !tweetDrop.value;
+const toggleDropdown = () => {
+  dropdown.value = !dropdown.value;
 };
 
 const handleRetweet = async (id: number) => {
   const response = await postRetweet(id);
   if (response) {
-    reTweetDrop.value = false;
+    dropdown.value = false;
   }
 };
 
@@ -99,18 +83,16 @@ const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
   const response = await postRetweet(id, content);
   if (response) {
-    reTweetDrop.value = false;
+    dropdown.value = false;
     retweetModal.value = false;
   }
 };
 
 const handleDeleteTweet = async (postID: number) => {
   const response = await deleteTweet(postID);
-  if (response) {
-    toList(postID, true);
-    return;
-  }
-  return;
+  console.log(response);
+
+  window.location.reload();
 };
 
 const toggleModalRetweet = () => {
@@ -154,11 +136,16 @@ const idU = Number(sessionStorage.getItem('userId'));
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
             <p class="tweet-content">{{ data.content }}</p>
           </div>
-          <div v-if="!isaReTweet" style="display: flex; align-items: end; flex-direction: column; position: relative">
-            <v-btn @click="toggleTweetDrop" icon="mdi-dots-vertical"> </v-btn>
-            <div v-if="tweetDrop" class="delTweet">
-              <v-btn class="text-none" v-if="userID === data.user.id" @click="handleDeleteTweet(data.id)">Apagar</v-btn>
-              <v-btn class="text-none" v-else>Denunciar</v-btn>
+
+          <div class="d-flex flex-column align-start position-relative">
+            <v-btn icon small @click="toggleDropdown">
+              <v-icon icon="mdi-menu" />
+            </v-btn>
+
+            <div v-if="dropdown" class="dropdown">
+              <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
+              <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
+              <v-btn v-if="data.user.id === idU" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
             </div>
           </div>
         </div>
@@ -186,14 +173,6 @@ const idU = Number(sessionStorage.getItem('userId'));
                 {{ data.likes_count + artificialLike }}
               </span>
             </v-btn>
-
-            <div style="display: flex; align-items: end; flex-direction: column; position: relative">
-              <v-btn @click="toggleReTweetDrop" icon="mdi-repeat-variant" class="btn-reTweet"> </v-btn>
-              <div v-if="reTweetDrop" class="dropdown">
-                <v-btn @click="handleRetweet(data.id)">Retweetar</v-btn>
-                <v-btn @click="toggleModalRetweet">Retweetar com comentário</v-btn>
-              </div>
-            </div>
           </article>
         </div>
         <div v-if="showDiv" class="mt-2">
@@ -304,18 +283,6 @@ const idU = Number(sessionStorage.getItem('userId'));
   cursor: pointer;
 }
 
-.btn-reTweet {
-  text-transform: none !important;
-  user-select: none;
-  cursor: pointer;
-  color: #808080;
-}
-
-.btn-reTweet:hover {
-  color: #2c8cd4 !important;
-  fill: #2c8cd4 !important;
-}
-
 .btn-like:hover {
   color: #f91880 !important;
 }
@@ -344,24 +311,9 @@ const idU = Number(sessionStorage.getItem('userId'));
 .dropdown {
   display: flex;
   flex-direction: column;
-  left: -100px;
-  top: 50px;
   position: absolute;
-  background-color: white;
-  border: 1px solid #ebe8e8;
-  padding: 10px;
-  border-radius: 5px;
-  width: max-content;
-  z-index: 10;
-}
-
-.delTweet {
-  background-color: #026eda;
-  display: flex;
-  flex-direction: column;
   top: 50px;
-  right: 0px;
-  position: absolute;
+  right: 0;
   background-color: white;
   border: 1px solid #ebe8e8;
   padding: 10px;
