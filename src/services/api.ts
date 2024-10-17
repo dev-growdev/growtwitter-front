@@ -22,7 +22,6 @@ export async function login(email: string, password: string) {
       },
       config
     );
-
     sessionStorage.setItem('userId', response.data.data.user.id);
 
     return response;
