@@ -3,23 +3,40 @@ import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
 import { getUser, getHomeData } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { onMounted, ref, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted, watch } from 'vue';
 import type { UserType } from '@/types';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 import BackToTop from '@/components/BackToTop.vue';
 
+interface Dados {
+  id: number;
+  isTweet: boolean;
+}
+
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
+const tweets = ref<TweetType[]>([]);
+const retweets = ref<any[]>([]);
+const item = ref<UserType>();
+const page = ref<number>(0);
+const windowWidth = ref(window.innerWidth);
+const continueLoading = ref<boolean>(true);
+
+const dados = ref<Dados>();
+
+const handleResize = () => {
+  windowWidth.value = window.innerWidth;
+};
 
 const listenEmit = () => {
   page.value = 0;
   load({
     done: () => {
-      console.log("Carregamento completo");
+      console.log('Carregamento completo');
     }
   });
   showMessage('Tweet publicado com sucesso!', 'success');
@@ -29,10 +46,10 @@ const handleEmit = () => {
   page.value = 0;
   console.log('entrou');
   load({
-  done: () => {
-    console.log("Carregamento completo");
-  }
-});
+    done: () => {
+      console.log('Carregamento completo');
+    }
+  });
   showMessage('Tweet publicado com sucesso!', 'success');
 };
 
@@ -48,7 +65,7 @@ async function showMessage(messageText: string, type: string) {
   if (messageTimeout.value) clearTimeout(messageTimeout.value);
   hasMessage.value = true;
 
- await delay(3000);
+  await delay(3000);
   hasMessage.value = false;
 }
 
@@ -56,10 +73,6 @@ function clearMessage() {
   clearTimeout(messageTimeout.value);
   hasMessage.value = false;
 }
-
-const tweets = ref<TweetType[]>([]);
-const retweets = ref<any[]>([]);
-const item = ref<UserType>();
 
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
@@ -72,38 +85,48 @@ async function handleGetUser() {
   }
   item.value = JSON.parse(userData);
 }
-const page = ref<number>(0);
 
-
-const windowWidth = ref(window.innerWidth);
-
-const handleResize = () => {
-  windowWidth.value = window.innerWidth;
-};
-
-const continueLoading = ref<boolean>(true);
-
-async function load({ done }:any) {
+async function load({ done }: any) {
   page.value++;
 
-  if(continueLoading.value == true){
-  const response = await getHomeData(page.value)
+  if (continueLoading.value == true) {
+    const response = await getHomeData(page.value);
 
-  if(response.data.data.posts.last_page <= page.value){
-      continueLoading.value = false
-      
+    if (response.data.data.posts.last_page <= page.value) {
+      continueLoading.value = false;
     }
 
     tweets.value.push(...response.data.data.posts.data);
-    retweets.value.push(...response.data.data.retweets.data)
+    retweets.value.push(...response.data.data.retweets.data);
   }
-    done("ok");
+  done('ok');
+}
+
+async function loadForRTandDel() {
+  window.location.reload();
+}
+
+function receberHome(dadosP: Dados) {
+  dados.value = dadosP;
+}
+
+function deletarRender() {
+  const identificador = dados.value?.isTweet ? tweets : retweets;
+
+  const index = identificador.value.findIndex((item) => item.id === dados.value?.id);
+  if (index !== -1) {
+    identificador.value.splice(index, 1);
+    identificador.value = [...identificador.value];
   }
+}
 
+watch(dados, () => {
+  deletarRender();
+});
 
-onMounted( async () => {
+onMounted(async () => {
   window.addEventListener('resize', handleResize);
-  localStorage.setItem("attemptsVerify", false.toString())
+  localStorage.setItem('attemptsVerify', false.toString());
   handleGetUser();
 });
 
@@ -135,17 +158,16 @@ onUnmounted(() => {
         <v-row class="">
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <p class="text-start font-weight-bold pt-6 px-2 text-h5">Página Inicial</p>
-            
+
             <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
               <div>
-                <ListCard :tweets="tweets" :retweets="retweets" />
+                <ListCard :tweets="tweets" :retweets="retweets" @to-list-card="receberHome" />
               </div>
             </v-infinite-scroll>
 
-              <div v-else >
-                <ListCard :tweets="tweets" :retweets="retweets"  />
-              </div>
-
+            <div v-else>
+              <ListCard :tweets="tweets" :retweets="retweets" @pass-for-list="loadForRTandDel" />
+            </div>
           </v-col>
         </v-row>
       </v-container>
