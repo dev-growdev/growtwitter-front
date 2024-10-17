@@ -9,8 +9,6 @@ interface Props {
   tweets: TweetType[];
   retweets: any[];
   profile?: boolean;
-  following?: boolean;
-  test?: number[];
 }
 
 const props = defineProps<Props>();
@@ -34,30 +32,18 @@ const combinedList = computed(() => {
 const route = useRoute();
 
 const filteredList = computed(() => {
-  if (props.profile ) {
-    const filtered = combinedList.value.filter(item => item.userId === Number(route.params.id));
-    return filtered;
+  if (!props.profile) {
+    return combinedList.value;
   }
-  if (props.following && props.test) {
-  let filtered = [];
-  for (let j = 0; j < props.test.length; j++) {
-      filtered.push(...combinedList.value.filter(item => item.user.id === props.test[j]));
-  }
-  console.log(filtered);
+  const filtered = combinedList.value.filter(item => item.userId === Number(route.params.id));
   
   return filtered;
-}
-
-  return combinedList.value;
 });
-
-
-
 </script>
 
 <template>
   <div class="pt-4">
-    <div v-for="(item, index) in filteredList" :key="index"> 
+    <div v-for="(item, index) in filteredList" :key="index"> <!-- filteredList.value.length +1 -->
           <CardRetweet v-if="item.type === 'retweet'" :data="item"
           :tweet="item.post" /> 
           <CardTweet v-if="item.type === 'tweet'" :data="item" />
