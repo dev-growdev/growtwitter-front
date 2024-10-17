@@ -382,13 +382,8 @@ const myPosts = ref<number>(0);
                   <span class="font-weight-bold">{{ anotherUser.following_count ?? '0' }}</span>
                   Seguidores
                 </p>
-<<<<<<< HEAD
-                <p class="text-h7" aria-label="Posts count">
-                  <span class="font-weight-bold">{{ tweets.length }}</span> Posts
-=======
                 <p class="text-h7">
                   <span class="font-weight-bold">{{ anotherUser.posts_count + anotherUser.retweets_count }}</span> Posts
->>>>>>> develop
                 </p>
               </div>
             </v-list>
