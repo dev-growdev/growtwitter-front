@@ -13,7 +13,14 @@ interface TweetTypeProps {
 }
 const props = defineProps<TweetTypeProps>();
 
-const listCardEmits = defineEmits(['reloadHome']);
+const listEmit = defineEmits(['toListCard']);
+
+function toLc(id: number, isTweet: boolean) {
+  listEmit('toListCard', {
+    id,
+    isTweet
+  });
+}
 
 const reTweetDrop = ref(false);
 const userID = Number(sessionStorage.getItem('userId'));
@@ -24,7 +31,7 @@ const toggleReTweetDrop = () => {
 
 const handleDeleteReTweet = async (reTweetID: number) => {
   const response = await deleteRetweet(reTweetID);
-  listCardEmits('reloadHome');
+  toLc(reTweetID, false);
   //
 };
 

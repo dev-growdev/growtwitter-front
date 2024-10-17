@@ -3,7 +3,7 @@ import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
 import { getUser, getHomeData } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
-import { onMounted, ref, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted, watch } from 'vue';
 import type { UserType } from '@/types';
 import ExploreComponent from '@/components/ExploreComponent.vue';
 import ApplicationBar from '@/components/ApplicationBar.vue';
@@ -99,12 +99,21 @@ async function load({ done }: any) {
 }
 
 async function loadForRTandDel() {
-  const response = await getHomeData(page.value);
-  tweets.value = [];
-  retweets.value = [];
-  tweets.value.push(...response.data.data.posts.data);
-  retweets.value.push(...response.data.data.retweets.data);
+  window.location.reload();
 }
+interface Dados {
+  id: number;
+  isTweet: boolean;
+}
+const dados = ref<Dados | any>();
+
+function receberHome(dadosP: Dados) {
+  dados.value = dadosP;
+}
+watch(dados, () => {
+  console.log(`DADOS DO EMMIT NA HOME: ${JSON.stringify(dados.value)}`);
+  deletarRender();
+});
 
 onMounted(async () => {
   window.addEventListener('resize', handleResize);
@@ -115,6 +124,17 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
 });
+
+function deletarRender() {
+  const identificador = dados.value.isTweet ? tweets : retweets;
+
+  const index = identificador.value.findIndex((item) => item.id === dados.value?.id);
+  if (index !== -1) {
+    identificador.value.splice(index, 1);
+    // Atualize o estado se necessário
+    identificador.value = [...identificador.value];
+  }
+}
 </script>
 
 <template>
@@ -143,7 +163,7 @@ onUnmounted(() => {
 
             <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
               <div>
-                <ListCard :tweets="tweets" :retweets="retweets" @pass-for-list="loadForRTandDel" />
+                <ListCard :tweets="tweets" :retweets="retweets" @to-list-card="receberHome" />
               </div>
             </v-infinite-scroll>
 

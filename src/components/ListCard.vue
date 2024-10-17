@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, computed } from 'vue';
+import { defineProps, computed, ref, watch } from 'vue';
 import type { TweetType } from '@/types';
 import CardTweet from './CardTweet.vue';
 import CardRetweet from './CardRetweet.vue';
@@ -10,8 +10,26 @@ interface Props {
   retweets: any[];
   profile?: boolean;
 }
+interface Dados {
+  id: number;
+  isTweet: boolean;
+}
+const dados = ref<Dados | null>(null);
 
-const listCardEmits = defineEmits(['passForList']);
+function receber(dadosP: Dados) {
+  dados.value = dadosP;
+}
+
+watch(dados, () => {
+  console.log(`DADOS DO EMMIT: ${JSON.stringify(dados.value)}`);
+  toLc();
+});
+
+const listEmit = defineEmits(['toListCard']);
+
+function toLc() {
+  listEmit('toListCard', dados.value);
+}
 
 const props = defineProps<Props>();
 
@@ -47,10 +65,10 @@ const filteredList = computed(() => {
   <div class="pt-4">
     <p>LITAGEM:</p>
     <div v-for="item in filteredList" :key="item.id">
-      <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="props.tweets.find((tweet) => tweet.id == item.postId)" @reloadHome="listCardEmits('passForList')" />
+      <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="props.tweets.find((tweet) => tweet.id == item.postId)" @toListCard="receber" />
       <div v-else>
-        <CardTweet v-if="profile" :data="item" :yourProfile="true" @reloadHome="listCardEmits('passForList')" />
-        <CardTweet v-else :data="item" @reloadHome="listCardEmits('passForList')" />
+        <CardTweet v-if="profile" :data="item" :yourProfile="true" @toListCard="receber" />
+        <CardTweet v-else :data="item" @toListCard="receber" />
       </div>
     </div>
   </div>
