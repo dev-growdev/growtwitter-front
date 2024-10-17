@@ -9,17 +9,29 @@ import IconComment from './icons/IconComment.vue';
 interface TweetTypeProps {
   data: TweetType;
   yourProfile?: boolean;
+  isaReTweet?: boolean;
+}
+const props = defineProps<TweetTypeProps>();
+
+const listEmit = defineEmits(['toListCard']);
+
+function toLc(id: number, isTweet: boolean) {
+  listEmit('toListCard', {
+    id,
+    isTweet
+  });
 }
 
-const props = defineProps<TweetTypeProps>();
 const liked = ref(false);
 const artificialLike = ref(0);
-const dropdown = ref(false);
+const reTweetDrop = ref(false);
+const tweetDrop = ref(false);
 const retweetModal = ref(false);
 const comment = ref('');
 const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
+const userID = Number(sessionStorage.getItem('userId'));
 const me = ref(JSON.parse(localStorage.getItem('userData') || '{}'));
 const localComments = ref([...props.data.comments]);
 const localCommentsCount = ref(props.data.comments_count);
@@ -63,14 +75,20 @@ const toogleDiv = () => {
   showDiv.value = !showDiv.value;
 };
 
-const toggleDropdown = () => {
-  dropdown.value = !dropdown.value;
+const toggleReTweetDrop = () => {
+  reTweetDrop.value = !reTweetDrop.value;
+};
+
+const toggleTweetDrop = () => {
+  tweetDrop.value = !tweetDrop.value;
 };
 
 const handleRetweet = async (id: number) => {
   const response = await postRetweet(id);
   if (response) {
-    dropdown.value = false;
+    console.log('cai no retweet');
+
+    reTweetDrop.value = false;
   }
 };
 
@@ -78,16 +96,19 @@ const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
   const response = await postRetweet(id, content);
   if (response) {
-    dropdown.value = false;
+    reTweetDrop.value = false;
     retweetModal.value = false;
   }
 };
 
 const handleDeleteTweet = async (postID: number) => {
+  // const confirmationDelete = window.confirm('Deseja realmente deletar?');
   const response = await deleteTweet(postID);
-  console.log(response);
-
-  window.location.reload();
+  if (response) {
+    toLc(postID, true);
+    return console.log('foi');
+  }
+  return console.log('n foi');
 };
 
 const toggleModalRetweet = () => {
@@ -130,16 +151,11 @@ const idU = Number(sessionStorage.getItem('userId'));
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
             <p class="tweet-content">{{ data.content }}</p>
           </div>
-
-          <div class="d-flex flex-column align-start position-relative">
-            <v-btn icon small @click="toggleDropdown">
-              <v-icon icon="mdi-menu" />
-            </v-btn>
-
-            <div v-if="dropdown" class="dropdown">
-              <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
-              <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
-              <v-btn v-if="data.user.id === idU" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
+          <div v-if="!isaReTweet" style="display: flex; align-items: end; flex-direction: column; position: relative">
+            <v-btn @click="toggleTweetDrop" icon="mdi-dots-vertical"> </v-btn>
+            <div v-if="tweetDrop" class="delTweet">
+              <v-btn class="text-none" v-if="userID === data.user.id" @click="handleDeleteTweet(data.id)">Apagar</v-btn>
+              <v-btn class="text-none" v-else>Denunciar</v-btn>
             </div>
           </div>
         </div>
@@ -167,6 +183,14 @@ const idU = Number(sessionStorage.getItem('userId'));
                 {{ data.likes_count + artificialLike }}
               </span>
             </v-btn>
+
+            <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+              <v-btn @click="toggleReTweetDrop" icon="mdi-repeat-variant" class="btn-reTweet"> </v-btn>
+              <div v-if="reTweetDrop" class="dropdown">
+                <v-btn @click="handleRetweet(data.id)">Retweetar</v-btn>
+                <v-btn @click="toggleModalRetweet">Retweetar com comentário</v-btn>
+              </div>
+            </div>
           </article>
         </div>
         <div v-if="showDiv" class="mt-2">
@@ -265,6 +289,18 @@ const idU = Number(sessionStorage.getItem('userId'));
   cursor: pointer;
 }
 
+.btn-reTweet {
+  text-transform: none !important;
+  user-select: none;
+  cursor: pointer;
+  color: #808080;
+}
+
+.btn-reTweet:hover {
+  color: #2c8cd4 !important;
+  fill: #2c8cd4 !important;
+}
+
 .btn-like:hover {
   color: #f91880 !important;
 }
@@ -293,9 +329,24 @@ const idU = Number(sessionStorage.getItem('userId'));
 .dropdown {
   display: flex;
   flex-direction: column;
-  position: absolute;
+  left: -100px;
   top: 50px;
-  right: 0;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ebe8e8;
+  padding: 10px;
+  border-radius: 5px;
+  width: max-content;
+  z-index: 10;
+}
+
+.delTweet {
+  background-color: #026eda;
+  display: flex;
+  flex-direction: column;
+  top: 50px;
+  right: 0px;
+  position: absolute;
   background-color: white;
   border: 1px solid #ebe8e8;
   padding: 10px;
