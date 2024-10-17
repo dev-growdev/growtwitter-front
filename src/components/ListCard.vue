@@ -40,12 +40,13 @@ const filteredList = computed(() => {
   }
   if (props.following && props.test) {
   let filtered = [];
+  console.log(props.tweets);
+  
   for (let j = 0; j < props.test.length; j++) {
       filtered.push(...combinedList.value.filter(item => item.user.id === props.test[j]));
   }
   console.log(filtered);
-  
-  return filtered;
+  return filtered.sort((a, b) => b.createdAt - a.createdAt);;
 }
 
   return combinedList.value;

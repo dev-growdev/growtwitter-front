@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { getUser, getHomeData, getUserbyId, showPosts } from '@/services/api';
+import { getUser, getHomeData, getUserbyId, showPosts, showFollowing } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
@@ -28,7 +28,6 @@ const listenEmit = () => {
 
 const handleEmit = () => {
   page.value = 0;
-  console.log('entrou');
   load({
   done: () => {
     console.log("Carregamento completo");
@@ -74,6 +73,7 @@ async function handleGetUser() {
   item.value = JSON.parse(userData);
 }
 const page = ref<number>(0);
+const pageFollowing = ref<number>(0);
 
 
 const windowWidth = ref(window.innerWidth);
@@ -91,115 +91,48 @@ const continueLoading = ref<boolean>(true);
 const showDiscoverytweets = ref<boolean>(true);
 const showFollowingtweets = ref<boolean>(false);
 const btnEnabled = ref<boolean>(false);
-// const followingTweets = ref<TweetType[]>([]);
-// const followingRetweets = ref<any[]>([]);
-
-
-
-// async function fetchFollowingTweets() {
-
-// const userId = await getUserId();
-
-// const response = await showPosts('follow/' + userId);
-// console.log(response);
-
-// const followingPosts = [];
-
-// for (let index = 0; index < response.data.followingsData.length; index++) {
-//  for (let i = 0; i < response.data.followingsData[index].posts.length; i++) {
-//   followingPosts.push(response.data.followingsData[index].posts[i]);
-//   }
-//  }
-
-//  console.log(followingPosts);
-//  followingTweets.value = followingPosts;
- 
-
-// const response1 = await showPosts('posts/');
-// console.log(response.data);
-
-
-// const tamanhoFollowingPosts = followingPosts.length;
-// for (let i = 0; i < response1.data.data.length; i++) {
-//   for (let j = 0; j < tamanhoFollowingPosts; j++) {
-//   for (let k = 0; k < response1.data.data[i].retweets.length; k++) {
-//     if(response1.data.data[i].retweets[k].userId == followingPosts[j].userId){ 
-//       followingPosts.push(response1.data.data[i]) //post
-//     }
-//   }
-// }
-// }
-
-// console.log(followingPosts);
-
-
-// console.log("following.value");
-// console.log(followingTweets.value);
-
-// }
-
-
-
-
-
-
-//----------
-//   async function fetchFollowingReTweets() {
-
-// const userId = await getUserId();
-
-// const response = await showPosts('follow/' + userId);
-
-// const followingPosts = [];
-// for (let index = 0; index < response.data.followingsData.length; index++) {
-//   for (let i = 0; i < response.data.followingsData[index].following.retweets.length; i++) {
-//     followingPosts.push(response.data.followingsData[index].following.retweets[i]);
-//   }
-// }
-
-// followingRetweets.value = followingPosts;
-// console.log(followingRetweets);
-// console.log(retweets);
-
-// }
-
-//--------------------
-
 
 function enableDiscoveryTweets(){
     showDiscoverytweets.value = true;
     showFollowingtweets.value = false;
-    
-      console.log("Discovery: " + showDiscoverytweets.value);
-      console.log("Following: " + showFollowingtweets.value);
   }
 
 function disableDiscoveryTweets(){
   showDiscoverytweets.value = false;
   showFollowingtweets.value = true;
-    
-    console.log("Discovery: " + showDiscoverytweets.value);
-    console.log("Following: " + showFollowingtweets.value);
 }
 
-
-
-async function loadFollowing() {
-  console.log("entrou1");
-  btnEnabled.value = false;
-  // await fetchFollowingReTweets();
-  // await fetchFollowingTweets()
-  disableDiscoveryTweets()
-  btnEnabled.value = true;
+async function loadHomeForFollowing(){
+  const response = await getHomeData(pageFollowing.value + 1)
+  tweets.value.push(...response.data.data.posts.data);
+  retweets.value.push(...response.data.data.retweets.data)
 }
 
 
 const test = ref<number[]>([]);
+  const isLoading = ref<boolean>(false);
 
 
+  function switchToFollowing() {
+    pageFollowing.value = 0;
+    continueLoading.value = true;
+    isLoading.value = true;
+    btnEnabled.value = false;
+    disableDiscoveryTweets()
+    btnEnabled.value = true;
+}
+
+
+
+async function switchToDiscovery(){
+  btnEnabled.value = false;
+  enableDiscoveryTweets();
+  btnEnabled.value = true;
+}
+
+const ultimapag = ref<number>(0);
 
   async function load({ done }:any) {
-    console.log("entrou2");
   btnEnabled.value = false;
   enableDiscoveryTweets()
   page.value++;
@@ -210,27 +143,54 @@ const test = ref<number[]>([]);
       continueLoading.value = false
       
     }
-
-    //////////////
-    
-const userId = await getUserId();
-
-const response2 = await showPosts('follow/' + userId);
-
-for (let index = 0; index < response2.data.followingsData.length; index++) {
-    test.value.push( response2.data.followingsData[index].followingId);
-  }
-
+    ultimapag.value = response.data.data.posts.last_page;
     tweets.value.push(...response.data.data.posts.data);
     retweets.value.push(...response.data.data.retweets.data)
   }
   btnEnabled.value = true;
     done("ok");
   }
+
+
+
+const showFollowings = ref<boolean>(false)
+
+  async function loadFollowing({ done }:any) {
+    continueLoading.value = true
+    
+ if (page.value >= ultimapag.value) {
+  continueLoading.value = false  
+   return;
+ }
+
+ if (page.value < ultimapag.value) {
+  continueLoading.value = true  
+ }
+
+  btnEnabled.value = false;
+  disableDiscoveryTweets();
+  pageFollowing.value++
+  page.value = pageFollowing.value;
+  page.value++;
+  const userId = await getUserId();
+
+  if (!showFollowings.value) {
+    const response = await showFollowing('follow/' + userId, pageFollowing.value);
+    for (let index = 0; index < response.data.followingsData.length; index++) {
+      test.value.push( response.data.followingsData[index].followingId);
+    }
+  }
   
-//--------------------
-//--------------------
-//--------------------
+  showFollowings.value = true;
+
+    loadHomeForFollowing()
+  
+  btnEnabled.value = true;
+  done("ok");
+}
+  
+
+
 
 onMounted( async () => {
   window.addEventListener('resize', handleResize);
@@ -266,23 +226,23 @@ onUnmounted(() => {
       <v-container class="mt-0 pa-0">
         <v-row class="">
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
-            <div class="div-page-title d-flex justify-center">
-              <v-layout class="layout overflow-visible mt-15 pb-10">
-              <v-bottom-navigation active>
-              <v-btn class=" home-switch-btn mt-5 mx-2" :disabled="!btnEnabled" @click="load"><p class="font-weight-bold text-h6">Descobrir</p></v-btn>
-              <v-btn class=" home-switch-btn mt-5 mx-2" :disabled="!btnEnabled" @click="loadFollowing"><p class="font-weight-bold text-h6">Seguindo</p></v-btn>
+            <div class="div-page-title">
+              <v-layout class="layout overflow-visible mt-15">
+              <v-bottom-navigation class="bottom-nav" active>
+              <v-btn class=" home-switch-btn mx-3" :disabled="!btnEnabled" @click="switchToDiscovery()"><p class="font-weight-bold text-h6">Descobrir</p></v-btn>
+              <v-btn class=" home-switch-btn mx-2" :disabled="!btnEnabled" @click="switchToFollowing()"><p class="font-weight-bold text-h6">Seguindo</p></v-btn>
             </v-bottom-navigation>
             </v-layout>
             </div>
             
             <div v-if="showDiscoverytweets">
-            <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+            <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
                   <ListCard :tweets="tweets" :retweets="retweets" />
                 </v-infinite-scroll>
               </div>
               
               <div v-if="showFollowingtweets">
-             <v-infinite-scroll v-if="continueLoading" color="blue"> <!-- colocar load -->
+             <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="loadFollowing" :scroll-target="'#scroll-container'"> <!-- colocar load -->
                   <ListCard :tweets="tweets" :retweets="retweets" :following="true" :test="test"/>
                 </v-infinite-scroll>
               </div>
@@ -311,6 +271,25 @@ onUnmounted(() => {
 <style scoped>
 .app {
   overflow-x: hidden;
+}
+
+.bottom-nav{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.infinite-scroll{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.layout{
+  height: 100% !important;
+}
+
+.div-page-title{
 }
 
 .spinner-div {
