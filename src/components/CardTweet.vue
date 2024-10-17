@@ -13,10 +13,10 @@ interface TweetTypeProps {
 }
 const props = defineProps<TweetTypeProps>();
 
-const listEmit = defineEmits(['toListCard']);
+const cardToList = defineEmits(['toListCard']);
 
-function toLc(id: number, isTweet: boolean) {
-  listEmit('toListCard', {
+function toList(id: number, isTweet: boolean) {
+  cardToList('toListCard', {
     id,
     isTweet
   });
@@ -86,8 +86,6 @@ const toggleTweetDrop = () => {
 const handleRetweet = async (id: number) => {
   const response = await postRetweet(id);
   if (response) {
-    console.log('cai no retweet');
-
     reTweetDrop.value = false;
   }
 };
@@ -102,13 +100,12 @@ const handleRetweetWithComment = async (id: number, content: string) => {
 };
 
 const handleDeleteTweet = async (postID: number) => {
-  // const confirmationDelete = window.confirm('Deseja realmente deletar?');
   const response = await deleteTweet(postID);
   if (response) {
-    toLc(postID, true);
-    return console.log('foi');
+    toList(postID, true);
+    return;
   }
-  return console.log('n foi');
+  return;
 };
 
 const toggleModalRetweet = () => {

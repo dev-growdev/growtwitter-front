@@ -10,10 +10,27 @@ import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 import BackToTop from '@/components/BackToTop.vue';
 
+interface Dados {
+  id: number;
+  isTweet: boolean;
+}
+
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
+const tweets = ref<TweetType[]>([]);
+const retweets = ref<any[]>([]);
+const item = ref<UserType>();
+const page = ref<number>(0);
+const windowWidth = ref(window.innerWidth);
+const continueLoading = ref<boolean>(true);
+
+const dados = ref<Dados>();
+
+const handleResize = () => {
+  windowWidth.value = window.innerWidth;
+};
 
 const listenEmit = () => {
   page.value = 0;
@@ -57,10 +74,6 @@ function clearMessage() {
   hasMessage.value = false;
 }
 
-const tweets = ref<TweetType[]>([]);
-const retweets = ref<any[]>([]);
-const item = ref<UserType>();
-
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
   if (!userData) {
@@ -72,15 +85,6 @@ async function handleGetUser() {
   }
   item.value = JSON.parse(userData);
 }
-const page = ref<number>(0);
-
-const windowWidth = ref(window.innerWidth);
-
-const handleResize = () => {
-  windowWidth.value = window.innerWidth;
-};
-
-const continueLoading = ref<boolean>(true);
 
 async function load({ done }: any) {
   page.value++;
@@ -101,17 +105,22 @@ async function load({ done }: any) {
 async function loadForRTandDel() {
   window.location.reload();
 }
-interface Dados {
-  id: number;
-  isTweet: boolean;
-}
-const dados = ref<Dados | any>();
 
 function receberHome(dadosP: Dados) {
   dados.value = dadosP;
 }
+
+function deletarRender() {
+  const identificador = dados.value?.isTweet ? tweets : retweets;
+
+  const index = identificador.value.findIndex((item) => item.id === dados.value?.id);
+  if (index !== -1) {
+    identificador.value.splice(index, 1);
+    identificador.value = [...identificador.value];
+  }
+}
+
 watch(dados, () => {
-  console.log(`DADOS DO EMMIT NA HOME: ${JSON.stringify(dados.value)}`);
   deletarRender();
 });
 
@@ -124,17 +133,6 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
 });
-
-function deletarRender() {
-  const identificador = dados.value.isTweet ? tweets : retweets;
-
-  const index = identificador.value.findIndex((item) => item.id === dados.value?.id);
-  if (index !== -1) {
-    identificador.value.splice(index, 1);
-    // Atualize o estado se necessário
-    identificador.value = [...identificador.value];
-  }
-}
 </script>
 
 <template>
