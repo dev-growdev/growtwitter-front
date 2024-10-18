@@ -10,4 +10,8 @@ export interface UserType {
   followers_count: number;
   posts_count: number
   retweets_count: number
+  followers: [] 
+  followings: [] 
+  posts: []
+  retweets: []
 }
