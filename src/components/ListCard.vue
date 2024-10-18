@@ -9,6 +9,8 @@ interface Props {
   tweets: TweetType[];
   retweets: any[];
   profile?: boolean;
+  following?: boolean;
+  followingsList: number[] | '';
 }
 
 interface Dados {
@@ -54,12 +56,20 @@ const combinedList = computed(() => {
 const route = useRoute();
 
 const filteredList = computed(() => {
-  if (!props.profile) {
-    return combinedList.value;
+  if (props.profile) {
+    const filtered = combinedList.value.filter((item) => item.userId === Number(route.params.id));
+    return filtered;
   }
-  const filtered = combinedList.value.filter((item) => item.userId === Number(route.params.id));
+  if (props.following && props.followingsList) {
+    let filtered = [];
 
-  return filtered;
+    for (let j = 0; j < props.followingsList.length; j++) {
+      filtered.push(...combinedList.value.filter((item) => item.user.id === props.followingsList[j]));
+    }
+    return filtered.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  return combinedList.value;
 });
 </script>
 
