@@ -157,8 +157,8 @@ export async function postRetweet(postId: number, content?: string) {
       content: content
     };
     const response = await client.post('/retweet', data, config);
-    if (response.status != 201) return false;
-    return true;
+
+    return response;
   } catch (error: any) {
     return error?.response;
   }
@@ -222,9 +222,7 @@ export async function deleteTweet(postID: number) {
   try {
     const config = await configMyRequest();
 
-    const response = await client.delete(`/posts/${postID}`, config);
-    if (response.status != 200) return false;
-    return true;
+    await client.delete(`/posts/${postID}`, config);
   } catch (error: any) {
     return error?.response;
   }
