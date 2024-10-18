@@ -190,10 +190,11 @@ const handleEdit = async () => {
       };
 
       const response = await edit(userData);
-
+      
       if (response.status === 201 || response.status === 200) {
         localStorage.setItem('userData', JSON.stringify(response.data.data));
         await fetchAll(route.params.id as string);
+        
         handleGetUser();
 
         loadingVisibleModal.value = false;
@@ -240,15 +241,15 @@ const retweets = ref<any[]>([]);
 async function fetchAll(id: string) {
   loadingVisible.value = true;
   const response = await getProfileData(id, 1);
-
   anotherUser.value = response.data.data.user;
-  if (response.data.data.followersData.some((follower: any) => follower.followerId === item.value.id)) {
+  
+  if (response.data.data.followersData.data.some((follower: any) => follower.followerId === item.value.id)) {
     isFollowing.value = true;
   }
   anotherUser.value.followers_count = response.data.data.followings;
   anotherUser.value.following_count = response.data.data.followers;
-  tweets.value = response.data.data.posts;
-  retweets.value = response.data.data.retweets;
+  tweets.value = response.data.data.posts.data;
+  retweets.value = response.data.data.retweets.data;
   loadingVisible.value = false;
 }
 
