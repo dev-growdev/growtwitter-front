@@ -132,8 +132,6 @@ function deletarRender() {
 }
 
 watch(dados, () => {
-  console.log('RECEBENDO DADOS NA HOME' + dados.value);
-
   deletarRender();
 });
 </script>

@@ -25,10 +25,6 @@ function receber(dadosP: Dados) {
 }
 
 watch(dados, () => {
-  console.log('aaaaaaaaaaaaaaaaaa: ' + dados);
-
-  console.log('cai no watch do list tweet: ' + dados.value);
-
   toHome(); //enviando os dados recebidos do cardTweet ou cardRetweet para home.
 });
 
