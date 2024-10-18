@@ -49,32 +49,34 @@ function toList(id: number, isTweet: boolean) {
 }
 
 async function handleSubmit(id: number) {
-  await postComment(id, commentInput.value);
-  localComments.value.push({
-    id: Math.floor(Math.random() * 10000),
-    user: {
-      id: id,
-      avatar_url: me.value.avatar_url,
-      name: me.value.name,
-      username: me.value.username,
-      surname: '',
-      email: '',
-      password: '',
-      following_count: 0,
-      followers_count: 0,
-      posts_count: 0,
-      retweets_count: 0,
-      followers: [],
-      followings: [],
-      posts: [],
-      retweets: []
-    },
+  if (commentInput.value.length > 0) {
+    await postComment(id, commentInput.value);
+    localComments.value.push({
+      id: Math.floor(Math.random() * 10000),
+      user: {
+        id: id,
+        avatar_url: me.value.avatar_url,
+        name: me.value.name,
+        username: me.value.username,
+        surname: '',
+        email: '',
+        password: '',
+        following_count: 0,
+        followers_count: 0,
+        posts_count: 0,
+        retweets_count: 0,
+        followers: [],
+        followings: [],
+        posts: [],
+        retweets: []
+      },
 
-    content: commentInput.value,
-    created_at: new Date().toISOString()
-  });
-  localCommentsCount.value++;
-  commentInput.value = '';
+      content: commentInput.value,
+      created_at: new Date().toISOString()
+    });
+    localCommentsCount.value++;
+    commentInput.value = '';
+  }
 }
 
 const toogleDiv = () => {

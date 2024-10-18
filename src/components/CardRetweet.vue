@@ -39,7 +39,7 @@ function toList(id: number, isTweet: boolean) {
 
 <template>
   <div class="card-principal rounded-0">
-    <v-card-actions class="ma-2 ga-2">
+    <v-card-actions class="ga-2">
       <div class="profileModal d-block align-self-start">
         <RouterLink :to="`/profile/${data.user.id}`">
           <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
@@ -50,12 +50,14 @@ function toList(id: number, isTweet: boolean) {
         <div class="tweet-header">
           <div>
             <RouterLink :to="`/profile/${data.user.id}`">
-              <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+              <strong class="mouseHover">{{ data.user.name }}</strong> <span style="color: #657786">@{{ data.user.username }}</span>
             </RouterLink>
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
+            <p class="tweet-content">{{ data.content }}</p>
           </div>
 
-          <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+          
+          <div class="d-flex align-end flex-column position-relative">
             <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical"></v-btn>
             <div v-if="reTweetDrop" class="delTweet">
               <v-btn v-if="userID === data.user.id" @click="handleDeleteReTweet(data.id)">Apagar</v-btn>
@@ -64,11 +66,12 @@ function toList(id: number, isTweet: boolean) {
           </div>
         </div>
         <div>
-          <span>{{ data.content }}</span>
           <p class="tweet-content" v-if="tweet">
             <CardTweet :data="tweet" :isaReTweet="true" />
           </p>
-          <div v-else class="d-flex justify-center w-100"><p class="bg-blue-lighten-5 pa-5 w-75 d-flex justify-center rounded-lg">Esse tweet foi excluido pelo autor.</p></div>
+          <div v-else class="d-flex justify-center w-100">
+            <p class="bg-blue-lighten-5 pa-5 w-75 d-flex justify-center rounded-lg">Esse tweet foi excluido pelo autor.</p>
+          </div>
         </div>
       </div>
     </v-card-actions>
