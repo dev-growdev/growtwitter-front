@@ -15,20 +15,26 @@ interface TweetTypeProps {
 
 const props = defineProps<TweetTypeProps>();
 
-const dropdown = ref(false);
+const cardToList = defineEmits(['toListCard']);
 
-const toggleDropdown = () => {
-  dropdown.value = !dropdown.value;
+function toList(id: number, isTweet: boolean) {
+  cardToList('toListCard', {
+    id,
+    isTweet
+  });
+}
+
+const reTweetDrop = ref(false);
+const userID = Number(sessionStorage.getItem('userId'));
+
+const toggleReTweetDrop = () => {
+  reTweetDrop.value = !reTweetDrop.value;
 };
 
-const handleDeleteRetweet = async (retweetID: number) => {
-  const response = await deleteRetweet(retweetID);
-  console.log(response);
-
-  window.location.reload();
+const handleDeleteReTweet = async (reTweetID: number) => {
+  await deleteRetweet(reTweetID);
+  toList(reTweetID, false);
 };
-
-const idU = Number(sessionStorage.getItem('userId'));
 </script>
 
 <template>
@@ -43,25 +49,26 @@ const idU = Number(sessionStorage.getItem('userId'));
       <div class="tweet-body">
         <div class="tweet-header">
           <div>
-            <div>
-              <RouterLink :to="`/profile/${data.user.id}`">
-                <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
-              </RouterLink>
-              <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
-              <p class="tweet-content">{{ data.content }}</p>
-            </div>
+            <RouterLink :to="`/profile/${data.user.id}`">
+              <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
+            </RouterLink>
+            <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
           </div>
+
           <div style="display: flex; align-items: end; flex-direction: column; position: relative">
-            <v-btn v-if="data.user.id === idU" icon small @click="toggleDropdown"> <v-icon icon="mdi-dots-horizontal"></v-icon></v-btn>
-            <div v-if="dropdown" class="dropdown">
-              <v-btn small @click="handleDeleteRetweet(data.id)"><v-icon icon="mdi-delete"></v-icon>Apagar</v-btn>
+            <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical"></v-btn>
+            <div v-if="reTweetDrop" class="delTweet">
+              <v-btn v-if="userID === data.user.id" @click="handleDeleteReTweet(data.id)">Apagar</v-btn>
+              <v-btn v-else>Denunciar</v-btn>
             </div>
           </div>
         </div>
         <div>
+          <span>{{ data.content }}</span>
           <p class="tweet-content" v-if="tweet">
-            <CardTweet :data="tweet" />
+            <CardTweet :data="tweet" :isaReTweet="true" />
           </p>
+          <div v-else class="d-flex justify-center w-100"><p class="bg-blue-lighten-5 pa-5 w-75 d-flex justify-center rounded-lg">Esse tweet foi excluido pelo autor.</p></div>
         </div>
       </div>
     </v-card-actions>
@@ -96,6 +103,22 @@ const idU = Number(sessionStorage.getItem('userId'));
   position: absolute;
   top: 50px;
   right: 0;
+  background-color: white;
+  border: 1px solid #ebe8e8;
+  padding: 10px;
+  border-radius: 5px;
+  width: max-content;
+  z-index: 10;
+}
+
+.delTweet {
+  text-transform: none !important;
+  background-color: #026eda;
+  display: flex;
+  flex-direction: column;
+  top: 50px;
+  right: 0px;
+  position: absolute;
   background-color: white;
   border: 1px solid #ebe8e8;
   padding: 10px;

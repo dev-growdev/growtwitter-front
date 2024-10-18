@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, computed, } from 'vue';
+import { defineProps, computed, ref, watch } from 'vue';
 import type { TweetType } from '@/types';
 import CardTweet from './CardTweet.vue';
 import CardRetweet from './CardRetweet.vue';
@@ -9,6 +9,33 @@ interface Props {
   tweets: TweetType[];
   retweets: any[];
   profile?: boolean;
+}
+
+interface Dados {
+  id: number;
+  isTweet: boolean;
+}
+const dados = ref<Dados>();
+console.log(dados);
+
+function receber(dadosP: Dados) {
+  console.log('recebi pro tweet: ' + dadosP);
+
+  dados.value = dadosP;
+}
+
+watch(dados, () => {
+  console.log('aaaaaaaaaaaaaaaaaa: ' + dados);
+
+  console.log('cai no watch do list tweet: ' + dados.value);
+
+  toHome(); //enviando os dados recebidos do cardTweet ou cardRetweet para home.
+});
+
+const listToHome = defineEmits(['toListCard']);
+
+function toHome() {
+  listToHome('toListCard', dados.value);
 }
 
 const props = defineProps<Props>();
@@ -35,21 +62,18 @@ const filteredList = computed(() => {
   if (!props.profile) {
     return combinedList.value;
   }
-  const filtered = combinedList.value.filter(item => item.userId === Number(route.params.id));
-  
+  const filtered = combinedList.value.filter((item) => item.userId === Number(route.params.id));
+
   return filtered;
 });
 </script>
 
 <template>
   <div class="pt-4">
-    <div v-for="(item, index) in filteredList" :key="index"> <!-- filteredList.value.length +1 -->
-          <CardRetweet v-if="item.type === 'retweet'" :data="item"
-          :tweet="item.post" /> 
-          <CardTweet v-if="item.type === 'tweet'" :data="item" />
-    </div> 
+    <div v-for="(item, index) in filteredList" :key="index">
+      <!-- filteredList.value.length +1 -->
+      <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="item.post" @to-list-card="receber" />
+      <CardTweet v-if="item.type === 'tweet'" :data="item" @to-list-card="receber" />
+    </div>
   </div>
 </template>
-
-
-
