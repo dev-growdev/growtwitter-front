@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue';
 import ListCard from '@/components/ListCard.vue';
-import { getUser, getHomeData, getUserbyId, showPosts, showFollowing } from '@/services/api';
+import { getUser, getHomeData, showFollowing } from '@/services/api';
 import type { TweetType } from '@/types/TweetType';
 import { onMounted, ref, onUnmounted } from 'vue';
 import type { UserType } from '@/types';
@@ -84,36 +84,42 @@ const handleResize = () => {
 
 const continueLoading = ref<boolean>(true);
 
-//--------------------
-//--------------------
-//--------------------
-
 const showDiscoverytweets = ref<boolean>(true);
 const showFollowingtweets = ref<boolean>(false);
 const btnEnabled = ref<boolean>(false);
+const activeButton = ref<string>('discover');
 
 function enableDiscoveryTweets(){
+    activeButton.value = 'discover';
     showDiscoverytweets.value = true;
     showFollowingtweets.value = false;
   }
 
 function disableDiscoveryTweets(){
+  activeButton.value = 'following';
   showDiscoverytweets.value = false;
   showFollowingtweets.value = true;
 }
 
-async function loadHomeForFollowing(){
-  const response = await getHomeData(pageFollowing.value + 1)
-  tweets.value.push(...response.data.data.posts.data);
-  retweets.value.push(...response.data.data.retweets.data)
-}
+const loaded = ref<boolean>(false);
+
+async function loadHomeForFollowing(){ 
+   if(loaded.value){
+    page.value++
+    const response = await getHomeData(page.value)
+    tweets.value.push(...response.data.data.posts.data);
+    retweets.value.push(...response.data.data.retweets.data)
+  }
+  loaded.value = true;
+ }
 
 
-const test = ref<number[]>([]);
+const followingsList = ref<number[]>([]);
   const isLoading = ref<boolean>(false);
 
 
   function switchToFollowing() {
+    activeButton.value = 'following';
     pageFollowing.value = 0;
     continueLoading.value = true;
     isLoading.value = true;
@@ -122,9 +128,8 @@ const test = ref<number[]>([]);
     btnEnabled.value = true;
 }
 
-
-
 async function switchToDiscovery(){
+  activeButton.value = 'discover';
   btnEnabled.value = false;
   enableDiscoveryTweets();
   btnEnabled.value = true;
@@ -156,6 +161,7 @@ const ultimapag = ref<number>(0);
 const showFollowings = ref<boolean>(false)
 
   async function loadFollowing({ done }:any) {
+    
     continueLoading.value = true
     
  if (page.value >= ultimapag.value) {
@@ -169,28 +175,21 @@ const showFollowings = ref<boolean>(false)
 
   btnEnabled.value = false;
   disableDiscoveryTweets();
-  pageFollowing.value++
-  page.value = pageFollowing.value;
-  page.value++;
+  
   const userId = await getUserId();
 
   if (!showFollowings.value) {
-    const response = await showFollowing('follow/' + userId, pageFollowing.value);
+    const response = await showFollowing('follow/' + userId);
     for (let index = 0; index < response.data.followingsData.length; index++) {
-      test.value.push( response.data.followingsData[index].followingId);
+      followingsList.value.push( response.data.followingsData[index].followingId);
     }
   }
-  
   showFollowings.value = true;
-
-    loadHomeForFollowing()
-  
+    loadHomeForFollowing() 
   btnEnabled.value = true;
   done("ok");
 }
   
-
-
 
 onMounted( async () => {
   window.addEventListener('resize', handleResize);
@@ -228,31 +227,31 @@ onUnmounted(() => {
           <v-col class="border px-4 px-md-0 mx-0 mx-md-4">
             <div class="div-page-title">
               <v-layout class="layout overflow-visible mt-15">
-              <v-bottom-navigation class="bottom-nav" active>
-              <v-btn class=" home-switch-btn mx-3" :disabled="!btnEnabled" @click="switchToDiscovery()"><p class="font-weight-bold text-h6">Descobrir</p></v-btn>
-              <v-btn class=" home-switch-btn mx-2" :disabled="!btnEnabled" @click="switchToFollowing()"><p class="font-weight-bold text-h6">Seguindo</p></v-btn>
-            </v-bottom-navigation>
-            </v-layout>
+                <v-bottom-navigation class="bottom-nav elevation-0" active>
+                  <v-btn  class="home-switch-btn mx-5 px-2 py-2" :class="{'btn-active': activeButton === 'discover'}" :disabled="!btnEnabled" @click="switchToDiscovery()"><p class="font-weight-bold text-h6">Descobrir</p></v-btn>
+                  <v-btn  class="home-switch-btn mx-5 px-2 py-2"  :class="{'btn-active': activeButton === 'following'}"  :disabled="!btnEnabled" @click="switchToFollowing()"><p class="font-weight-bold text-h6">Seguindo</p></v-btn>
+                </v-bottom-navigation>
+              </v-layout>
             </div>
             
             <div v-if="showDiscoverytweets">
-            <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
-                  <ListCard :tweets="tweets" :retweets="retweets" />
+            <v-infinite-scroll class="infinite-scroll " v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+                  <ListCard :tweets="tweets" :retweets="retweets" followingsList="" />
                 </v-infinite-scroll>
               </div>
               
               <div v-if="showFollowingtweets">
-             <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="loadFollowing" :scroll-target="'#scroll-container'"> <!-- colocar load -->
-                  <ListCard :tweets="tweets" :retweets="retweets" :following="true" :test="test"/>
+             <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="loadFollowing" :scroll-target="'#scroll-container'">
+                  <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList"/>
                 </v-infinite-scroll>
               </div>
 
             <div v-if="!continueLoading" >
               <div v-if="showDiscoverytweets">
-                <ListCard :tweets="tweets" :retweets="retweets" />
+                <ListCard :tweets="tweets" :retweets="retweets" followingsList=""/>
               </div>
               <div v-if="showFollowingtweets">
-                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :test="test"/>
+                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList"/>
               </div>
             </div>
 
@@ -280,16 +279,9 @@ onUnmounted(() => {
 
 }
 
-.infinite-scroll{
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.layout{
-  height: 100% !important;
-}
-
-.div-page-title{
+.v-btn.btn-active{
+  border-bottom: 3px solid #1976d2 !important;
+  background-color: white !important;
 }
 
 .spinner-div {
@@ -317,4 +309,6 @@ onUnmounted(() => {
     right: 20%;
   }
 }
+
+
 </style>

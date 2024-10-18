@@ -21,7 +21,7 @@ const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
 const me = ref(JSON.parse(localStorage.getItem('userData') || '{}'));
-const localComments = ref([props.data.comments]);
+const localComments = ref([...props.data.comments]);
 const localCommentsCount = ref(props.data.comments_count);
 
 function like() {

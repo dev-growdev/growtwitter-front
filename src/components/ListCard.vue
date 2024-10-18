@@ -10,7 +10,7 @@ interface Props {
   retweets: any[];
   profile?: boolean;
   following?: boolean;
-  test?: number[];
+  followingsList: number[] | "";
 }
 
 const props = defineProps<Props>();
@@ -38,14 +38,12 @@ const filteredList = computed(() => {
     const filtered = combinedList.value.filter(item => item.userId === Number(route.params.id));
     return filtered;
   }
-  if (props.following && props.test) {
+  if (props.following && props.followingsList) {
   let filtered = [];
-  console.log(props.tweets);
   
-  for (let j = 0; j < props.test.length; j++) {
-      filtered.push(...combinedList.value.filter(item => item.user.id === props.test[j]));
+  for (let j = 0; j < props.followingsList.length; j++) {
+      filtered.push(...combinedList.value.filter(item => item.user.id === props.followingsList[j]));
   }
-  console.log(filtered);
   return filtered.sort((a, b) => b.createdAt - a.createdAt);;
 }
 
@@ -57,7 +55,7 @@ const filteredList = computed(() => {
 </script>
 
 <template>
-  <div class="pt-4">
+  <div >
     <div v-for="(item, index) in filteredList" :key="index"> 
           <CardRetweet v-if="item.type === 'retweet'" :data="item"
           :tweet="item.post" /> 

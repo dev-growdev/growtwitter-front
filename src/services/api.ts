@@ -83,11 +83,11 @@ export async function showPosts(endpoint: string) {
   }
 }
 
-export async function showFollowing(endpoint: string, page:number) {
+export async function showFollowing(endpoint: string) {
   try {
     const config = await configMyRequest();
 
-    return await client.get(endpoint + '?page=' + page, config);
+    return await client.get(endpoint, config);
   } catch (error: any) {
     return error?.response;
   }
