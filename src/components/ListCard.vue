@@ -20,8 +20,6 @@ interface Dados {
 const dados = ref<Dados>();
 
 function receber(dadosP: Dados) {
-  console.log('recebi pro tweet: ' + dadosP);
-
   dados.value = dadosP;
 }
 
