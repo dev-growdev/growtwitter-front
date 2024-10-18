@@ -101,19 +101,6 @@ function disableDiscoveryTweets(){
   showFollowingtweets.value = true;
 }
 
-const loaded = ref<boolean>(false);
-
-async function loadHomeForFollowing(){ 
-   if(loaded.value){
-    page.value++
-    const response = await getHomeData(page.value)
-    tweets.value.push(...response.data.data.posts.data);
-    retweets.value.push(...response.data.data.retweets.data)
-  }
-  loaded.value = true;
- }
-
-
 const followingsList = ref<number[]>([]);
   const isLoading = ref<boolean>(false);
 
@@ -156,38 +143,47 @@ const ultimapag = ref<number>(0);
     done("ok");
   }
 
-
-
 const showFollowings = ref<boolean>(false)
+const isLoadingPage = ref<boolean>(false);
 
-  async function loadFollowing({ done }:any) {
-    
-    continueLoading.value = true
-    
- if (page.value >= ultimapag.value) {
-  continueLoading.value = false  
-   return;
- }
+async function loadFollowing({ done }: any) {
+  if (isLoadingPage.value) return;
 
- if (page.value < ultimapag.value) {
-  continueLoading.value = true  
- }
+  if (pageFollowing.value >= ultimapag.value) {
+    continueLoading.value = false;
+    return;
+  }
+
+  isLoadingPage.value = true;
 
   btnEnabled.value = false;
   disableDiscoveryTweets();
   
   const userId = await getUserId();
 
-  if (!showFollowings.value) {
-    const response = await showFollowing('follow/' + userId);
-    for (let index = 0; index < response.data.followingsData.length; index++) {
-      followingsList.value.push( response.data.followingsData[index].followingId);
-    }
+if (!showFollowings.value) {
+  const response = await showFollowing('follow/' + userId);
+  for (let index = 0; index < response.data.followingsData.length; index++) {
+    followingsList.value.push(response.data.followingsData[index].followingId);
   }
-  showFollowings.value = true;
-    loadHomeForFollowing() 
-  btnEnabled.value = true;
-  done("ok");
+}
+
+showFollowings.value = true;
+
+const response = await getHomeData(page.value +1);
+if (response.data.data.posts.data.length === 0 || page.value >= response.data.data.posts.last_page) {
+  continueLoading.value = false;
+
+} else {
+  tweets.value.push(...response.data.data.posts.data);
+  retweets.value.push(...response.data.data.retweets.data);
+  page.value++;
+}
+
+isLoadingPage.value = false;
+btnEnabled.value = true;
+
+done("ok");
 }
   
 
