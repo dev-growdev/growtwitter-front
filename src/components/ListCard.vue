@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, computed, } from 'vue';
+import { defineProps, computed, ref, watch } from 'vue';
 import type { TweetType } from '@/types';
 import CardTweet from './CardTweet.vue';
 import CardRetweet from './CardRetweet.vue';
@@ -10,10 +10,25 @@ interface Props {
   retweets: any[];
   profile?: boolean;
   following?: boolean;
-  followingsList: number[] | "";
+  followingsList: number[] | '';
 }
 
+interface Dados {
+  id: number;
+  isTweet: boolean;
+}
+const listToHome = defineEmits(['toListCard']);
 const props = defineProps<Props>();
+const dados = ref<Dados>();
+const route = useRoute();
+
+function receber(dadosP: Dados) {
+  dados.value = dadosP;
+}
+
+function toHome() {
+  listToHome('toListCard', dados.value);
+}
 
 const combinedList = computed(() => {
   const formattedTweets = props.tweets.map((tweet) => ({
@@ -31,38 +46,37 @@ const combinedList = computed(() => {
   return [...formattedTweets, ...formattedRetweets].sort((a, b) => b.createdAt - a.createdAt);
 });
 
-const route = useRoute();
-
 const filteredList = computed(() => {
-  if (props.profile ) {
-    const filtered = combinedList.value.filter(item => item.userId === Number(route.params.id));
+  if (props.profile) {
+    const filtered = combinedList.value.filter((item) => item.userId === Number(route.params.id));
     return filtered;
   }
   if (props.following && props.followingsList) {
-  let filtered = [];
-  
-  for (let j = 0; j < props.followingsList.length; j++) {
-      filtered.push(...combinedList.value.filter(item => item.user.id === props.followingsList[j]));
+    let filtered = [];
+
+    for (let j = 0; j < props.followingsList.length; j++) {
+      filtered.push(...combinedList.value.filter((item) => item.user.id === props.followingsList[j]));
+    }
+    return filtered.sort((a, b) => b.createdAt - a.createdAt);
   }
-  return filtered.sort((a, b) => b.createdAt - a.createdAt);;
-}
 
   return combinedList.value;
 });
 
+watch(dados, () => {
+  console.log('cai aqui');
+  console.log(dados.value);
 
-
+  toHome(); //enviando os dados recebidos do cardTweet ou cardRetweet para home.
+});
 </script>
 
 <template>
-  <div >
-    <div v-for="(item, index) in filteredList" :key="index"> 
-          <CardRetweet v-if="item.type === 'retweet'" :data="item"
-          :tweet="item.post" /> 
-          <CardTweet v-if="item.type === 'tweet'" :data="item" />
-    </div> 
+  <div class="pt-4">
+    <div v-for="(item, index) in filteredList" :key="index">
+      <!-- filteredList.value.length +1 -->
+      <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="item.post" @to-list-card="receber" />
+      <CardTweet v-if="item.type === 'tweet'" :data="item" @to-list-card="receber" />
+    </div>
   </div>
 </template>
-
-
-
