@@ -17,23 +17,18 @@ interface Dados {
   id: number;
   isTweet: boolean;
 }
+const listToHome = defineEmits(['toListCard']);
+const props = defineProps<Props>();
 const dados = ref<Dados>();
+const route = useRoute();
 
 function receber(dadosP: Dados) {
   dados.value = dadosP;
 }
 
-watch(dados, () => {
-  toHome(); //enviando os dados recebidos do cardTweet ou cardRetweet para home.
-});
-
-const listToHome = defineEmits(['toListCard']);
-
 function toHome() {
   listToHome('toListCard', dados.value);
 }
-
-const props = defineProps<Props>();
 
 const combinedList = computed(() => {
   const formattedTweets = props.tweets.map((tweet) => ({
@@ -51,8 +46,6 @@ const combinedList = computed(() => {
   return [...formattedTweets, ...formattedRetweets].sort((a, b) => b.createdAt - a.createdAt);
 });
 
-const route = useRoute();
-
 const filteredList = computed(() => {
   if (props.profile) {
     const filtered = combinedList.value.filter((item) => item.userId === Number(route.params.id));
@@ -68,6 +61,13 @@ const filteredList = computed(() => {
   }
 
   return combinedList.value;
+});
+
+watch(dados, () => {
+  console.log('cai aqui');
+  console.log(dados.value);
+
+  toHome(); //enviando os dados recebidos do cardTweet ou cardRetweet para home.
 });
 </script>
 

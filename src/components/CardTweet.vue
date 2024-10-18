@@ -12,16 +12,10 @@ interface TweetTypeProps {
   yourProfile?: boolean;
   isaReTweet?: boolean;
 }
+
 const props = defineProps<TweetTypeProps>();
 
 const cardToList = defineEmits(['toListCard']);
-
-function toList(id: number, isTweet: boolean) {
-  cardToList('toListCard', {
-    id,
-    isTweet
-  });
-}
 
 const liked = ref(false);
 const artificialLike = ref(0);
@@ -45,6 +39,13 @@ function like() {
     artificialLike.value--;
     liked.value = false;
   }
+}
+
+function toList(id: number, isTweet: boolean) {
+  cardToList('toListCard', {
+    id,
+    isTweet
+  });
 }
 
 async function handleSubmit(id: number) {
@@ -89,10 +90,8 @@ const toggleTweetDrop = () => {
 };
 
 const handleRetweet = async (id: number) => {
-  const response = await postRetweet(id);
-  if (response) {
-    reTweetDrop.value = false;
-  }
+  await postRetweet(id);
+  reTweetDrop.value = false;
 };
 
 const handleRetweetWithComment = async (id: number, content: string) => {
@@ -107,6 +106,7 @@ const handleRetweetWithComment = async (id: number, content: string) => {
 const handleDeleteTweet = async (postID: number) => {
   await deleteTweet(postID);
   toList(postID, true);
+  toggleTweetDrop();
   return;
 };
 
@@ -129,8 +129,6 @@ onMounted(() => {
     liked.value = props.data.likes.some((like: any) => like.userId == JSON.parse(user).id);
   }
 });
-
-const idU = Number(sessionStorage.getItem('userId'));
 </script>
 
 <template>

@@ -16,6 +16,22 @@ const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
 const dados = ref<Dados>();
+const continueLoading = ref<boolean>(true);
+const showDiscoverytweets = ref<boolean>(true);
+const showFollowingtweets = ref<boolean>(false);
+const btnEnabled = ref<boolean>(false);
+const activeButton = ref<string>('discover');
+const tweets = ref<TweetType[]>([]);
+const retweets = ref<any[]>([]);
+const item = ref<UserType>();
+const page = ref<number>(0);
+const pageFollowing = ref<number>(0);
+const windowWidth = ref(window.innerWidth);
+const followingsList = ref<number[]>([]);
+const isLoading = ref<boolean>(false);
+const ultimapag = ref<number>(0);
+const showFollowings = ref<boolean>(false);
+const isLoadingPage = ref<boolean>(false);
 interface Dados {
   id: number;
   isTweet: boolean;
@@ -62,10 +78,6 @@ function clearMessage() {
   hasMessage.value = false;
 }
 
-const tweets = ref<TweetType[]>([]);
-const retweets = ref<any[]>([]);
-const item = ref<UserType>();
-
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
   if (!userData) {
@@ -77,20 +89,10 @@ async function handleGetUser() {
   }
   item.value = JSON.parse(userData);
 }
-const page = ref<number>(0);
-const pageFollowing = ref<number>(0);
-
-const windowWidth = ref(window.innerWidth);
 
 const handleResize = () => {
   windowWidth.value = window.innerWidth;
 };
-
-const continueLoading = ref<boolean>(true);
-const showDiscoverytweets = ref<boolean>(true);
-const showFollowingtweets = ref<boolean>(false);
-const btnEnabled = ref<boolean>(false);
-const activeButton = ref<string>('discover');
 
 function enableDiscoveryTweets() {
   activeButton.value = 'discover';
@@ -103,8 +105,6 @@ function disableDiscoveryTweets() {
   showDiscoverytweets.value = false;
   showFollowingtweets.value = true;
 }
-const followingsList = ref<number[]>([]);
-const isLoading = ref<boolean>(false);
 
 function switchToFollowing() {
   activeButton.value = 'following';
@@ -140,10 +140,6 @@ async function load({ done }: any) {
   btnEnabled.value = true;
   done('ok');
 }
-
-const ultimapag = ref<number>(0);
-const showFollowings = ref<boolean>(false);
-const isLoadingPage = ref<boolean>(false);
 
 async function loadFollowing({ done }: any) {
   if (isLoadingPage.value) return;
@@ -184,16 +180,6 @@ async function loadFollowing({ done }: any) {
   done('ok');
 }
 
-onMounted(async () => {
-  window.addEventListener('resize', handleResize);
-  localStorage.setItem('attemptsVerify', false.toString());
-  handleGetUser();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-});
-
 function deletarRender() {
   const identificador = dados.value?.isTweet ? tweets : retweets;
 
@@ -204,7 +190,23 @@ function deletarRender() {
   }
 }
 
+function receberHome(dadosP: Dados) {
+  dados.value = dadosP;
+}
+
+onMounted(async () => {
+  window.addEventListener('resize', handleResize);
+  localStorage.setItem('attemptsVerify', false.toString());
+  handleGetUser();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
+
 watch(dados, () => {
+  console.log(dados);
+
   deletarRender();
 });
 </script>
@@ -246,22 +248,22 @@ watch(dados, () => {
 
             <div v-if="showDiscoverytweets">
               <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
-                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" />
+                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" @to-list-card="receberHome" />
               </v-infinite-scroll>
             </div>
 
             <div v-if="showFollowingtweets">
               <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="loadFollowing" :scroll-target="'#scroll-container'">
-                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" />
+                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" @to-list-card="receberHome" />
               </v-infinite-scroll>
             </div>
 
             <div v-if="!continueLoading">
               <div v-if="showDiscoverytweets">
-                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" />
+                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" @to-list-card="receberHome" />
               </div>
               <div v-if="showFollowingtweets">
-                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" />
+                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" @to-list-card="receberHome" />
               </div>
             </div>
           </v-col>

@@ -13,19 +13,11 @@ interface TweetTypeProps {
   tweet?: TweetType;
 }
 
-const props = defineProps<TweetTypeProps>();
-
-const cardToList = defineEmits(['toListCard']);
-
-function toList(id: number, isTweet: boolean) {
-  cardToList('toListCard', {
-    id,
-    isTweet
-  });
-}
-
 const reTweetDrop = ref(false);
 const userID = Number(sessionStorage.getItem('userId'));
+
+const props = defineProps<TweetTypeProps>();
+const cardToList = defineEmits(['toListCard']);
 
 const toggleReTweetDrop = () => {
   reTweetDrop.value = !reTweetDrop.value;
@@ -34,7 +26,15 @@ const toggleReTweetDrop = () => {
 const handleDeleteReTweet = async (reTweetID: number) => {
   await deleteRetweet(reTweetID);
   toList(reTweetID, false);
+  toggleReTweetDrop();
 };
+
+function toList(id: number, isTweet: boolean) {
+  cardToList('toListCard', {
+    id,
+    isTweet
+  });
+}
 </script>
 
 <template>
