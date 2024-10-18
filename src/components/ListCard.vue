@@ -16,7 +16,6 @@ interface Dados {
   isTweet: boolean;
 }
 const dados = ref<Dados>();
-console.log(dados);
 
 function receber(dadosP: Dados) {
   console.log('recebi pro tweet: ' + dadosP);
