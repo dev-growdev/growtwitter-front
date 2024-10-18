@@ -83,6 +83,18 @@ export async function showPosts(endpoint: string) {
   }
 }
 
+export async function showFollowing(endpoint: string) {
+  try {
+    const config = await configMyRequest();
+
+    return await client.get(endpoint, config);
+  } catch (error: any) {
+    return error?.response;
+  }
+}
+
+
+
 export async function postTweet(content: string) {
   try {
     const config = await configMyRequest();

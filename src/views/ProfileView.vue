@@ -406,13 +406,15 @@ const myPosts = ref<number>(0);
           <v-col cols="12">
             <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
               <div>
-                <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
+                <ListCard :tweets="tweets" :retweets="retweets" :profile="true" followingsList=""/>
               </div>
             </v-infinite-scroll>
 
-            <div v-else>
-              <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
-            </div>
+              <div v-else >
+                <ListCard :tweets="tweets" :retweets="retweets" :profile="true" followingsList="" />
+              </div>
+
+
           </v-col>
         </v-row>
       </v-container>
