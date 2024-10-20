@@ -7,6 +7,7 @@ import { isUserAuthenticated } from '@/services/authentication';
 import ExploreView from '@/views/ExploreView.vue';
 import ForgotView from '@/views/ForgotView.vue';
 import ResetView from '@/views/ResetView.vue';
+import SearchView from '@/views/SearchView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +67,14 @@ const router = createRouter({
       component: ResetView,
       meta: {
         title: 'Redefinir sua senha - GrowTwitter'
+      }
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView,
+      meta: {
+        title: 'Resultados - GrowTwitter'
       }
     }
   ]
