@@ -4,6 +4,7 @@ import type { TweetType } from '@/types';
 import CardTweet from './CardTweet.vue';
 import CardRetweet from './CardRetweet.vue';
 import { useRoute } from 'vue-router';
+import type { DadosType, DadosRtType } from '@/types/DadosType';
 
 interface Props {
   tweets: TweetType[];
@@ -13,21 +14,26 @@ interface Props {
   followingsList: number[] | '';
 }
 
-interface Dados {
-  id: number;
-  isTweet: boolean;
-}
-const listToHome = defineEmits(['toListCard']);
+const listToHome = defineEmits(['toListCard', 'rtListCard']);
 const props = defineProps<Props>();
-const dados = ref<Dados>();
+const dados = ref<DadosType>();
+const dadosRT = ref<DadosRtType>();
 const route = useRoute();
 
-function receber(dadosP: Dados) {
+function receiveDelTweet(dadosP: DadosType) {
   dados.value = dadosP;
+}
+
+function receiveRT(dadosP: DadosRtType) {
+  dadosRT.value = dadosP;
 }
 
 function toHome() {
   listToHome('toListCard', dados.value);
+}
+
+function rtToHome() {
+  listToHome('rtListCard', dadosRT.value);
 }
 
 const combinedList = computed(() => {
@@ -64,10 +70,10 @@ const filteredList = computed(() => {
 });
 
 watch(dados, () => {
-  console.log('cai aqui');
-  console.log(dados.value);
-
   toHome(); //enviando os dados recebidos do cardTweet ou cardRetweet para home.
+});
+watch(dadosRT, () => {
+  rtToHome(); //enviando os RTs recebidos do cardTweet  para home.
 });
 </script>
 
@@ -75,8 +81,8 @@ watch(dados, () => {
   <div class="pt-4">
     <div v-for="(item, index) in filteredList" :key="index">
       <!-- filteredList.value.length +1 -->
-      <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="item.post" @to-list-card="receber" />
-      <CardTweet v-if="item.type === 'tweet'" :data="item" @to-list-card="receber" />
+      <CardRetweet v-if="item.type === 'retweet'" :data="item" :tweet="item.post" @to-list-card="receiveDelTweet" />
+      <CardTweet v-if="item.type === 'tweet'" :data="item" @to-list-card="receiveDelTweet" @rt-list-card="receiveRT" />
     </div>
   </div>
 </template>
