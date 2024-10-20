@@ -24,9 +24,9 @@ const toggleReTweetDrop = () => {
 };
 
 const handleDeleteReTweet = async (reTweetID: number) => {
-  await deleteRetweet(reTweetID);
-  toList(reTweetID, false);
   toggleReTweetDrop();
+  toList(reTweetID, false);
+  await deleteRetweet(reTweetID);
 };
 
 function toList(id: number, isTweet: boolean) {
@@ -56,7 +56,6 @@ function toList(id: number, isTweet: boolean) {
             <p class="tweet-content">{{ data.content }}</p>
           </div>
 
-          
           <div class="d-flex align-end flex-column position-relative">
             <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical"></v-btn>
             <div v-if="reTweetDrop" class="delTweet">
