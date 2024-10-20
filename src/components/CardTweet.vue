@@ -74,7 +74,8 @@ async function handleSubmit(id: number) {
         followers: [],
         followings: [],
         posts: [],
-        retweets: []
+        retweets: [],
+        cover_url: me.value.cover_url
       },
 
       content: commentInput.value,
