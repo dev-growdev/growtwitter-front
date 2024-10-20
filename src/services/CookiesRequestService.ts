@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { getUserToken } from './authentication';
 
-export async function getCsfrToken() {
-  // TODO: Mudar url para apontar para o banco utilizado
-  await axios.get(import.meta.env.VITE_API_URL_CORS, {
-    headers: {
-      Accept: 'application/json'
-    },
-    withCredentials: true
-  });
-}
+// export async function getCsfrToken() {
+//   // TODO: Mudar url para apontar para o banco utilizado
+//   await axios.get(import.meta.env.VITE_API_URL_CORS, {
+//     headers: {
+//       Accept: 'application/json'
+//     },
+//     withCredentials: true
+//   });
+// }
 
 export async function getCookie(cookieName: string) {
   const name = cookieName + '=';

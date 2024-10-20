@@ -18,7 +18,7 @@ const attempts = ref<number>(0);
 const attemptsVerify = ref<boolean>(false);
 
 function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms*1000 ));
+  return new Promise((resolve) => setTimeout(resolve, ms * 1000));
 }
 
 const handleLogin = async () => {
@@ -43,8 +43,8 @@ const handleLogin = async () => {
   attempts.value++;
 
   error.value = response.data.msg;
-  
-  if(attempts.value >= 3){
+
+  if (attempts.value >= 3) {
     attemptsVerify.value = true;
     error.value = "Tente novamente em 1 minuto";
     localStorage.setItem("attemptsVerify", true.toString());
@@ -57,15 +57,15 @@ const handleLogin = async () => {
 };
 
 onMounted(async () => {
-  if(localStorage.getItem("attemptsVerify") == "true"){
+  if (localStorage.getItem("attemptsVerify") == "true") {
     attemptsVerify.value = true;
     await delay(60);
     localStorage.setItem("attemptsVerify", false.toString())
     attemptsVerify.value = false;
   }
   else
-  localStorage.setItem("attemptsVerify", false.toString())
-   attemptsVerify.value = false;
+    localStorage.setItem("attemptsVerify", false.toString())
+  attemptsVerify.value = false;
 })
 </script>
 
@@ -75,18 +75,11 @@ onMounted(async () => {
   </BackgroundOverlay>
   <div class="background">
     <v-container>
-      <v-card
-        class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8"
-        elevation="8"
-        max-width="900"
-        rounded="lg"
-      >
+      <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="900" rounded="lg">
         <v-row class="d-flex align-center">
           <v-col cols="12" sm="6" class="text bg-blue rounded py-15">
             <v-card-title>Growtwitter</v-card-title>
-            <v-card-subtitle class="text-white"
-              >Trabalho final do bloco intermediário</v-card-subtitle
-            >
+            <v-card-subtitle class="text-white">Trabalho final do bloco intermediário</v-card-subtitle>
             <v-card-text>
               O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais
               que buscam uma experiência familiar e poderosa, semelhante ao Twitter, mas com um
@@ -98,42 +91,31 @@ onMounted(async () => {
           <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8">
             <h1 class="pa-5 mb-5 text-center register-title">Entrar no Growtwitter</h1>
 
-            <v-text-field
-              density="compact"
-              placeholder="Digite seu endereço de e-mail"
-              prepend-inner-icon="mdi-email-outline"
-              variant="outlined"
-              v-model="email"
-            ></v-text-field>
+            <v-text-field density="compact" placeholder="Digite seu endereço de e-mail"
+              prepend-inner-icon="mdi-email-outline" variant="outlined" v-model="email"></v-text-field>
 
-            <v-text-field
-              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-              @click:append-inner="visible = !visible"
-              :type="visible ? 'text' : 'password'"
-              density="compact"
-              placeholder="Digite sua  senha "
-              prepend-inner-icon="mdi-lock-outline"
-              variant="outlined"
-              v-model="password"
-            ></v-text-field>
+            <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              @click:append-inner="visible = !visible" :type="visible ? 'text' : 'password'" density="compact"
+              placeholder="Digite sua  senha " prepend-inner-icon="mdi-lock-outline" variant="outlined"
+              v-model="password"></v-text-field>
 
             <div class="keep-connected-container pa-5">
               <label for="keep-connected">Permanecer conectado:</label>
               <input type="checkbox" id="keep-connected" v-model="keepConnected" />
             </div>
 
-            <v-btn @click="handleLogin" :disabled="attemptsVerify" class="mb-2" color="blue" size="large" variant="flat" block
-              >Enviar</v-btn
-            >
+            <v-btn @click="handleLogin" :disabled="attemptsVerify" class="mb-2" color="blue" size="large" variant="flat"
+              block>Enviar</v-btn>
 
-            <v-card-text class="text-center">
+            <v-card-text class="text-center d-flex flex-column">
               <RouterLink to="/register" class="text-blue text-decoration-none">
                 Não tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
               </RouterLink>
+              <RouterLink to="/forgot" class="text-blue text-decoration-none">
+                Esqueceu sua senha? <v-icon icon="mdi-chevron-right"></v-icon>
+              </RouterLink>
             </v-card-text>
-            <v-card-text
-              ><span class="error-message" v-if="error">{{ error }}</span></v-card-text
-            >
+            <v-card-text><span class="error-message" v-if="error">{{ error }}</span></v-card-text>
           </v-col>
         </v-row>
       </v-card>

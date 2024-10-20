@@ -60,6 +60,15 @@ export async function edit(userData: UserDataType) {
     return error?.response;
   }
 }
+export async function resetPassword(userData: any) {
+  try {
+    const config = await configMyRequest();
+
+    return await client.post(`/reset/`, userData, config);
+  } catch (error: any) {
+    return error?.response;
+  }
+}
 
 export async function doGet(url: string) {
   try {

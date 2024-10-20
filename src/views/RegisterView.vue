@@ -8,6 +8,8 @@ import useAvatar from '@/services/avatar';
 import SpinnerComponent from '@/components/SpinnerComponent.vue';
 import BackgroundOverlay from '@/components/BackgroundOverlay.vue';
 import axios from 'axios';
+import emailjs from 'emailjs-com';
+import { sendMail } from '@/services/senderMail';
 
 const loadingVisible = ref<boolean>(false);
 const visible = ref<boolean>(false);
@@ -147,6 +149,13 @@ const handleRegister = async () => {
     loadingVisible.value = true;
 
     const response = await register(userData);
+    const templateParams = {
+      name: userData.name,
+      email: userData.email,
+      to_email: userData.email, // O destinatário é o email do usuário
+    };
+
+    sendMail(templateParams);
 
     loadingVisible.value = false;
 
@@ -191,66 +200,35 @@ onMounted(async () => {
       <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="648" rounded="lg">
         <h1 class="mt-1 text-center register-title">Criar conta</h1>
         <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
-        <v-text-field
-          density="compact"
-          placeholder="Seu primeiro nome"
-          prepend-inner-icon="mdi-account-outline"
-          variant="outlined"
-          v-model="account.name"
-          :error-messages="validationErrors.name"
-          required
-        ></v-text-field>
+        <v-text-field density="compact" placeholder="Seu primeiro nome" prepend-inner-icon="mdi-account-outline"
+          variant="outlined" v-model="account.name" :error-messages="validationErrors.name" required></v-text-field>
 
         <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
-        <v-text-field
-          density="compact"
-          placeholder="Seu sobrenome"
-          prepend-inner-icon="mdi-account-outline"
-          variant="outlined"
-          v-model="account.surname"
-          :error-messages="validationErrors.surname"
-          required
-        ></v-text-field>
+        <v-text-field density="compact" placeholder="Seu sobrenome" prepend-inner-icon="mdi-account-outline"
+          variant="outlined" v-model="account.surname" :error-messages="validationErrors.surname"
+          required></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
-        <v-text-field
-          density="compact"
-          placeholder="Escolha um nome de usuário"
-          prepend-inner-icon="mdi-account-outline"
-          variant="outlined"
-          v-model="account.username"
-          :error-messages="validationErrors.username"
-        ></v-text-field>
+        <v-text-field density="compact" placeholder="Escolha um nome de usuário"
+          prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.username"
+          :error-messages="validationErrors.username"></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis">E-mail</div>
 
-        <v-text-field
-          density="compact"
-          placeholder="Seu endereço de e-mail"
-          prepend-inner-icon="mdi-email-outline"
-          variant="outlined"
-          v-model="account.email"
-          :error-messages="validationErrors.email"
-          required
-        ></v-text-field>
+        <v-text-field density="compact" placeholder="Seu endereço de e-mail" prepend-inner-icon="mdi-email-outline"
+          variant="outlined" v-model="account.email" :error-messages="validationErrors.email" required></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">Senha</div>
 
-        <v-text-field
-          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-          :type="visible ? 'text' : 'password'"
-          density="compact"
-          placeholder="Crie uma senha forte"
-          prepend-inner-icon="mdi-lock-outline"
-          variant="outlined"
-          @click:append-inner="visible = !visible"
-          v-model="account.password"
-          :error-messages="validationErrors.password"
-        ></v-text-field>
+        <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
+          density="compact" placeholder="Crie uma senha forte" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+          @click:append-inner="visible = !visible" v-model="account.password"
+          :error-messages="validationErrors.password"></v-text-field>
 
         <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
         <div class="upload-avatar-container">
-          <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar" @change="bindCustomAvatar" id="avatar"></v-file-input>
+          <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
+            @change="bindCustomAvatar" id="avatar"></v-file-input>
           <label class="upload-avatar-label mt-3" for="avatar">
             <v-avatar class="avatar-preview" :image="previewAvatar ?? defaultAvatar" size="75"></v-avatar>
           </label>
@@ -261,10 +239,12 @@ onMounted(async () => {
           </div>
         </div>
 
-        <v-btn @click="handleRegister" :disabled="attemptsRegister" class="mb-2" color="blue" size="large" variant="flat" block type="submit"> Criar </v-btn>
+        <v-btn @click="handleRegister" :disabled="attemptsRegister" class="mb-2" color="blue" size="large"
+          variant="flat" block type="submit"> Criar </v-btn>
 
         <v-card-text class="text-center">
-          <RouterLink to="/login" class="text-blue text-decoration-none"> Já tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon> </RouterLink>
+          <RouterLink to="/login" class="text-blue text-decoration-none"> Já tem uma conta? <v-icon
+              icon="mdi-chevron-right"></v-icon> </RouterLink>
         </v-card-text>
       </v-card>
     </div>
@@ -304,6 +284,7 @@ onMounted(async () => {
     width: 50px !important;
     height: 50px !important;
   }
+
   .register-title {
     font-size: 1.5rem;
   }

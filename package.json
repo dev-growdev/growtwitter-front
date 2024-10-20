@@ -15,6 +15,7 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "axios": "^1.7.2",
+    "emailjs-com": "^3.2.0",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
     "vuetify": "^3.6.13"
