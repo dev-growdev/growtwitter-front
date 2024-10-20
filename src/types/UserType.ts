@@ -6,6 +6,7 @@ export interface UserType {
   email: string;
   password: string;
   avatar_url: string;
+  cover_url: string;
   following_count: number;
   followers_count: number;
   posts_count: number
