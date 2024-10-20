@@ -303,6 +303,7 @@ onMounted(() => {
 });
 onBeforeRouteUpdate((to, from, next) => {
   handleGetUser();
+  fetchAll(to.params.id as string);
   next();
 });
 const tweets = ref<TweetType[]>([]);

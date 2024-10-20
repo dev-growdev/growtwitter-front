@@ -6,6 +6,7 @@ import { deleteTweet, postComment, postLike, postRetweet } from '@/services/api'
 import { onMounted, ref } from 'vue';
 import IconComment from './icons/IconComment.vue';
 import ModalSeeProfile from '@/components/ModalSeeProfile.vue';
+import { getUserData } from '@/services/authentication';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -15,11 +16,11 @@ interface TweetTypeProps {
 
 const props = defineProps<TweetTypeProps>();
 
-const cardToList = defineEmits(['toListCard']);
+const cardToList = defineEmits(['toListCard', 'rtListCard']);
 
 const liked = ref(false);
 const artificialLike = ref(0);
-const reTweetDrop = ref(false);
+const retweetDrop = ref(false);
 const tweetDrop = ref(false);
 const retweetModal = ref(false);
 const comment = ref('');
@@ -48,6 +49,11 @@ function toList(id: number, isTweet: boolean) {
   });
 }
 
+function rtToList(retweet: any, post: any, user: any) {
+  const formattedRt = Object.assign(retweet, { post: post }, { user: user });
+  cardToList('rtListCard', formattedRt);
+}
+
 async function handleSubmit(id: number) {
   if (commentInput.value.length > 0) {
     await postComment(id, commentInput.value);
@@ -68,7 +74,8 @@ async function handleSubmit(id: number) {
         followers: [],
         followings: [],
         posts: [],
-        retweets: []
+        retweets: [],
+        cover_url: me.value.cover_url
       },
 
       content: commentInput.value,
@@ -84,7 +91,7 @@ const toogleDiv = () => {
 };
 
 const toggleReTweetDrop = () => {
-  reTweetDrop.value = !reTweetDrop.value;
+  retweetDrop.value = !retweetDrop.value;
 };
 
 const toggleTweetDrop = () => {
@@ -92,23 +99,25 @@ const toggleTweetDrop = () => {
 };
 
 const handleRetweet = async (id: number) => {
-  await postRetweet(id);
-  reTweetDrop.value = false;
+  toggleReTweetDrop();
+  const response = await postRetweet(id);
+  rtToList(response.data.data, props.data, getUserData());
 };
 
 const handleRetweetWithComment = async (id: number, content: string) => {
   retweetLoading.value = true;
+  toggleReTweetDrop();
   const response = await postRetweet(id, content);
+  rtToList(response.data.data, props.data, getUserData());
   if (response) {
-    reTweetDrop.value = false;
     retweetModal.value = false;
   }
 };
 
 const handleDeleteTweet = async (postID: number) => {
-  await deleteTweet(postID);
-  toList(postID, true);
   toggleTweetDrop();
+  toList(postID, true);
+  await deleteTweet(postID);
   return;
 };
 
@@ -184,9 +193,9 @@ onMounted(() => {
               </span>
             </v-btn>
 
-            <div style="display: flex; align-items: end; flex-direction: column; position: relative">
+            <div v-if="!isaReTweet" style="display: flex; align-items: end; flex-direction: column; position: relative">
               <v-btn @click="toggleReTweetDrop" icon="mdi-repeat-variant" class="btn-reTweet"> </v-btn>
-              <div v-if="reTweetDrop" class="dropdown">
+              <div v-if="retweetDrop" class="dropdown">
                 <v-btn @click="handleRetweet(data.id)">Retweetar</v-btn>
                 <v-btn @click="toggleModalRetweet">Retweetar com comentário</v-btn>
               </div>

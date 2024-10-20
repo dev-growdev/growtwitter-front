@@ -102,8 +102,6 @@ export async function showFollowing(endpoint: string) {
   }
 }
 
-
-
 export async function postTweet(content: string) {
   try {
     const config = await configMyRequest();
@@ -188,7 +186,6 @@ export async function postRetweet(postId: number, content?: string) {
 export async function getRetweet() {
   try {
     const config = await configMyRequest();
-
     const response = await client.get(`/retweet`, config);
     return response;
   } catch (error: any) {
