@@ -10,19 +10,21 @@ import ApplicationBar from '@/components/ApplicationBar.vue';
 import ButtonTweet from '@/components/ButtonTweet.vue';
 import BackToTop from '@/components/BackToTop.vue';
 import { getUserId } from '@/services/authentication';
+import type { DadosType, DadosRtType } from '@/types/DadosType';
 
+const tweets = ref<TweetType[]>([]); //array de tweets;
+const retweets = ref<any[]>([]); //array de rt;
 const hasMessage = ref<boolean>(false);
 const message = ref<string>('');
 const messageTimeout = ref<number>(-1);
 const alertType = ref<string>('');
-const dados = ref<Dados>();
+const dados = ref<DadosType>();
+const dadosRT = ref<DadosRtType>();
 const continueLoading = ref<boolean>(true);
 const showDiscoverytweets = ref<boolean>(true);
 const showFollowingtweets = ref<boolean>(false);
 const btnEnabled = ref<boolean>(false);
 const activeButton = ref<string>('discover');
-const tweets = ref<TweetType[]>([]);
-const retweets = ref<any[]>([]);
 const item = ref<UserType>();
 const page = ref<number>(0);
 const pageFollowing = ref<number>(0);
@@ -32,10 +34,6 @@ const isLoading = ref<boolean>(false);
 const ultimapag = ref<number>(0);
 const showFollowings = ref<boolean>(false);
 const isLoadingPage = ref<boolean>(false);
-interface Dados {
-  id: number;
-  isTweet: boolean;
-}
 
 const listenEmit = () => {
   page.value = 0;
@@ -180,18 +178,26 @@ async function loadFollowing({ done }: any) {
   done('ok');
 }
 
-function deletarRender() {
-  const identificador = dados.value?.isTweet ? tweets : retweets;
+function deleteTweet() {
+  const tweetOrRetweet = dados.value?.isTweet ? tweets : retweets;
 
-  const index = identificador.value.findIndex((item) => item.id === dados.value?.id);
+  const index = tweetOrRetweet.value.findIndex((item) => item.id === dados.value?.id);
   if (index !== -1) {
-    identificador.value.splice(index, 1);
-    identificador.value = [...identificador.value];
+    tweetOrRetweet.value.splice(index, 1);
+    tweetOrRetweet.value = [...tweetOrRetweet.value];
   }
 }
 
-function receberHome(dadosP: Dados) {
+function addRetweet() {
+  retweets.value.unshift(dadosRT.value);
+}
+
+function reciveDelTweetHome(dadosP: DadosType) {
   dados.value = dadosP;
+}
+
+function reciveRtHome(dadosP: DadosRtType) {
+  dadosRT.value = dadosP;
 }
 
 onMounted(async () => {
@@ -205,9 +211,10 @@ onUnmounted(() => {
 });
 
 watch(dados, () => {
-  console.log(dados);
-
-  deletarRender();
+  deleteTweet();
+});
+watch(dadosRT, () => {
+  addRetweet();
 });
 </script>
 
@@ -248,22 +255,22 @@ watch(dados, () => {
 
             <div v-if="showDiscoverytweets">
               <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
-                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" @to-list-card="receberHome" />
+                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" @to-list-card="reciveDelTweetHome" @rt-list-card="reciveRtHome" />
               </v-infinite-scroll>
             </div>
 
             <div v-if="showFollowingtweets">
               <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="loadFollowing" :scroll-target="'#scroll-container'">
-                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" @to-list-card="receberHome" />
+                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" @to-list-card="reciveDelTweetHome" @rt-list-card="reciveRtHome" />
               </v-infinite-scroll>
             </div>
 
             <div v-if="!continueLoading">
               <div v-if="showDiscoverytweets">
-                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" @to-list-card="receberHome" />
+                <ListCard :tweets="tweets" :retweets="retweets" followingsList="" @to-list-card="reciveDelTweetHome" @rt-list-card="reciveRtHome" />
               </div>
               <div v-if="showFollowingtweets">
-                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" @to-list-card="receberHome" />
+                <ListCard :tweets="tweets" :retweets="retweets" :following="true" :followingsList="followingsList" @to-list-card="reciveDelTweetHome" @rt-list-card="reciveRtHome" />
               </div>
             </div>
           </v-col>
