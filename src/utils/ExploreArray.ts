@@ -15,7 +15,7 @@ interface ProcessedItem {
   created_at: string;
 }
 
-async function fetchAndProcessWords(): Promise<ProcessedItem[]> {
+export async function fetchAndProcessWords(): Promise<ProcessedItem[]> {
   try {
     const response = await axios.get<ApiResponse>('http://127.0.0.1:8000/api/words');
     const data = response.data;
@@ -29,5 +29,3 @@ async function fetchAndProcessWords(): Promise<ProcessedItem[]> {
     return [];
   }
 }
-
-export const items: ProcessedItem[] = await fetchAndProcessWords();
