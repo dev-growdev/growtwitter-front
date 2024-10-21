@@ -3,24 +3,30 @@ import growtwitterLogo from '@/components/icons/growtwitterLogo.vue';
 import homePageLogo from '@/components/icons/homePageLogo.vue';
 import ProfileLogo from '@/components/icons/profileLogo.vue';
 import HashTag from '@/components/icons/hashTagLogo.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { logout } from '@/services/api';
 import router from '@/router';
 import { resetStorage } from '@/services/authentication';
-import type { UserType } from '@/types';
+import type { TweetType, UserType } from '@/types';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTweet from './ButtonTweet.vue';
-
-const emit = defineEmits(['callEmit']);
 
 interface SidebarProps {
   item: Partial<UserType>;
 }
-const handleEmit = () => {
-  emit('callEmit');
-};
-
 defineProps<SidebarProps>();
+
+const sideToHome = defineEmits(['sideToHome']);
+
+const dadosBtn = ref<any>();
+
+function receiveBtnTweet(dadosBtnP: any) {
+  dadosBtn.value = dadosBtnP;
+}
+
+function toHome() {
+  sideToHome('sideToHome', dadosBtn.value);
+}
 
 const spinnerLoading = ref<boolean>(false);
 
@@ -39,6 +45,10 @@ async function handleLogout() {
     alert('Ocorreu um erro entre em contato com o suporte.');
   }
 }
+
+watch(dadosBtn, () => {
+  toHome();
+});
 </script>
 
 <template>
@@ -63,7 +73,7 @@ async function handleLogout() {
           Perfil
         </RouterLink>
         <div class="d-flex align-center ga-0 mt-2" style="margin-left: 8px">
-          <ButtonTweet @add-tweet="handleEmit" />
+          <ButtonTweet @to-side-bar="receiveBtnTweet" />
         </div>
       </v-list>
     </div>

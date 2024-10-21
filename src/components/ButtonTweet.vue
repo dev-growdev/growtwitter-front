@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
 import { ref } from 'vue';
+import type { TweetType, UserType } from '@/types';
+import { getUserData } from '@/services/authentication';
 
-const emit = defineEmits(['addTweet', 'updateKey']);
+const emit = defineEmits(['toSideBar', 'updateKey']);
+
 const content = ref<string>('');
 const isTweeting = ref<boolean>(false);
 const hasMessage = ref<boolean>(false);
@@ -12,6 +15,11 @@ const alertType = ref<string>('');
 const closeModal = ref<boolean>(false);
 const spinnerLoading = ref<boolean>(false);
 const maxContentLength = 280;
+
+function toSideBar(tweet: TweetType, user: UserType) {
+  const objeto = Object.assign(tweet, { retweets: [], user, comments: [], likes: [], likes_count: 0 });
+  emit('toSideBar', objeto);
+}
 
 async function handlePostTweet() {
   spinnerLoading.value = true;
@@ -34,7 +42,7 @@ async function handlePostTweet() {
     return;
   }
 
-  emit('addTweet');
+  toSideBar(response.data.data, getUserData());
 
   closeModal.value = false; // Fechar modal após mostrar a mensagem
 
@@ -56,7 +64,7 @@ function showMessage(messageText: string, type: string) {
 </script>
 
 <template>
-  <v-btn click="closeModal.value = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat">
+  <v-btn click="closeModal.value = true" class="tweet-btn" prepend-icon="mdi-feather" variant="flat" size="normal">
     <div class="text-none mobile-text-none font-weight-regular">
       <span class="d-none d-lg-flex">Tweetar</span>
     </div>
@@ -74,8 +82,16 @@ function showMessage(messageText: string, type: string) {
 
           <!-- Modal Body -->
           <v-card-text>
-            <v-textarea label="O que está acontecendo?" v-model="content" :counter="maxContentLength"
-              :maxlength="maxContentLength" class="mb-2" rows="5" variant="outlined" persistent-counter></v-textarea>
+            <v-textarea
+              label="O que está acontecendo?"
+              v-model="content"
+              :counter="maxContentLength"
+              :maxlength="maxContentLength"
+              class="mb-2"
+              rows="5"
+              variant="outlined"
+              persistent-counter
+            ></v-textarea>
           </v-card-text>
 
           <v-divider class="mt-2"></v-divider>
@@ -84,8 +100,7 @@ function showMessage(messageText: string, type: string) {
           <v-card-actions class="my-2 d-flex justify-end">
             <v-btn class="text-none" rounded="xl" text="Cancel" @click="isActive.value = false"></v-btn>
 
-            <v-btn class="text-none" color="primary" rounded="xl" text="Tweetar" variant="flat" @click="handlePostTweet"
-              :disabled="isTweeting">
+            <v-btn class="text-none" color="primary" rounded="xl" text="Tweetar" variant="flat" @click="handlePostTweet" :disabled="isTweeting">
               <p v-if="!spinnerLoading">Tweetar</p>
               <v-progress-circular class="spinner" v-if="spinnerLoading" indeterminate></v-progress-circular>
             </v-btn>
@@ -135,11 +150,10 @@ function showMessage(messageText: string, type: string) {
 }
 
 .v-btn.tweet-btn {
-  padding: 1em 1.5em 1em;
   background-color: #4285f4;
   border: none;
   color: white;
-  border-radius: 21px;
+  border-radius: 20%;
   cursor: pointer;
   font-size: 1em;
   display: flex;
