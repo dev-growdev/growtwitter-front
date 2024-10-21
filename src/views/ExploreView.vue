@@ -28,7 +28,8 @@ onMounted(() => {
 
 <template>
   <v-app>
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0"
+      touchless disable-swipe>
       <SideBar :item="item!" />
     </v-navigation-drawer>
 
@@ -42,13 +43,16 @@ onMounted(() => {
           </v-col>
           <v-col cols="12" class="d-flex flex-column border-t py-4" v-for="(item, index) in items" :key="index">
             <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
-            <h3>{{ item.content }}</h3>
+            <RouterLink :to="`/search?keyword=${item.title}`">
+              <h3>{{ item.content }}</h3>
+            </RouterLink>
           </v-col>
         </v-row>
       </v-container>
     </v-main>
 
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0"
+      touchless disable-swipe>
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>

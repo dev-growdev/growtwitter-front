@@ -8,13 +8,11 @@ import { items } from '@/utils/ExploreArray';
     <div class="pb-4">
       <h2>O que está acontecendo?</h2>
     </div>
-    <div
-      class="d-flex flex-column mb-4 home-whats-card"
-      v-for="(item, index) in items.slice(0, 4)"
-      :key="index"
-    >
+    <div class="d-flex flex-column mb-4 home-whats-card" v-for="(item, index) in items.slice(0, 4)" :key="index">
       <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
-      <h3>{{ item.content }}</h3>
+      <RouterLink :to="`/search?keyword=${item.title}`">
+        <h3>{{ item.content }}</h3>
+      </RouterLink>
     </div>
     <div>
       <RouterLink to="/explore">Mostrar mais</RouterLink>
@@ -29,26 +27,26 @@ import { items } from '@/utils/ExploreArray';
   margin: 0;
 }
 
-.home-whats-card > a {
+.home-whats-card>a {
   text-decoration: none;
   color: #289ef0;
 }
 
-.home-whats-card > div {
+.home-whats-card>div {
   margin-bottom: 1.2rem;
 }
 
-.home-whats-card > div > h2 {
+.home-whats-card>div>h2 {
   font-size: 1rem;
   font-weight: 600;
 }
 
-.home-whats-card > div > h3 {
+.home-whats-card>div>h3 {
   font-size: 1rem;
   font-weight: 600;
 }
 
-.home-whats-card > div > span {
+.home-whats-card>div>span {
   font-size: 1rem;
 }
 </style>
