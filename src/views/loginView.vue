@@ -97,8 +97,8 @@ onMounted(async () => {
   <div :class="theme" class="accessBar">
     <div :class="theme" style="border: none;">
       <span>Alterar tema de acessibilidade: </span>
-      <select v-model="selected" :class="theme" style="border: none;">
-        <option disabled value="" :class="theme"> --- </option>
+      <select v-model="selected" :class="theme" class="border-dashed px-2">
+        <option disabled value="" :class="theme"> Mudar Estilo</option>
         <option :class="theme">Classico</option>
         <option :class="theme">Escuro - Acromatopsia</option>
         <option :class="theme">Alto contraste - Deuteranopia</option>
@@ -114,7 +114,7 @@ onMounted(async () => {
     <v-container>
       <v-card :class="theme" class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="900" rounded="lg">
         <v-row class="d-flex align-center">
-          <v-col cols="12" sm="6" :class="theme" class="textBackground backgroundTextExplanation rounded py-15">
+          <v-col v-if="$vuetify.display.smAndUp" cols="12" sm="6" :class="theme" class="textBackground backgroundTextExplanation rounded py-15">
             <v-card-title>Growtwitter</v-card-title>
             <v-card-subtitle :class="theme" class="subTitleColorText" style="border: none;">Trabalho final do curso
               despertar.dev</v-card-subtitle>
