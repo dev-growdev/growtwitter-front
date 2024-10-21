@@ -64,7 +64,7 @@ function showMessage(messageText: string, type: string) {
 </script>
 
 <template>
-  <v-btn click="closeModal.value = true" class="tweet-btn" prepend-icon="mdi-feather" variant="flat">
+  <v-btn click="closeModal.value = true" class="tweet-btn" prepend-icon="mdi-feather" variant="flat" size="normal">
     <div class="text-none mobile-text-none font-weight-regular">
       <span class="d-none d-lg-flex">Tweetar</span>
     </div>
@@ -150,11 +150,10 @@ function showMessage(messageText: string, type: string) {
 }
 
 .v-btn.tweet-btn {
-  padding: 1em 1.5em 1em;
   background-color: #4285f4;
   border: none;
   color: white;
-  border-radius: 21px;
+  border-radius: 20%;
   cursor: pointer;
   font-size: 1em;
   display: flex;
