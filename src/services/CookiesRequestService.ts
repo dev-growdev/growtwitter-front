@@ -13,7 +13,7 @@ import { getUserToken } from './authentication';
 
 export async function getCsfrToken() {
   // TODO: Mudar url para apontar para o banco utilizado
-  await axios.get('http://localhost:8000/sanctum/csrf-cookie', {
+  await axios.get(import.meta.env.VITE_API_URL_CORS, {
     headers: {
       Accept: 'application/json'
     },
@@ -66,7 +66,7 @@ export function deleteCookie(name: string) {
   document.cookie = name + '=; expires=' + date.toUTCString() + '; path=/';
 }
 
-export async function configMyRequest(authorization = true, csrfToken = true, withCredentials = true) {
+export async function configMyRequest(authorization = true, withCredentials = true) {
   const config = {};
 
   if (authorization === true) {
@@ -76,36 +76,38 @@ export async function configMyRequest(authorization = true, csrfToken = true, wi
       }
     };
 
-    if (csrfToken === true) {
-      const hasCookie = await checkCookie();
+    // CSRF TOKEN CONFIG
+    // if (csrfToken === true) {
+    //   const hasCookie = await checkCookie();
 
-      if (!hasCookie) {
-        return { success: false, msg: 'Você não tem um Cookie de autenticação!' };
-      }
+    //   if (!hasCookie) {
+    //     return { success: false, msg: 'Você não tem um Cookie de autenticação!' };
+    //   }
 
-      Object.assign(aditionalConfig.headers, {
-        'X-XSRF-TOKEN': await getCookie('XSRF-TOKEN')
-      });
-    }
-
-    Object.assign(config, aditionalConfig);
-  }
-
-  if (csrfToken === true && authorization === false) {
-    const hasCookie = await checkCookie();
-
-    if (!hasCookie) {
-      return { success: false, msg: 'Você não tem um Cookie de autenticação!' };
-    }
-
-    const aditionalConfig = {
-      headers: {
-        'X-XSRF-TOKEN': await getCookie('XSRF-TOKEN')
-      }
-    };
+    //   Object.assign(aditionalConfig.headers, {
+    //     'X-XSRF-TOKEN': await getCookie('XSRF-TOKEN')
+    //   });
+    // }
 
     Object.assign(config, aditionalConfig);
   }
+
+  // CSRF TOKEN CONFIG
+  // if (csrfToken === true && authorization === false) {
+  //   const hasCookie = await checkCookie();
+
+  //   if (!hasCookie) {
+  //     return { success: false, msg: 'Você não tem um Cookie de autenticação!' };
+  //   }
+
+  //   const aditionalConfig = {
+  //     headers: {
+  //       'X-XSRF-TOKEN': await getCookie('XSRF-TOKEN')
+  //     }
+  //   };
+
+  //   Object.assign(config, aditionalConfig);
+  // }
 
   if (withCredentials === true) {
     const aditionalConfig = {

@@ -5,11 +5,15 @@ import { onMounted, ref } from 'vue';
 import type { UserType } from '@/types';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import ExploreComponent from '@/components/ExploreComponent.vue';
-import { items } from '@/utils/ExploreArray';
+import { fetchAndProcessWords } from '@/utils/ExploreArray';
 import ApplicationBar from '@/components/ApplicationBar.vue';
-
+interface ProcessedItem {
+  title: string;
+  content: string;
+  created_at: string;
+}
 const item = ref<UserType>();
-
+const items = ref<ProcessedItem[]>([]);
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
   if (!userData) {
@@ -21,14 +25,16 @@ async function handleGetUser() {
   item.value = JSON.parse(userData);
 }
 
-onMounted(() => {
+onMounted(async () => {
   handleGetUser();
+  items.value = await fetchAndProcessWords();
 });
 </script>
 
 <template>
   <v-app>
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0"
+      touchless disable-swipe>
       <SideBar :item="item!" />
     </v-navigation-drawer>
 
@@ -42,13 +48,16 @@ onMounted(() => {
           </v-col>
           <v-col cols="12" class="d-flex flex-column border-t py-4" v-for="(item, index) in items" :key="index">
             <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
-            <h3>{{ item.content }}</h3>
+            <RouterLink :to="`/search?keyword=${item.title}`">
+              <h3>{{ item.content }}</h3>
+            </RouterLink>
           </v-col>
         </v-row>
       </v-container>
     </v-main>
 
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0"
+      touchless disable-swipe>
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>

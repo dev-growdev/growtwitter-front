@@ -2,7 +2,6 @@ import axios from 'axios';
 import { configMyRequest } from './CookiesRequestService';
 import type { UserDataType } from '@/types/UserDataType';
 
-import { getUserToken } from './authentication';
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -45,8 +44,11 @@ export async function logout() {
 export async function register(userData: UserDataType) {
   try {
     const config = await configMyRequest(false);
+    const response = await client.post('/users', userData, config);
+    console.log(response);
 
-    return await client.post('/users', userData, config);
+    sessionStorage.setItem('userId', response.data.user.id);
+    return response;
   } catch (error: any) {
     return error?.response;
   }
@@ -57,6 +59,15 @@ export async function edit(userData: UserDataType) {
     const config = await configMyRequest();
 
     return await client.put(`/users/${userData.id}`, userData, config);
+  } catch (error: any) {
+    return error?.response;
+  }
+}
+export async function resetPassword(userData: any) {
+  try {
+    const config = await configMyRequest();
+
+    return await client.post(`/reset/`, userData, config);
   } catch (error: any) {
     return error?.response;
   }
@@ -75,6 +86,16 @@ export async function doGet(url: string) {
 }
 
 export async function showPosts(endpoint: string) {
+  try {
+    const config = await configMyRequest();
+
+    return await client.get(endpoint, config);
+  } catch (error: any) {
+    return error?.response;
+  }
+}
+
+export async function showFollowing(endpoint: string) {
   try {
     const config = await configMyRequest();
 
@@ -168,7 +189,6 @@ export async function postRetweet(postId: number, content?: string) {
 export async function getRetweet() {
   try {
     const config = await configMyRequest();
-
     const response = await client.get(`/retweet`, config);
     return response;
   } catch (error: any) {
@@ -218,7 +238,16 @@ export async function getHomeData(page: number) {
     return error?.response;
   }
 }
+export async function getSearchData(page: number, keyword: string) {
+  try {
+    const config = await configMyRequest();
+    const response = await client.post('/search?page=' + page + '&keyword=' + keyword, config);
 
+    return response;
+  } catch (error: any) {
+    return error?.response;
+  }
+}
 export async function deleteTweet(postID: number) {
   try {
     const config = await configMyRequest();

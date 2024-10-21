@@ -5,6 +5,9 @@ import ProfileView from '@/views/ProfileView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import { isUserAuthenticated } from '@/services/authentication';
 import ExploreView from '@/views/ExploreView.vue';
+import ForgotView from '@/views/ForgotView.vue';
+import ResetView from '@/views/ResetView.vue';
+import SearchView from '@/views/SearchView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +51,31 @@ const router = createRouter({
       meta: {
         title: 'Explorar - GrowTwitter'
       }
+    },
+    {
+      path: '/forgot',
+      name: 'forgot',
+      component: ForgotView,
+      meta: {
+        title: 'Esqueceu sua senha - GrowTwitter'
+      }
+    }
+    ,
+    {
+      path: '/reset',
+      name: 'reset',
+      component: ResetView,
+      meta: {
+        title: 'Redefinir sua senha - GrowTwitter'
+      }
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView,
+      meta: {
+        title: 'Resultados - GrowTwitter'
+      }
     }
   ]
 });
@@ -58,7 +86,7 @@ router.afterEach((to) => {
 });
 
 router.beforeEach((to) => {
-  if (!isUserAuthenticated() && to.name !== 'login' && to.name !== 'register') {
+  if (!isUserAuthenticated() && to.name !== 'login' && to.name !== 'register' && to.name !== 'forgot' && to.name !== 'reset') {
     return { name: 'login' };
   } else if (isUserAuthenticated() && (to.name === 'login' || to.name === 'register')) {
     return { name: 'home' };

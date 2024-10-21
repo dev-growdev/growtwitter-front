@@ -150,6 +150,9 @@ onMounted(async () => {
                 style="border: none;">
                 Não tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
               </RouterLink>
+              <RouterLink to="/forgot" class="text-blue text-decoration-none">
+                Esqueceu sua senha? <v-icon icon="mdi-chevron-right"></v-icon>
+              </RouterLink>
             </v-card-text>
             <v-card-text><span class="error-message" v-if="error">{{ error }}</span></v-card-text>
           </v-col>

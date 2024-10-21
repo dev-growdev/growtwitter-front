@@ -26,11 +26,16 @@ const item = ref<UserType>({
   email: '',
   password: '',
   avatar_url: defaultAvatar,
+  cover_url: defaultAvatar,
   id: 0,
   followers_count: 0,
   following_count: 0,
   posts_count: 0,
-  retweets_count: 0
+  retweets_count: 0,
+  followers: [],
+  followings: [],
+  posts: [],
+  retweets: []
 });
 
 const anotherUser = ref<UserType>({
@@ -40,14 +45,20 @@ const anotherUser = ref<UserType>({
   email: '',
   password: '',
   avatar_url: defaultAvatar,
+  cover_url: defaultAvatar,
   id: 0,
   followers_count: 0,
   following_count: 0,
   posts_count: 0,
-  retweets_count: 0
+  retweets_count: 0,
+  followers: [],
+  followings: [],
+  posts: [],
+  retweets: []
 });
 
 const editDialog = ref<boolean>(false);
+const editCoverDialog = ref<boolean>(false);
 
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
@@ -79,7 +90,8 @@ const account = reactive<CreateAccountType>({
   surname: item.value.surname,
   email: item.value.email,
   password: item.value.password,
-  avatar_url: undefined
+  avatar_url: undefined,
+  cover_url: undefined
 });
 
 const validationErrors = reactive<RegisterAccountValidationType>({
@@ -92,6 +104,8 @@ const validationErrors = reactive<RegisterAccountValidationType>({
 });
 
 const { previewAvatar, loadFileToPreview } = useAvatar();
+
+
 
 const clearValidationErrors = () => {
   for (const key in validationErrors) {
@@ -107,7 +121,14 @@ const bindCustomAvatar = (event: Event) => {
   const file = input.files[0];
   account.avatar_url = loadFileToPreview(file);
 };
-
+const bindCustomCover = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+  const file = input.files[0];
+  account.cover_url = loadFileToPreview(file);
+};
 const uploadToCloudinary = async (file: File): Promise<string> => {
   const cloudName = import.meta.env.VITE_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
@@ -128,9 +149,14 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 const handleEdit = async () => {
   try {
     let avatarUrl = '';
+    let coverUrl = ''
     if (account.avatar_url instanceof File) {
       avatarUrl = await uploadToCloudinary(account.avatar_url);
     }
+    if (account.cover_url instanceof File) {
+      coverUrl = await uploadToCloudinary(account.cover_url);
+    }
+
 
     clearValidationErrors();
 
@@ -178,7 +204,8 @@ const handleEdit = async () => {
         email: account.email,
         password: account.password,
         username: account.username,
-        avatar_url: avatarUrl !== '' ? avatarUrl : account.avatar_url
+        avatar_url: avatarUrl !== '' ? avatarUrl : account.avatar_url,
+        cover_url: coverUrl !== '' ? coverUrl : account.cover_url
       };
 
       const response = await edit(userData);
@@ -186,6 +213,7 @@ const handleEdit = async () => {
       if (response.status === 201 || response.status === 200) {
         localStorage.setItem('userData', JSON.stringify(response.data.data));
         await fetchAll(route.params.id as string);
+
         handleGetUser();
 
         loadingVisibleModal.value = false;
@@ -232,35 +260,42 @@ const retweets = ref<any[]>([]);
 async function fetchAll(id: string) {
   loadingVisible.value = true;
   const response = await getProfileData(id, 1);
-
-  anotherUser.value = response.data.data.user;
-  if (response.data.data.followersData.some((follower: any) => follower.followerId === item.value.id)) {
-    isFollowing.value = true;
-  }
-  anotherUser.value.followers_count = response.data.data.followings;
-  anotherUser.value.following_count = response.data.data.followers;
-  tweets.value = response.data.data.posts;
-  retweets.value = response.data.data.retweets;
-  loadingVisible.value = false;
-}
-
-const page = ref<number>(0);
-
-async function load({ done }: any) {
-  page.value++;
-  const response = await getProfileData(route.params.id as string, page.value);
-
   anotherUser.value = response.data.data.user;
 
   if (response.data.data.followersData.data.some((follower: any) => follower.followerId === item.value.id)) {
     isFollowing.value = true;
   }
-
   anotherUser.value.followers_count = response.data.data.followings;
   anotherUser.value.following_count = response.data.data.followers;
+  tweets.value = response.data.data.posts.data;
+  retweets.value = response.data.data.retweets.data;
+  loadingVisible.value = false;
+}
 
-  tweets.value.push(...response.data.data.posts.data);
-  retweets.value.push(...response.data.data.retweets.data);
+const page = ref<number>(0);
+const continueLoading = ref<boolean>(true);
+
+async function load({ done }: any) {
+  page.value++;
+  if (continueLoading.value == true) {
+    const response = await getProfileData(route.params.id as string, page.value);
+
+    if (response.data.data.posts.last_page <= page.value) {
+      continueLoading.value = false;
+    }
+
+    anotherUser.value = response.data.data.user;
+
+    if (response.data.data.followersData.data.some((follower: any) => follower.followerId === item.value.id)) {
+      isFollowing.value = true;
+    }
+
+    anotherUser.value.followers_count = response.data.data.followings;
+    anotherUser.value.following_count = response.data.data.followers;
+
+    tweets.value.push(...response.data.data.posts.data);
+    retweets.value.push(...response.data.data.retweets.data);
+  }
 
   done('ok');
 }
@@ -270,6 +305,7 @@ onMounted(() => {
 });
 onBeforeRouteUpdate((to, from, next) => {
   handleGetUser();
+  fetchAll(to.params.id as string);
   next();
 });
 const tweets = ref<TweetType[]>([]);
@@ -339,12 +375,54 @@ const myPosts = ref<number>(0);
         </v-dialog>
       </div>
     </template>
+    <template>
+      <div class="text-center" style="background-color: brown">
+        <v-dialog v-model="editCoverDialog">
+          <v-card class="pa-12 pb-8 profile-card" elevation="8">
+            <v-btn icon class="close-btn" @click="editCoverDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
 
+            <div>
+              <h1 class="mt-1 text-center">Escolha uma capa</h1>
+
+              <v-img height="215" aspect-ratio="16/9" cover :src="item.cover_url"></v-img>
+
+              <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
+                <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
+                  @change="bindCustomCover" id="cover"></v-file-input>
+                <label class="upload-avatar-label" for="cover">
+                  <v-avatar v-if="previewAvatar" :image="previewAvatar ?? item.cover_url" size="75"></v-avatar>
+                  <v-avatar v-if="!previewAvatar" color="grey-lighten-3" size="75" icon="mdi-image-outline"></v-avatar>
+
+                </label>
+              </div>
+
+
+
+              <v-btn @click="handleEdit" class="mb-2" color="blue" size="large" variant="flat" block
+                :disabled="loadingVisibleModal">
+                <span v-if="!loadingVisibleModal"> Editar Capa </span>
+                <div class="d-flex justify-center" v-if="loadingVisibleModal">
+                  <v-progress-circular indeterminate color="white" :size="20" :width="3" />
+                </div>
+              </v-btn>
+            </div>
+          </v-card>
+        </v-dialog>
+      </div>
+    </template>
     <v-main class="mx-0 mx-md-4">
       <v-container class="mt-0 pa-0">
         <v-row class="border ga-4">
           <v-col class="pa-0 ma-0">
-            <v-img class="bg-grey" height="215" aspect-ratio="16/9" cover />
+            <div style="position: relative;">
+              <button v-if="item.id === anotherUser.id"
+                style="position: absolute; right: 10px; top: 15px; z-index: 999; color: white; "
+                @click="editCoverDialog = true"><span>✏️</span></button>
+              <v-img class="bg-grey-lighten-3" height="215" aspect-ratio="16/9" cover :src="anotherUser.cover_url" />
+            </div>
+
             <img class="profile-img mx-4 rounded-circle border-md" width="100" height="100"
               :src="anotherUser.avatar_url ?? default_avatar" alt="" />
           </v-col>
@@ -380,11 +458,17 @@ const myPosts = ref<number>(0);
             </v-list>
           </v-col>
           <v-col cols="12">
-            <v-infinite-scroll color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+            <v-infinite-scroll v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
               <div>
-                <ListCard :tweets="tweets" :retweets="retweets" :profile="true" />
+                <ListCard :tweets="tweets" :retweets="retweets" :profile="true" followingsList="" />
               </div>
             </v-infinite-scroll>
+
+            <div v-else>
+              <ListCard :tweets="tweets" :retweets="retweets" :profile="true" followingsList="" />
+            </div>
+
+
           </v-col>
         </v-row>
       </v-container>
