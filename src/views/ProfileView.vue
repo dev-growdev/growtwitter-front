@@ -106,6 +106,7 @@ const validationErrors = reactive<RegisterAccountValidationType>({
 const { previewAvatar, loadFileToPreview } = useAvatar();
 
 
+
 const clearValidationErrors = () => {
   for (const key in validationErrors) {
     validationErrors[key as keyof RegisterAccountValidationType] = [];
@@ -151,7 +152,8 @@ const handleEdit = async () => {
     let coverUrl = ''
     if (account.avatar_url instanceof File) {
       avatarUrl = await uploadToCloudinary(account.avatar_url);
-    } if (account.cover_url instanceof File) {
+    }
+    if (account.cover_url instanceof File) {
       coverUrl = await uploadToCloudinary(account.cover_url);
     }
 
@@ -390,7 +392,9 @@ const myPosts = ref<number>(0);
                 <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
                   @change="bindCustomCover" id="cover"></v-file-input>
                 <label class="upload-avatar-label" for="cover">
-                  <v-avatar :image="previewAvatar ?? item.cover_url" size="75"></v-avatar>
+                  <v-avatar v-if="previewAvatar" :image="previewAvatar ?? item.cover_url" size="75"></v-avatar>
+                  <v-avatar v-if="!previewAvatar" color="grey-lighten-3" size="75" icon="mdi-image-outline"></v-avatar>
+
                 </label>
               </div>
 
@@ -416,7 +420,7 @@ const myPosts = ref<number>(0);
               <button v-if="item.id === anotherUser.id"
                 style="position: absolute; right: 10px; top: 15px; z-index: 999; color: white; "
                 @click="editCoverDialog = true"><span>✏️</span></button>
-              <v-img class="bg-red" height="215" aspect-ratio="16/9" cover :src="anotherUser.cover_url" />
+              <v-img class="bg-grey-lighten-3" height="215" aspect-ratio="16/9" cover :src="anotherUser.cover_url" />
             </div>
 
             <img class="profile-img mx-4 rounded-circle border-md" width="100" height="100"
