@@ -64,45 +64,40 @@ function showMessage(messageText: string, type: string) {
 </script>
 
 <template>
-  <v-btn click="closeModal.value = true" class="tweet-btn" prepend-icon="mdi-feather" variant="flat" size="normal">
+  <v-btn click="closeModal.value = true" class="pe-2 tweet-btn" prepend-icon="mdi-feather" variant="flat" aria-label="Tweetar">
     <div class="text-none mobile-text-none font-weight-regular">
       <span class="d-none d-lg-flex">Tweetar</span>
     </div>
 
-    <v-dialog v-model="closeModal" activator="parent" max-width="500" class="full-screen-dialog">
+    <v-dialog v-model="closeModal" activator="parent" max-width="500" class="full-screen-dialog" aria-labelledby="tweet-dialog-title" aria-modal="true">
       <template v-slot:default="{ isActive }">
         <v-card>
           <v-card-title class="d-flex justify-space-between align-center">
-            <div class="text-h5 text-medium-emphasis ps-2">Tweetar</div>
+            <div class="text-h5 text-medium-emphasis ps-2" id="tweet-dialog-title">Tweetar</div>
 
-            <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
+            <v-btn icon="mdi-close" variant="text" @click="isActive.value = false" aria-label="Close dialog"></v-btn>
           </v-card-title>
 
           <v-divider class="mb-4"></v-divider>
 
           <!-- Modal Body -->
           <v-card-text>
-            <v-textarea
-              label="O que está acontecendo?"
-              v-model="content"
-              :counter="maxContentLength"
-              :maxlength="maxContentLength"
-              class="mb-2"
-              rows="5"
-              variant="outlined"
-              persistent-counter
-            ></v-textarea>
+            <v-textarea label="O que está acontecendo?" v-model="content" :counter="maxContentLength"
+              :maxlength="maxContentLength" class="mb-2" rows="5" variant="outlined" persistent-counter  aria-label="O que está acontecendo?"
+              aria-required="true"
+              :aria-invalid="!!content.length && content.length > maxContentLength"></v-textarea>
           </v-card-text>
 
           <v-divider class="mt-2"></v-divider>
 
           <!-- Modal Footer -->
           <v-card-actions class="my-2 d-flex justify-end">
-            <v-btn class="text-none" rounded="xl" text="Cancel" @click="isActive.value = false"></v-btn>
+            <v-btn class="text-none" rounded="xl" text="Cancel" @click="isActive.value = false" aria-label="Cancel"></v-btn>
 
-            <v-btn class="text-none" color="primary" rounded="xl" text="Tweetar" variant="flat" @click="handlePostTweet" :disabled="isTweeting">
+            <v-btn class="text-none" color="primary" rounded="xl" text="Tweetar" variant="flat" @click="handlePostTweet"
+              :disabled="isTweeting"  aria-label="Tweetar">
               <p v-if="!spinnerLoading">Tweetar</p>
-              <v-progress-circular class="spinner" v-if="spinnerLoading" indeterminate></v-progress-circular>
+              <v-progress-circular class="spinner" v-if="spinnerLoading" indeterminate aria-label="Loading"></v-progress-circular>
             </v-btn>
           </v-card-actions>
         </v-card>

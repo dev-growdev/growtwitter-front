@@ -34,21 +34,21 @@ onMounted(async () => {
 <template>
   <v-app>
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0"
-      touchless disable-swipe>
+      touchless disable-swipe aria-label="Main Navigation Drawer" >
       <SideBar :item="item!" />
     </v-navigation-drawer>
 
-    <ApplicationBar class="d-flex d-lg-none" />
+    <ApplicationBar class="d-flex d-lg-none" aria-label="Application Bar for Mobile"/>
 
-    <v-main class="mx-0 mx-md-4">
+    <v-main class="mx-0 mx-md-4" aria-labelledby="mainContentTitle">
       <v-container class="pa-0">
         <v-row class="border px-4 px-md-0">
           <v-col class="mx-2 mt-6">
-            <h2>O que está acontecendo?</h2>
+            <h2 id="mainContentTitle" >O que está acontecendo?</h2>
           </v-col>
           <v-col cols="12" class="d-flex flex-column border-t py-4" v-for="(item, index) in items" :key="index">
-            <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
-            <RouterLink :to="`/search?keyword=${item.title}`">
+            <p aria-label="Item metadata">{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
+            <RouterLink :to="`/search?keyword=${item.title}`" aria-label="Search for {{ item.title }}">
               <h3>{{ item.content }}</h3>
             </RouterLink>
           </v-col>
@@ -57,7 +57,7 @@ onMounted(async () => {
     </v-main>
 
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0"
-      touchless disable-swipe>
+      touchless disable-swipe aria-label="Explore Navigation Drawer">
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>

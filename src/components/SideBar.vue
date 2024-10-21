@@ -56,30 +56,30 @@ watch(dadosBtn, () => {
     <div class="d-flex justify-end">
       <v-list class="d-flex flex-column">
         <div class="d-flex align-center mb-4" style="margin-left: 12px">
-          <growtwitterLogo height="50px" width="200px" />
+          <growtwitterLogo height="50px" width="200px" aria-label="Growtwitter logo" />
         </div>
-        <RouterLink to="/" class="router-icon text-black font-weight-semibold text-h6 d-flex align-center ga-2">
+        <RouterLink to="/" class="router-icon text-black font-weight-semibold text-h6 d-flex align-center ga-2" aria-label="Home">
           <homePageLogo class="img-icon" />
           Página inicial
         </RouterLink>
 
-        <RouterLink to="/explore" class="router-icon text-black font-weight-semibold text-h6 pt-1 d-flex align-center ga-2">
+        <RouterLink to="/explore" class="router-icon text-black font-weight-semibold text-h6 pt-1 d-flex align-center ga-2" aria-label="Explore">
           <HashTag class="img-icon" />
           Explorar
         </RouterLink>
 
-        <RouterLink :to="`/profile/${item.id}`" class="router-icon text-black font-weight-semibold text-h6 pt-2 d-flex align-center ga-2">
+        <RouterLink :to="`/profile/${item.id}`" class="router-icon text-black font-weight-semibold text-h6 pt-2 d-flex align-center ga-2" aria-label="Profile">
           <ProfileLogo class="img-icon" />
           Perfil
         </RouterLink>
         <div class="d-flex align-center ga-0 mt-2" style="margin-left: 8px">
-          <ButtonTweet @to-side-bar="receiveBtnTweet" />
+          <ButtonTweet @to-side-bar="receiveBtnTweet"  aria-label="Tweet" />
         </div>
       </v-list>
     </div>
     <div>
       <v-list class="d-flex align-center justify-end ga-4">
-        <v-img max-width="50" max-height="50" aspect-ratio="1" cover class="rounded-circle" :src="item.avatar_url" />
+        <v-img max-width="50" max-height="50" aspect-ratio="1" cover class="rounded-circle" :src="item.avatar_url" aria-label="User avatar" />
 
         <div>
           {{ item.name && item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name }}
@@ -87,9 +87,9 @@ watch(dadosBtn, () => {
         </div>
 
         <div>
-          <ButtonDefault @click="handleLogout">
+          <ButtonDefault @click="handleLogout" aria-label="Logout">
             <p v-if="!spinnerLoading">Sair</p>
-            <v-progress-circular size="20" v-if="spinnerLoading" indeterminate />
+            <v-progress-circular size="20" v-if="spinnerLoading" indeterminate aria-label="Loading" />
           </ButtonDefault>
         </div>
       </v-list>

@@ -154,7 +154,7 @@ onMounted(() => {
       <div class="d-flex flex-column justify-space-between w-100 ml-2">
         <div class="d-flex align-center justify-space-between w-100">
           <div>
-            <RouterLink :to="`/profile/${data.user.id}`">
+            <RouterLink :to="`/profile/${data.user.id}`" aria-label="User profile">
               <strong class="mouseHover">{{ data.user.name }}</strong> <span style="color: #657786">@{{ data.user.username }}</span>
             </RouterLink>
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
@@ -214,7 +214,7 @@ onMounted(() => {
 
               <div class="mx-2">
                 <div>
-                  <RouterLink :to="`/profile/${comment.user.id}`">
+                  <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
                     <span class="mouseHover font-weight-bold">{{ comment.user.name }}</span> <span style="color: #657786">@{{ comment.user.username }}</span>
                   </RouterLink>
 
@@ -229,9 +229,10 @@ onMounted(() => {
           <form @submit.prevent="handleSubmit(data.id)">
             <div class="text-box">
               <div class="box-container">
-                <textarea placeholder="Comentar" v-model="commentInput"></textarea>
+                <textarea placeholder="Comentar" v-model="commentInput" aria-label="Add a comment" aria-required="true"></textarea>
+
                 <div class="formatting">
-                  <button type="submit" class="send" title="Send">
+                  <button type="submit" class="send" title="Send" aria-label="Send comment">
                     <svg fill="none" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" stroke="#ffffff" d="M12 5L12 20"></path>
                       <path
@@ -252,17 +253,17 @@ onMounted(() => {
     </v-card-actions>
   </div>
 
-  <v-dialog v-model="retweetModal" max-width="500px">
+  <v-dialog v-model="retweetModal" max-width="500px" aria-labelledby="retweet-dialog-title" aria-modal="true">
     <v-card>
       <v-card-title>
-        <span class="text-h5">Retweetar com comentário</span>
+        <span class="text-h5" id="retweet-dialog-title">Retweetar com comentário</span>
       </v-card-title>
       <v-card-text>
-        <v-textarea v-model="comment" label="Adicionar um comentário..." auto-grow rows="3"></v-textarea>
+        <v-textarea v-model="comment" id="comment-textarea" label="Adicionar um comentário..." auto-grow rows="3" aria-label="Add a comment" aria-labelledby="comment-label" aria-required="true"></v-textarea>
         <v-card class="mt-4" outlined>
           <v-card-text>
             <div class="d-flex align-center">
-              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45"></v-avatar>
+              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar" role="img"></v-avatar>
               <div class="ml-3">
                 <div class="mouseHover font-weight-bold">{{ data.user.name }}</div>
                 <div class="text--secondary">@{{ data.user.username }}</div>
@@ -274,8 +275,8 @@ onMounted(() => {
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" @click="retweetModal = false">Cancelar</v-btn>
-        <v-btn :loading="retweetLoading" color="blue darken-1" @click="handleRetweetWithComment(data.id, comment)">Retweet</v-btn>
+        <v-btn color="blue darken-1" @click="retweetModal = false" aria-label="Cancel">Cancelar</v-btn>
+        <v-btn :loading="retweetLoading" color="blue darken-1" @click="handleRetweetWithComment(data.id, comment)" aria-label="Retweet">Retweet</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

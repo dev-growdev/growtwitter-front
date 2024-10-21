@@ -315,48 +315,52 @@ const myPosts = ref<number>(0);
 <template>
   <v-app class="ma-0" id="app">
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0"
-      touchless disable-swipe>
+      touchless disable-swipe
+      aria-label="Main Navigation Drawer">
       <SideBar :item="item" />
     </v-navigation-drawer>
 
-    <ApplicationBar class="d-flex d-lg-none" />
+    <ApplicationBar class="d-flex d-lg-none" aria-label="Application Bar for Mobile" />
 
-    <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" />
+    <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" aria-label="Loading spinner" aria-live="assertive"
+    aria-busy="true" />
 
     <!-- Modal para editar o perfil -->
     <template>
-      <div class="text-center" style="background-color: brown">
-        <v-dialog v-model="editDialog">
+      <div class="text-center" style="background-color: brown" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+        <v-dialog v-model="editDialog" aria-labelledby="dialog-title">
           <v-card class="pa-12 pb-8 profile-card" elevation="8">
-            <v-btn icon class="close-btn" @click="editDialog = false">
+            <v-btn icon class="close-btn" @click="editDialog = false" aria-label="Close dialog">
               <v-icon>mdi-close</v-icon>
             </v-btn>
 
             <div>
-              <h1 class="mt-1 text-center">Editar perfil</h1>
+              <h1 id="dialog-title" class="mt-1 text-center">Editar perfil</h1>
               <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
               <v-text-field density="compact" :placeholder="account.name.toUpperCase()"
                 prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.name"
-                :error-messages="validationErrors.name"></v-text-field>
+                :error-messages="validationErrors.name"  aria-label="Nome" aria-required="true"
+                :aria-invalid="validationErrors.name.length > 0"></v-text-field>
 
               <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
               <v-text-field density="compact" :placeholder="account.surname.toUpperCase()"
                 prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.surname"
-                :error-messages="validationErrors.surname"></v-text-field>
+                :error-messages="validationErrors.surname" aria-label="Sobrenome" aria-required="true"
+                :aria-invalid="validationErrors.surname.length > 0"></v-text-field>
 
               <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
               <v-text-field density="compact" :placeholder="account.username" prepend-inner-icon="mdi-account-outline"
                 variant="outlined" v-model="account.username"
-                :error-messages="validationErrors.username"></v-text-field>
+                :error-messages="validationErrors.username" aria-label="Nome de usuário" aria-required="true" :aria-invalid="validationErrors.username.length > 0"></v-text-field>
 
               <div class="mt-1 text-center text-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
               <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
                 <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
-                  @change="bindCustomAvatar" id="avatar"></v-file-input>
+                  @change="bindCustomAvatar" id="avatar" aria-label="Upload avatar"></v-file-input>
                 <label class="upload-avatar-label" for="avatar">
-                  <v-avatar :image="previewAvatar ?? item.avatar_url" size="75"></v-avatar>
+                  <v-avatar :image="previewAvatar ?? item.avatar_url" size="75" aria-label="Current avatar"></v-avatar>
                 </label>
-                <div v-if="validationErrors.avatar.length > 0">
+                <div v-if="validationErrors.avatar.length > 0" aria-live="polite">
                   <p class="error-avatar-message" v-for="error in validationErrors.avatar" :key="error">
                     {{ error }}
                   </p>
@@ -364,10 +368,10 @@ const myPosts = ref<number>(0);
               </div>
 
               <v-btn @click="handleEdit" class="mb-2" color="blue" size="large" variant="flat" block
-                :disabled="loadingVisibleModal">
+                :disabled="loadingVisibleModal" aria-label="Editar Perfil">
                 <span v-if="!loadingVisibleModal"> Editar Perfil </span>
                 <div class="d-flex justify-center" v-if="loadingVisibleModal">
-                  <v-progress-circular indeterminate color="white" :size="20" :width="3" />
+                  <v-progress-circular indeterminate color="white" :size="20" :width="3" aria-label="Loading" />
                 </div>
               </v-btn>
             </div>
@@ -390,10 +394,10 @@ const myPosts = ref<number>(0);
 
               <div class="d-flex justify-center my-4 ga-2 upload-avatar-container">
                 <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
-                  @change="bindCustomCover" id="cover"></v-file-input>
+                  @change="bindCustomCover" id="cover" aria-label="Upload cover"></v-file-input>
                 <label class="upload-avatar-label" for="cover">
-                  <v-avatar v-if="previewAvatar" :image="previewAvatar ?? item.cover_url" size="75"></v-avatar>
-                  <v-avatar v-if="!previewAvatar" color="grey-lighten-3" size="75" icon="mdi-image-outline"></v-avatar>
+                  <v-avatar v-if="previewAvatar" :image="previewAvatar ?? item.cover_url" size="75" aria-label="Current cover"></v-avatar>
+                  <v-avatar v-if="!previewAvatar" color="grey-lighten-3" size="75" icon="mdi-image-outline" aria-label="Current cover"></v-avatar>
 
                 </label>
               </div>
@@ -401,10 +405,10 @@ const myPosts = ref<number>(0);
 
 
               <v-btn @click="handleEdit" class="mb-2" color="blue" size="large" variant="flat" block
-                :disabled="loadingVisibleModal">
+                :disabled="loadingVisibleModal"  aria-label="Editar Capa">
                 <span v-if="!loadingVisibleModal"> Editar Capa </span>
                 <div class="d-flex justify-center" v-if="loadingVisibleModal">
-                  <v-progress-circular indeterminate color="white" :size="20" :width="3" />
+                  <v-progress-circular indeterminate color="white" :size="20" :width="3"  aria-label="Loading"/>
                 </div>
               </v-btn>
             </div>
@@ -419,35 +423,35 @@ const myPosts = ref<number>(0);
             <div style="position: relative;">
               <button v-if="item.id === anotherUser.id"
                 style="position: absolute; right: 10px; top: 15px; z-index: 999; color: white; "
-                @click="editCoverDialog = true"><span>✏️</span></button>
+                @click="editCoverDialog = true" aria-label="Edit cover"><span>✏️</span></button>
               <v-img class="bg-grey-lighten-3" height="215" aspect-ratio="16/9" cover :src="anotherUser.cover_url" />
             </div>
 
             <img class="profile-img mx-4 rounded-circle border-md" width="100" height="100"
-              :src="anotherUser.avatar_url ?? default_avatar" alt="" />
+              :src="anotherUser.avatar_url ?? default_avatar" alt="User profile image" aria-label="User profile image"/>
           </v-col>
           <v-col cols="12" class="d-flex flex-row justify-end ga-2 py-4 py-md-0 px-4">
-            <button v-if="item.id === anotherUser.id" @click="editDialog = true">
+            <button v-if="item.id === anotherUser.id" @click="editDialog = true" aria-label="Editar perfil">
               <span>Editar</span>
             </button>
             <v-btn v-if="item.id !== anotherUser.id" :loading="btnLoading" class="d-flex justify-start align-self-start"
-              height="32" @click="handleFollow">
+              height="32" @click="handleFollow" aria-label="Follow user">
               <span>{{ isFollowing ? 'Seguindo' : 'Seguir' }}</span>
             </v-btn>
           </v-col>
           <v-col class="py-0 px-4">
             <v-list class="py-0">
               <div class="d-flex flex-column">
-                <span class="text-h4 font-weight-bold">{{ anotherUser.name && anotherUser.name.length > 20 ?
+                <span class="text-h4 font-weight-bold" aria-label="User name">{{ anotherUser.name && anotherUser.name.length > 20 ?
                   anotherUser.name.substring(0, 20) : anotherUser.name }} {{ anotherUser.surname }}</span>
-                <span class="text-h6">@{{ anotherUser.username }}</span>
+                <span class="text-h6" aria-label="User username">@{{ anotherUser.username }}</span>
               </div>
               <div class="d-flex ga-4">
-                <p class="text-h7">
+                <p class="text-h7" aria-label="Followers count">
                   <span class="font-weight-bold">{{ anotherUser.followers_count ?? '0' }}</span>
                   Seguindo
                 </p>
-                <p class="text-h7">
+                <p class="text-h7" aria-label="Following count">
                   <span class="font-weight-bold">{{ anotherUser.following_count ?? '0' }}</span>
                   Seguidores
                 </p>
@@ -475,7 +479,7 @@ const myPosts = ref<number>(0);
     </v-main>
 
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0"
-      touchless disable-swipe>
+      touchless disable-swipe aria-label="Explore Navigation Drawer">
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>
