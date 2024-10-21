@@ -50,8 +50,8 @@ onMounted(async () => {
         <v-container>
             <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="900" rounded="lg">
                 <v-row class="d-flex align-center">
-                    <v-col cols="12" sm="6" class="text bg-blue rounded py-15" role="region" aria-labelledby="growtwitterTitle"
-                        <v-card-title id="growtwitterTitle">Growtwitter </v-card-title>
+                    <v-col cols="12" sm="6" class="text bg-blue rounded py-15" role="region" aria-labelledby="growtwitterTitle">
+                        <v-card-title id="growtwitterTitle">Growtwitter</v-card-title>
                         <v-card-subtitle class="text-white">Trabalho final do bloco intermediário</v-card-subtitle>
                         <v-card-text>
                             O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais
@@ -70,18 +70,18 @@ onMounted(async () => {
                             placeholder="Crie uma senha forte" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                             @click:append-inner="visiblePass = !visiblePass" v-model="password"
                             aria-label="Crie uma senha forte"
-              aria-required="true"
-              :aria-invalid="!!validationErrors.password">
+                            aria-required="true"
+                            :aria-invalid="!!validationErrors">
                         </v-text-field>
-
                         <v-text-field :append-inner-icon="visibleConfirm ? 'mdi-eye-off' : 'mdi-eye'"
                             :type="visibleConfirm ? 'text' : 'password'" density="compact"
                             placeholder="Confirme sua senha" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                             @click:append-inner="visibleConfirm = !visibleConfirm"
                             v-model="confirmPassword"
                             aria-label="Confirme sua senha"
-              aria-required="true"
-              :aria-invalid="!!validationErrors.confirmPassword"></v-text-field>
+                            aria-required="true"
+                            :aria-invalid="!!validationErrors">
+                        </v-text-field>
 
                         <div v-if="validationErrors" style="color: red; margin-bottom: 5px;" aria-live="assertive">
 

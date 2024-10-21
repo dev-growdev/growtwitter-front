@@ -318,7 +318,7 @@ const myPosts = ref<number>(0);
       <SideBar :item="item" />
     </v-navigation-drawer>
 
-    <ApplicationBar class="d-flex d-lg-none" aria-label="Application Bar for Mobile"
+    <ApplicationBar class="d-flex d-lg-none" aria-label="Application Bar for Mobile" />
 
     <SpinnerComponent v-if="loadingVisible" class="spinner-div" color="blue" aria-label="Loading spinner" aria-live="assertive"
     aria-busy="true" />
