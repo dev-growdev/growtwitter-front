@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { postTweet } from '@/services/api';
 import { ref } from 'vue';
+import type { TweetType, UserType } from '@/types';
+import { getUserData } from '@/services/authentication';
 
-const emit = defineEmits(['addTweet', 'updateKey']);
+const emit = defineEmits(['toSideBar', 'updateKey']);
+
 const content = ref<string>('');
 const isTweeting = ref<boolean>(false);
 const hasMessage = ref<boolean>(false);
@@ -12,6 +15,11 @@ const alertType = ref<string>('');
 const closeModal = ref<boolean>(false);
 const spinnerLoading = ref<boolean>(false);
 const maxContentLength = 280;
+
+function toSideBar(tweet: TweetType, user: UserType) {
+  const objeto = Object.assign(tweet, { retweets: [], user, comments: [], likes: [], likes_count: 0 });
+  emit('toSideBar', objeto);
+}
 
 async function handlePostTweet() {
   spinnerLoading.value = true;
@@ -34,7 +42,7 @@ async function handlePostTweet() {
     return;
   }
 
-  emit('addTweet');
+  toSideBar(response.data.data, getUserData());
 
   closeModal.value = false; // Fechar modal após mostrar a mensagem
 
