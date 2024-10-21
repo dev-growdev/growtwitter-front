@@ -144,18 +144,8 @@ onMounted(() => {
 
 <template>
   <div class="card-principal rounded-0">
-<<<<<<< HEAD
-    <v-card-actions class="ma-2 ga-2">
-      <div class="d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :image="data.user.avatar_url ?? default_avatar"
-            size="50" aria-label="User avatar"></v-avatar></RouterLink>
-
-
-
-=======
     <v-card-actions>
       <div class="profileModal d-block align-self-start">
->>>>>>> origin/develop
         <RouterLink :to="`/profile/${data.user.id}`">
           <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
         </RouterLink>
@@ -170,24 +160,11 @@ onMounted(() => {
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
             <p class="tweet-content">{{ data.content }}</p>
           </div>
-<<<<<<< HEAD
-
-          <div class="d-flex flex-column align-start position-relative">
-            <v-btn icon small @click="toggleDropdown" aria-label="Open options menu">
-              <v-icon icon="mdi-menu" />
-            </v-btn>
-
-            <div v-if="dropdown" class="dropdown" role="menu" aria-label="Options menu">
-              <v-btn small @click="handleRetweet(data.id)" aria-label="Retweet"> Retweet> Retweet</v-btn>
-              <v-btn small @click="toggleModalRetweet()"  aria-label="Retweet with comment"> Retweet com Comentário</v-btn>
-              <v-btn v-if="data.user.id === idU" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
-=======
           <div v-if="!isaReTweet" style="display: flex; align-items: end; flex-direction: column; position: relative">
             <v-btn @click="toggleTweetDrop" icon="mdi-dots-vertical"> </v-btn>
             <div v-if="tweetDrop" class="delTweet">
               <v-btn class="text-none" v-if="userID === data.user.id" @click="handleDeleteTweet(data.id)">Apagar</v-btn>
               <v-btn class="text-none" v-else>Denunciar</v-btn>
->>>>>>> origin/develop
             </div>
           </div>
         </div>
@@ -227,13 +204,6 @@ onMounted(() => {
         </div>
         <div v-if="showDiv" class="mt-2">
           <div v-for="comment in localComments" :key="comment.id" class="d-flex flex-column pb-4">
-<<<<<<< HEAD
-            <div class="d-flex ga-2 align-center w-100 mx-2">
-              <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
-                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar"></v-avatar>
-              </RouterLink>
-              <div>
-=======
             <div class="d-flex align-center w-100 mx-2">
               <div class="profileModal mx-2">
                 <RouterLink :to="`/profile/${comment.user.id}`">
@@ -243,7 +213,6 @@ onMounted(() => {
               </div>
 
               <div class="mx-2">
->>>>>>> origin/develop
                 <div>
                   <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
                     <span class="mouseHover font-weight-bold">{{ comment.user.name }}</span> <span style="color: #657786">@{{ comment.user.username }}</span>
