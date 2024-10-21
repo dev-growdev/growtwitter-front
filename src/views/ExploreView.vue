@@ -5,11 +5,15 @@ import { onMounted, ref } from 'vue';
 import type { UserType } from '@/types';
 import { tempoDesdeCriacao } from '@/utils/PastTime';
 import ExploreComponent from '@/components/ExploreComponent.vue';
-import { items } from '@/utils/ExploreArray';
+import { fetchAndProcessWords } from '@/utils/ExploreArray';
 import ApplicationBar from '@/components/ApplicationBar.vue';
-
+interface ProcessedItem {
+  title: string;
+  content: string;
+  created_at: string;
+}
 const item = ref<UserType>();
-
+const items = ref<ProcessedItem[]>([]);
 async function handleGetUser() {
   const userData = localStorage.getItem('userData');
   if (!userData) {
@@ -21,8 +25,9 @@ async function handleGetUser() {
   item.value = JSON.parse(userData);
 }
 
-onMounted(() => {
+onMounted(async () => {
   handleGetUser();
+  items.value = await fetchAndProcessWords();
 });
 </script>
 
