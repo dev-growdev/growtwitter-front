@@ -75,29 +75,11 @@ onMounted(async () => {
   </BackgroundOverlay>
   <div class="background">
     <v-container>
-<<<<<<< HEAD
-      <v-card
-        class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8"
-        elevation="8"
-        max-width="900"
-        rounded="lg"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="login-card-title"
-      >
-        <v-row class="d-flex align-center">
-          <v-col cols="12" sm="6" class="text bg-blue rounded py-15">
-            <v-card-title id="login-card-title">Growtwitter</v-card-title>
-            <v-card-subtitle class="text-white"
-              >Trabalho final do bloco intermediário</v-card-subtitle
-            >
-=======
       <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="900" rounded="lg">
         <v-row class="d-flex align-center">
           <v-col cols="12" sm="6" class="text bg-blue rounded py-15">
             <v-card-title>Growtwitter</v-card-title>
             <v-card-subtitle class="text-white">Trabalho final do bloco intermediário</v-card-subtitle>
->>>>>>> origin/develop
             <v-card-text>
               O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais
               que buscam uma experiência familiar e poderosa, semelhante ao Twitter, mas com um
@@ -109,30 +91,6 @@ onMounted(async () => {
           <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8">
             <h1 class="pa-5 mb-5 text-center register-title">Entrar no Growtwitter</h1>
 
-<<<<<<< HEAD
-            <v-text-field
-              density="compact"
-              placeholder="Digite seu endereço de e-mail"
-              prepend-inner-icon="mdi-email-outline"
-              variant="outlined"
-              v-model="email"
-              aria-label="Endereço de e-mail"
-              aria-required="true"
-            ></v-text-field>
-
-            <v-text-field
-              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-              @click:append-inner="visible = !visible"
-              :type="visible ? 'text' : 'password'"
-              density="compact"
-              placeholder="Digite sua  senha "
-              prepend-inner-icon="mdi-lock-outline"
-              variant="outlined"
-              v-model="password"
-              aria-label="Senha"
-              aria-required="true"
-            ></v-text-field>
-=======
             <v-text-field density="compact" placeholder="Digite seu endereço de e-mail"
               prepend-inner-icon="mdi-email-outline" variant="outlined" v-model="email"></v-text-field>
 
@@ -140,21 +98,14 @@ onMounted(async () => {
               @click:append-inner="visible = !visible" :type="visible ? 'text' : 'password'" density="compact"
               placeholder="Digite sua  senha " prepend-inner-icon="mdi-lock-outline" variant="outlined"
               v-model="password"></v-text-field>
->>>>>>> origin/develop
 
             <div class="keep-connected-container pa-5">
               <label for="keep-connected">Permanecer conectado:</label>
               <input type="checkbox" id="keep-connected" v-model="keepConnected" aria-label="Permanecer conectado" />
             </div>
 
-<<<<<<< HEAD
-            <v-btn @click="handleLogin" :disabled="attemptsVerify" class="mb-2" color="blue" size="large" variant="flat" block  aria-label="Enviar"
-              >Enviar</v-btn
-            >
-=======
             <v-btn @click="handleLogin" :disabled="attemptsVerify" class="mb-2" color="blue" size="large" variant="flat"
               block>Enviar</v-btn>
->>>>>>> origin/develop
 
             <v-card-text class="text-center d-flex flex-column">
               <RouterLink to="/register" class="text-blue text-decoration-none">
@@ -164,13 +115,7 @@ onMounted(async () => {
                 Esqueceu sua senha? <v-icon icon="mdi-chevron-right"></v-icon>
               </RouterLink>
             </v-card-text>
-<<<<<<< HEAD
-            <v-card-text
-              ><span class="error-message" v-if="error" aria-live="polite">{{ error }}</span></v-card-text
-            >
-=======
             <v-card-text><span class="error-message" v-if="error">{{ error }}</span></v-card-text>
->>>>>>> origin/develop
           </v-col>
         </v-row>
       </v-card>
