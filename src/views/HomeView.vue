@@ -34,26 +34,11 @@ const isLoading = ref<boolean>(false);
 const ultimapag = ref<number>(0);
 const showFollowings = ref<boolean>(false);
 const isLoadingPage = ref<boolean>(false);
+const dadosBtn = ref<any>();
 
-const listenEmit = () => {
-  page.value = 0;
-  tweets.value = [];
-  retweets.value = [];
-  load({
-    done: () => {}
-  });
-  showMessage('Tweet publicado com sucesso!', 'success');
-};
-
-const handleEmit = () => {
-  page.value = 0;
-  tweets.value = [];
-  retweets.value = [];
-  load({
-    done: () => {}
-  });
-  showMessage('Tweet publicado com sucesso!', 'success');
-};
+function receiveFromSideBar(props: any) {
+  dadosBtn.value = props;
+}
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -192,6 +177,11 @@ function addRetweet() {
   retweets.value.unshift(dadosRT.value);
 }
 
+function addTweet() {
+  tweets.value.unshift(dadosBtn.value);
+  showMessage('Tweet publicado com sucesso', 'success');
+}
+
 function reciveDelTweetHome(dadosP: DadosType) {
   dados.value = dadosP;
 }
@@ -216,6 +206,9 @@ watch(dados, () => {
 watch(dadosRT, () => {
   addRetweet();
 });
+watch(dadosBtn, () => {
+  addTweet();
+});
 </script>
 
 <template>
@@ -225,7 +218,7 @@ watch(dadosRT, () => {
     </div>
 
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
-      <SideBar :item="item!" @call-emit="listenEmit" />
+      <SideBar :item="item!" @side-to-home="receiveFromSideBar" />
     </v-navigation-drawer>
 
     <ApplicationBar class="d-flex d-lg-none" />
@@ -233,7 +226,7 @@ watch(dadosRT, () => {
     <BackToTop />
 
     <div class="d-flex d-lg-none">
-      <ButtonTweet @add-tweet="handleEmit" />
+      <ButtonTweet @to-side-bar="receiveFromSideBar" />
     </div>
 
     <v-main class="mx-0">
