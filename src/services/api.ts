@@ -44,8 +44,11 @@ export async function logout() {
 export async function register(userData: UserDataType) {
   try {
     const config = await configMyRequest(false);
+    const response = await client.post('/users', userData, config);
+    console.log(response);
 
-    return await client.post('/users', userData, config);
+    sessionStorage.setItem('userId', response.data.user.id);
+    return response;
   } catch (error: any) {
     return error?.response;
   }
