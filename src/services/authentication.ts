@@ -12,7 +12,7 @@ export function resetStorage() {
 }
 
 export function getUserId() {
-  const userId = localStorage.getItem('userData');
+  const userId = localStorage.getItem('userData') ? localStorage.getItem('userData') : sessionStorage.getItem('userData');
   
   if (userId) {
     return JSON.parse(userId).id;

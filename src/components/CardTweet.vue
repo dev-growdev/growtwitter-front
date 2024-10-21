@@ -6,7 +6,7 @@ import { deleteTweet, postComment, postLike, postRetweet } from '@/services/api'
 import { onMounted, ref } from 'vue';
 import IconComment from './icons/IconComment.vue';
 import ModalSeeProfile from '@/components/ModalSeeProfile.vue';
-import { getUserData } from '@/services/authentication';
+import { getUserData, getUserId } from '@/services/authentication';
 
 interface TweetTypeProps {
   data: TweetType;
@@ -27,7 +27,7 @@ const comment = ref('');
 const retweetLoading = ref(false);
 const commentInput = ref<string>('');
 const showDiv = ref(false);
-const userID = Number(sessionStorage.getItem('userId'));
+const userID = getUserId();
 const me = ref(JSON.parse(localStorage.getItem('userData') || '{}'));
 const localComments = ref([...props.data.comments]);
 const localCommentsCount = ref(props.data.comments_count);
