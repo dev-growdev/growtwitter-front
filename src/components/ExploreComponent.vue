@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import { tempoDesdeCriacao } from '@/utils/PastTime';
-import { items } from '@/utils/ExploreArray';
+import { fetchAndProcessWords } from '@/utils/ExploreArray';
+import { onMounted, ref } from 'vue';
+
+interface ProcessedItem {
+  title: string;
+  content: string;
+  created_at: string;
+}
+
+const items = ref<ProcessedItem[]>([]);
+onMounted(async () => {
+
+  items.value = await fetchAndProcessWords();
+});
 </script>
 
 <template>
