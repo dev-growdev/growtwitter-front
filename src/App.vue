@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import ThemeBar from './components/ThemeBar.vue';
 </script>
 
 <template>
-
-<div>
-  <ThemeBar />
-</div>
-
   <RouterView />
 </template>
 
