@@ -259,11 +259,11 @@ onMounted(() => {
         <span class="text-h5" id="retweet-dialog-title">Retweetar com comentário</span>
       </v-card-title>
       <v-card-text>
-        <v-textarea v-model="comment" label="Adicionar um comentário..." auto-grow rows="3" aria-label="Add a comment" aria-required="true"></v-textarea>
+        <v-textarea v-model="comment" id="comment-textarea" label="Adicionar um comentário..." auto-grow rows="3" aria-label="Add a comment" aria-labelledby="comment-label" aria-required="true"></v-textarea>
         <v-card class="mt-4" outlined>
           <v-card-text>
             <div class="d-flex align-center">
-              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar"></v-avatar>
+              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar" role="img"></v-avatar>
               <div class="ml-3">
                 <div class="mouseHover font-weight-bold">{{ data.user.name }}</div>
                 <div class="text--secondary">@{{ data.user.username }}</div>

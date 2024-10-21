@@ -19,16 +19,16 @@ onMounted(async () => {
 <template>
   <div class="pt-4 pl-6">
     <div class="pb-4">
-      <h2>O que está acontecendo?</h2>
+      <h2 aria-label="Trending topics" >O que está acontecendo?</h2>
     </div>
     <div class="d-flex flex-column mb-4 home-whats-card" v-for="(item, index) in items.slice(0, 4)" :key="index">
       <p>{{ item.title }} - {{ tempoDesdeCriacao(item.created_at) }}</p>
-      <RouterLink :to="`/search?keyword=${item.title}`">
+      <RouterLink :to="`/search?keyword=${item.title}`" aria-label="View more about {{ item.title }}">
         <h3>{{ item.content }}</h3>
       </RouterLink>
     </div>
     <div>
-      <RouterLink to="/explore">Mostrar mais</RouterLink>
+      <RouterLink to="/explore" aria-label="View all trending topics">Mostrar mais</RouterLink>
     </div>
   </div>
 </template>

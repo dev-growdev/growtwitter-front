@@ -223,19 +223,20 @@ watch(dadosRT, () => {
     <div class="model-alert">
       <v-alert v-if="hasMessage" closable class="alert fixed-alert" :text="message" :color="alertType" @click:close="clearMessage()" role="alert"
         aria-live="assertive"
-        aria-atomic="true"></v-alert>
+        aria-atomic="true"
+        aria-label="Alert message"></v-alert>
     </div>
 
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe aria-label="Main Navigation Drawer" >
       <SideBar :item="item!" @call-emit="listenEmit" />
     </v-navigation-drawer>
 
-    <ApplicationBar class="d-flex d-lg-none" />
+    <ApplicationBar class="d-flex d-lg-none" aria-label="Application Bar for Mobile"/>
 
-    <BackToTop />
+    <BackToTop aria-label="Back to Top" />
 
     <div class="d-flex d-lg-none">
-      <ButtonTweet @add-tweet="handleEmit" />
+      <ButtonTweet @add-tweet="handleEmit"  aria-label="Add Tweet"/>
     </div>
 
     <v-main class="mx-0">
@@ -245,18 +246,22 @@ watch(dadosRT, () => {
             <div class="div-page-title">
               <v-layout class="layout overflow-visible mt-15">
                 <v-bottom-navigation class="bottom-nav elevation-0" active>
-                  <v-btn class="home-switch-btn mx-5 px-2 py-2" :class="{ 'btn-active': activeButton === 'discover' }" :disabled="!btnEnabled" @click="switchToDiscovery()"
+                  <v-btn class="home-switch-btn mx-5 px-2 py-2" :class="{ 'btn-active': activeButton === 'discover' }" :disabled="!btnEnabled" @click="switchToDiscovery()" aria-label="Switch to Discover"
+                    aria-pressed="false"
                     ><p class="font-weight-bold text-h6">Descobrir</p></v-btn
                   >
-                  <v-btn class="home-switch-btn mx-5 px-2 py-2" :class="{ 'btn-active': activeButton === 'following' }" :disabled="!btnEnabled" @click="switchToFollowing()"
+                  <v-btn class="home-switch-btn mx-5 px-2 py-2" :class="{ 'btn-active': activeButton === 'following' }" :disabled="!btnEnabled" @click="switchToFollowing()"  aria-label="Switch to Following"
+                    aria-pressed="false"
                     ><p class="font-weight-bold text-h6">Seguindo</p></v-btn
                   >
                 </v-bottom-navigation>
               </v-layout>
             </div>
 
-            <div v-if="showDiscoverytweets">
-              <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'">
+            <div v-if="showDiscoverytweets" role="region">
+              <v-infinite-scroll class="infinite-scroll" v-if="continueLoading" color="blue" :onLoad="load" :scroll-target="'#scroll-container'"  aria-live="polite"
+              aria-busy="false"
+              >
                 <ListCard :tweets="tweets" :retweets="retweets" followingsList="" @to-list-card="reciveDelTweetHome" @rt-list-card="reciveRtHome" />
               </v-infinite-scroll>
             </div>
@@ -280,7 +285,7 @@ watch(dadosRT, () => {
       </v-container>
     </v-main>
 
-    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe>
+    <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="right" class="border-0" touchless disable-swipe  aria-label="Explore Navigation Drawer">
       <ExploreComponent />
     </v-navigation-drawer>
   </v-app>

@@ -51,12 +51,13 @@ onMounted(() => {
 
 <template>
   <div class="mainDiv flex flex-col align-end position-relative">
-    <section class="d-flex flex-column justify-space-between position-absolute bg-grey-lighten-5 ga-2 pa-4 rounded-lg dropdown" style="min-width: 320px; max-width: 380px">
+    <section class="d-flex flex-column justify-space-between position-absolute bg-grey-lighten-5 ga-2 pa-4 rounded-lg dropdown" style="min-width: 320px; max-width: 380px" role="region"
+    aria-labelledby="profileSectionTitle">
       <div>
         <article class="d-block align-start">
           <div class="d-flex justify-space-between align-center">
-            <RouterLink :to="`/profile/${data.id}`">
-              <v-avatar :image="data.avatar_url ?? default_avatar" size="75" />
+            <RouterLink :to="`/profile/${data.id}`"  aria-label="Profile of {{ data.name }}">
+              <v-avatar :image="data.avatar_url ?? default_avatar" size="75" role="img" aria-label="User avatar" />
             </RouterLink>
             <v-btn
               id="followingSpan"
@@ -64,7 +65,7 @@ onMounted(() => {
               :loading="btnLoading"
               class="followingBtn rounded-xl justify-self-center"
               height="32"
-              @click="handleFollow()"
+              @click="handleFollow()" aria-label="Unfollow {{ data.name }}"
             >
               Seguindo
             </v-btn>
@@ -76,20 +77,22 @@ onMounted(() => {
               height="40"
               width="80"
               @click="handleFollow()"
+               aria-label="Follow {{ data.name }}"
             >
               Seguir
             </v-btn>
           </div>
 
           <div class="d-flex flex-column mt-2">
-            <RouterLink :to="`/profile/${props.data.id}`" class="text-grey-darken-4 font-weight-bold text-h6" v-if="itsMe">
+            <RouterLink :to="`/profile/${props.data.id}`" class="text-grey-darken-4 font-weight-bold text-h6" v-if="itsMe"
+            aria-label="Profile of {{ props.data.name }}">
               {{ props.data.name }}
             </RouterLink>
-            <RouterLink :to="`/profile/${props.data.id}`" class="text-grey-darken-4 font-weight-bold text-h6" v-if="!itsMe">
+            <RouterLink :to="`/profile/${props.data.id}`" class="text-grey-darken-4 font-weight-bold text-h6" v-if="!itsMe"  aria-label="Profile of {{ props.data.name }} (You)">
               {{ props.data.name }}
               <span class="text-grey-darken-1 text-subtitle-2 font-weight-regular">(Você)</span>
             </RouterLink>
-            <RouterLink :to="`/profile/${props.data.id}`">
+            <RouterLink :to="`/profile/${props.data.id}`"    aria-label="Username of {{ props.data.name }}">
               <span class="text-grey-darken-1 font-weight-regular">@{{ props.data.username }}</span>
             </RouterLink>
           </div>
@@ -97,14 +100,14 @@ onMounted(() => {
       </div>
 
       <div>
-        <article class="d-flex justify-start ga-6">
-          <p v-if="props.data.followers">
+        <article class="d-flex justify-start ga-6" role="presentation">
+          <p v-if="props.data.followers" aria-label="Followers count">
             <span class="font-weight-bold">
               {{ props.data.followers?.length }}
             </span>
             Seguidores
           </p>
-          <p v-if="props.data.followings">
+          <p v-if="props.data.followings" aria-label="Following count">
             <span class="font-weight-bold">
               {{ props.data.followings?.length }}
             </span>

@@ -17,9 +17,9 @@ async function handlePostTweet() {
 }
 </script>
 <template>
-  <v-dialog max-width="500">
+  <v-dialog max-width="500" aria-labelledby="dialogTitle" aria-modal="true">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn v-bind="activatorProps" color="blue" text="Vuetify" variant="flat"></v-btn>
+      <v-btn v-bind="activatorProps" color="blue" text="Vuetify" variant="flat" aria-label="Open Tweet Dialog"></v-btn>
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -29,17 +29,19 @@ async function handlePostTweet() {
           placeholder="O que está acontecendo?"
           v-model="content"
           label="Tweet"
+          aria-label="Write your tweet here"
+          aria-required="true"
         ></v-textarea>
         <v-card-actions>
           <v-spacer></v-spacer>
           <div class="d-flex justify-center mt-5 loading"></div>
           
-          <ButtonDefault class="tweet-btn mr-2" :disabled="content.length < 1" @click="handlePostTweet"><p v-if="!loadingVisible">Tweetar</p>
+          <ButtonDefault class="tweet-btn mr-2" :disabled="content.length < 1" @click="handlePostTweet" aria-label="Post Tweet"><p v-if="!loadingVisible">Tweetar</p>
 
         <v-progress-linear v-if="loadingVisible"  indeterminate></v-progress-linear>
 
       </ButtonDefault>
-          <ButtonDefault @click="isActive.value = false">Fechar</ButtonDefault>
+          <ButtonDefault @click="isActive.value = false" aria-label="Close Dialog">Fechar</ButtonDefault>
         </v-card-actions>
       </v-card>
     </template>

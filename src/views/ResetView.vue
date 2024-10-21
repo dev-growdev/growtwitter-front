@@ -50,8 +50,8 @@ onMounted(async () => {
         <v-container>
             <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="900" rounded="lg">
                 <v-row class="d-flex align-center">
-                    <v-col cols="12" sm="6" class="text bg-blue rounded py-15">
-                        <v-card-title>Growtwitter</v-card-title>
+                    <v-col cols="12" sm="6" class="text bg-blue rounded py-15" role="region" aria-labelledby="growtwitterTitle"
+                        <v-card-title id="growtwitterTitle">Growtwitter </v-card-title>
                         <v-card-subtitle class="text-white">Trabalho final do bloco intermediário</v-card-subtitle>
                         <v-card-text>
                             O Growtwitter é a plataforma definitiva para todos os apaixonados por redes sociais
@@ -61,34 +61,40 @@ onMounted(async () => {
                         </v-card-text>
                     </v-col>
 
-                    <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8">
-                        <h1 class="pa-5 mb-5 text-center register-title">Redefinir sua senha</h1>
+                    <v-col cols="12" sm="6" class="bg-white rounded-e-lg pa-8" role="region" aria-labelledby="resetPasswordTitle">
+                        <h1 id="resetPasswordTitle" class="pa-5 mb-5 text-center register-title">Redefinir sua senha</h1>
 
 
                         <v-text-field :append-inner-icon="visiblePass ? 'mdi-eye-off' : 'mdi-eye'"
                             :type="visiblePass ? 'text' : 'password'" density="compact"
                             placeholder="Crie uma senha forte" prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                            @click:append-inner="visiblePass = !visiblePass" v-model="password">
+                            @click:append-inner="visiblePass = !visiblePass" v-model="password"
+                            aria-label="Crie uma senha forte"
+              aria-required="true"
+              :aria-invalid="!!validationErrors.password">
                         </v-text-field>
 
                         <v-text-field :append-inner-icon="visibleConfirm ? 'mdi-eye-off' : 'mdi-eye'"
                             :type="visibleConfirm ? 'text' : 'password'" density="compact"
                             placeholder="Confirme sua senha" prepend-inner-icon="mdi-lock-outline" variant="outlined"
                             @click:append-inner="visibleConfirm = !visibleConfirm"
-                            v-model="confirmPassword"></v-text-field>
+                            v-model="confirmPassword"
+                            aria-label="Confirme sua senha"
+              aria-required="true"
+              :aria-invalid="!!validationErrors.confirmPassword"></v-text-field>
 
-                        <div v-if="validationErrors" style="color: red; margin-bottom: 5px;">
+                        <div v-if="validationErrors" style="color: red; margin-bottom: 5px;" aria-live="assertive">
 
                             {{ error }}
 
                         </div>
 
-                        <v-btn @click="updateUser" class="mb-2" color="blue" size="large" variant="flat" block>{{
+                        <v-btn @click="updateUser" class="mb-2" color="blue" size="large" variant="flat"  aria-label="Enviar" block>{{
                             isLoading ? 'Carregando...' : 'Enviar' }}</v-btn>
 
                         <v-card-text class="text-center d-flex flex-column">
 
-                            <RouterLink to="/login" class="text-blue text-decoration-none">
+                            <RouterLink to="/login" class="text-blue text-decoration-none" aria-label="Voltar para o login">
                                 Voltar para o login <v-icon icon="mdi-chevron-right"></v-icon>
                             </RouterLink>
                         </v-card-text>

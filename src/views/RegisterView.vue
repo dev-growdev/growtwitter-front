@@ -192,7 +192,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <BackgroundOverlay v-if="loadingVisible">
+  <BackgroundOverlay v-if="loadingVisible" aria-live="assertive" aria-busy="true" role="alert"
     <SpinnerComponent color="white" />
   </BackgroundOverlay>
   <div class="background">
@@ -200,37 +200,52 @@ onMounted(async () => {
       <v-card class="mx-auto mt-sm-6 pa-6 pa-md-12 pb-md-8" elevation="8" max-width="648" rounded="lg"  role="dialog"
         aria-modal="true"
         aria-labelledby="register-card-title">
-        <h1 class="mt-1 text-center register-title">Criar conta</h1>
+        <h1 id="register-card-title" class="mt-1 text-center register-title">Criar conta</h1>
         <div class="text-subtitle-1 text-medium-emphasis">Nome</div>
         <v-text-field density="compact" placeholder="Seu primeiro nome" prepend-inner-icon="mdi-account-outline"
-          variant="outlined" v-model="account.name" :error-messages="validationErrors.name" required></v-text-field>
+          variant="outlined" v-model="account.name" :error-messages="validationErrors.name" required
+          aria-label="Seu primeiro nome"
+          aria-required="true"
+          :aria-invalid="validationErrors.name.length > 0"
+          ></v-text-field>
 
         <div class="mt-1 text-subtitle-1 text-medium-emphasis">Sobrenome</div>
         <v-text-field density="compact" placeholder="Seu sobrenome" prepend-inner-icon="mdi-account-outline"
           variant="outlined" v-model="account.surname" :error-messages="validationErrors.surname"
-          required></v-text-field>
+          required
+          aria-label="Seu sobrenome"
+          aria-required="true"
+          :aria-invalid="validationErrors.surname.length > 0"></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis">Nome de usuário</div>
         <v-text-field density="compact" placeholder="Escolha um nome de usuário"
           prepend-inner-icon="mdi-account-outline" variant="outlined" v-model="account.username"
-          :error-messages="validationErrors.username"></v-text-field>
+          :error-messages="validationErrors.username"
+          aria-label="Escolha um nome de usuário"
+          :aria-invalid="validationErrors.username.length > 0"></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis">E-mail</div>
 
         <v-text-field density="compact" placeholder="Seu endereço de e-mail" prepend-inner-icon="mdi-email-outline"
-          variant="outlined" v-model="account.email" :error-messages="validationErrors.email" required></v-text-field>
+          variant="outlined" v-model="account.email" :error-messages="validationErrors.email" required
+          aria-label="Seu endereço de e-mail"
+          aria-required="true"
+          :aria-invalid="validationErrors.email.length > 0"></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">Senha</div>
 
         <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
           density="compact" placeholder="Crie uma senha forte" prepend-inner-icon="mdi-lock-outline" variant="outlined"
           @click:append-inner="visible = !visible" v-model="account.password"
-          :error-messages="validationErrors.password"></v-text-field>
+          :error-messages="validationErrors.password"
+          aria-label="Crie uma senha forte"
+          aria-required="true"
+          :aria-invalid="validationErrors.password.length > 0"></v-text-field>
 
         <div class="mt-1 text-subtitle-2 text-sm-subtitle-1 text-medium-emphasis">Escolha um avatar (opcional):</div>
         <div class="upload-avatar-container">
           <v-file-input class="d-none" accept="image/png, image/jpeg, image/jpg" label="Avatar"
-            @change="bindCustomAvatar" id="avatar"></v-file-input>
+            @change="bindCustomAvatar" id="avatar"  aria-label="Upload avatar"></v-file-input>
           <label class="upload-avatar-label mt-3" for="avatar">
             <v-avatar class="avatar-preview" :image="previewAvatar ?? defaultAvatar" size="75" aria-label="Current avatar"></v-avatar>
           </label>
@@ -242,10 +257,10 @@ onMounted(async () => {
         </div>
 
         <v-btn @click="handleRegister" :disabled="attemptsRegister" class="mb-2" color="blue" size="large"
-          variant="flat" block type="submit"> Criar </v-btn>
+          variant="flat" block type="submit" aria-label="Criar conta"> Criar </v-btn>
 
         <v-card-text class="text-center">
-          <RouterLink to="/login" class="text-blue text-decoration-none"> Já tem uma conta? <v-icon
+          <RouterLink to="/login" class="text-blue text-decoration-none" aria-label="Já tem uma conta?"> Já tem uma conta? <v-icon
               icon="mdi-chevron-right"></v-icon> </RouterLink>
         </v-card-text>
       </v-card>

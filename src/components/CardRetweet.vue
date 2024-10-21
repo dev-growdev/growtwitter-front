@@ -41,15 +41,15 @@ function toList(id: number, isTweet: boolean) {
   <div class="card-principal rounded-0">
     <v-card-actions class="ga-2">
       <div class="profileModal d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`">
-          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+        <RouterLink :to="`/profile/${data.user.id}`" aria-label="User profile">
+          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50" aria-label="User avatar"></v-avatar>
         </RouterLink>
-        <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="props.data.user" />
+        <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="props.data.user" aria-label="View profile modal"/>
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
           <div>
-            <RouterLink :to="`/profile/${data.user.id}`">
+            <RouterLink :to="`/profile/${data.user.id}`" aria-label="User profile">
               <strong class="mouseHover">{{ data.user.name }}</strong> <span style="color: #657786">@{{ data.user.username }}</span>
             </RouterLink>
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
@@ -57,10 +57,10 @@ function toList(id: number, isTweet: boolean) {
           </div>
 
           <div class="d-flex align-end flex-column position-relative">
-            <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical"></v-btn>
-            <div v-if="reTweetDrop" class="delTweet">
-              <v-btn v-if="userID === data.user.id" @click="handleDeleteReTweet(data.id)">Apagar</v-btn>
-              <v-btn v-else>Denunciar</v-btn>
+            <v-btn @click="toggleReTweetDrop" icon="mdi-dots-vertical" aria-label="Open options menu"></v-btn>
+            <div v-if="reTweetDrop" class="delTweet" role="menu" aria-label="Options menu">
+              <v-btn v-if="userID === data.user.id" @click="handleDeleteReTweet(data.id)" aria-label="Delete tweet">Apagar</v-btn>
+              <v-btn v-else aria-label="Report tweet">Denunciar</v-btn>
             </div>
           </div>
         </div>
