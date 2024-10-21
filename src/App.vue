@@ -5,12 +5,3 @@ import { RouterView } from 'vue-router';
 <template>
   <RouterView />
 </template>
-
-
-<style>
-div{
-  z-index: 1000;
-  /* background-color: blue; */
-}
-
-</style>
