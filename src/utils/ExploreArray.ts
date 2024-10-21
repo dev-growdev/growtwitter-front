@@ -17,7 +17,7 @@ interface ProcessedItem {
 
 export async function fetchAndProcessWords(): Promise<ProcessedItem[]> {
   try {
-    const response = await axios.get<ApiResponse>('http://127.0.0.1:8000/api/words');
+    const response = await axios.get<ApiResponse>(import.meta.env.VITE_API_URL+'/words');
     const data = response.data;
     return Object.entries(data).map(([word, wordData]) => ({
       title: word.charAt(0).toUpperCase() + word.slice(1),
