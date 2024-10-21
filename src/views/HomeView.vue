@@ -119,13 +119,7 @@ onUnmounted(() => {
         aria-live="assertive"
         aria-atomic="true"></v-alert>
     </div>
-<<<<<<< HEAD
-    <div v-if="loadingVisible" class="spinner-div" role="status" aria-live="polite">
-      <v-progress-circular indeterminate :size="45" :width="9" aria-label="Loading"/>
-    </div>
-=======
 
->>>>>>> develop
     <v-navigation-drawer v-if="!$vuetify.display.mdAndDown" permanent width="455" location="left" class="border-0" touchless disable-swipe>
       <SideBar :item="item!" @call-emit="listenEmit" />
     </v-navigation-drawer>

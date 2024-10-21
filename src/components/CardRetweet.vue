@@ -38,14 +38,14 @@ const idU = Number(sessionStorage.getItem('userId'));
     <v-card-actions class="ma-2 ga-2">
       <div class="d-block align-self-start">
         <RouterLink :to="`/profile/${data.user.id}`">
-          <v-avatar :to="`/profile/${data.user.id}`" :image="data.user.avatar_url ?? default_avatar" size="45" />
+          <v-avatar :to="`/profile/${data.user.id}`" :image="data.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar"/>
         </RouterLink>
       </div>
       <div class="tweet-body">
         <div class="tweet-header">
           <div>
             <div>
-              <RouterLink :to="`/profile/${data.user.id}`">
+              <RouterLink :to="`/profile/${data.user.id}`" aria-label="User profile">
                 <strong class="mouseHover">{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
               </RouterLink>
               <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
@@ -53,9 +53,9 @@ const idU = Number(sessionStorage.getItem('userId'));
             </div>
           </div>
           <div style="display: flex; align-items: end; flex-direction: column; position: relative">
-            <v-btn v-if="data.user.id === idU" icon small @click="toggleDropdown"> <v-icon icon="mdi-dots-horizontal"></v-icon></v-btn>
-            <div v-if="dropdown" class="dropdown">
-              <v-btn small @click="handleDeleteRetweet(data.id)"><v-icon icon="mdi-delete"></v-icon>Apagar</v-btn>
+            <v-btn v-if="data.user.id === idU" icon small @click="toggleDropdown" aria-label="Open options menu"> <v-icon icon="mdi-dots-horizontal"></v-icon></v-btn>
+            <div v-if="dropdown" class="dropdown"  role="menu" aria-label="Options menu">
+              <v-btn small @click="handleDeleteRetweet(data.id)" aria-label="Delete tweet"><v-icon icon="mdi-delete"></v-icon>Apagar</v-btn>
             </div>
           </div>
         </div>

@@ -117,50 +117,34 @@ const idU = Number(sessionStorage.getItem('userId'));
   <div class="card-principal rounded-0">
     <v-card-actions class="ma-2 ga-2">
       <div class="d-block align-self-start">
-<<<<<<< HEAD
         <RouterLink :to="`/profile/${data.user.id}`"><v-avatar :image="data.user.avatar_url ?? default_avatar"
             size="50" aria-label="User avatar"></v-avatar></RouterLink>
 
 
 
-=======
         <RouterLink :to="`/profile/${data.user.id}`">
           <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" />
         </RouterLink>
->>>>>>> develop
       </div>
       <div class="d-flex flex-column justify-space-between w-100">
         <div class="d-flex align-center justify-space-between w-100">
           <div>
-<<<<<<< HEAD
             <RouterLink :to="`/profile/${data.user.id}`" aria-label="User profile">
-              <strong>{{ data.user.name }}</strong> <span>@{{ data.user.username }}</span>
-=======
-            <RouterLink :to="`/profile/${data.user.id}`">
               <strong class="mouseHover">{{ data.user.name }}</strong> <span style="color: #657786">@{{ data.user.username }}</span>
->>>>>>> develop
             </RouterLink>
             <span> ·</span> <span>{{ tempoDesdeCriacao(data.created_at) }}</span>
             <p class="tweet-content">{{ data.content }}</p>
           </div>
-<<<<<<< HEAD
-          <div style="display: flex; align-items: end; flex-direction: column; position: relative;">
-            <v-btn icon small @click="toggleDropdown" aria-label="Open options menu"> <v-icon icon="mdi-menu"></v-icon></v-btn>
-            <div v-if="dropdown" class="dropdown" role="menu" aria-label="Options menu">
-              <v-btn small @click="handleRetweet(data.id)" aria-label="Retweet"> Retweet</v-btn>
-              <v-btn small @click="toggleModalRetweet()" aria-label="Retweet with comment"> Retweet com Comentário</v-btn>
-=======
 
           <div class="d-flex flex-column align-start position-relative">
-            <v-btn icon small @click="toggleDropdown">
+            <v-btn icon small @click="toggleDropdown" aria-label="Open options menu">
               <v-icon icon="mdi-menu" />
             </v-btn>
 
-            <div v-if="dropdown" class="dropdown">
-              <v-btn small @click="handleRetweet(data.id)"> Retweet</v-btn>
-              <v-btn small @click="toggleModalRetweet()"> Retweet com Comentário</v-btn>
+            <div v-if="dropdown" class="dropdown" role="menu" aria-label="Options menu">
+              <v-btn small @click="handleRetweet(data.id)" aria-label="Retweet"> Retweet> Retweet</v-btn>
+              <v-btn small @click="toggleModalRetweet()"  aria-label="Retweet with comment"> Retweet com Comentário</v-btn>
               <v-btn v-if="data.user.id === idU" small @click="handleDeleteTweet(data.id)">Apagar</v-btn>
->>>>>>> develop
             </div>
           </div>
         </div>
@@ -174,16 +158,6 @@ const idU = Number(sessionStorage.getItem('userId'));
             </v-btn>
           </article>
 
-<<<<<<< HEAD
-            <div style="display: flex; align-items: center; justify-content: end; width: 100%; margin: 5px 0;">
-              <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
-                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="25" aria-label="User avatar"></v-avatar>
-              </RouterLink>
-              <div>
-                <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
-                  <strong>{{ comment.user.name }}</strong> <span>@{{ comment.user.username }}</span>
-                </RouterLink>
-=======
           <article class="d-flex">
             <v-btn icon v-if="!liked" class="btn-like d-flex align-center ga-0" @click="handlePostLike(data.id)">
               <v-icon icon="mdi-cards-heart-outline" />
@@ -203,15 +177,14 @@ const idU = Number(sessionStorage.getItem('userId'));
         <div v-if="showDiv" class="mt-2">
           <div v-for="comment in localComments" :key="comment.id" class="d-flex flex-column pb-4">
             <div class="d-flex ga-2 align-center w-100 mx-2">
-              <RouterLink :to="`/profile/${comment.user.id}`">
-                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
+              <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
+                <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar"></v-avatar>
               </RouterLink>
               <div>
                 <div>
-                  <RouterLink :to="`/profile/${comment.user.id}`">
+                  <RouterLink :to="`/profile/${comment.user.id}`" aria-label="User profile">
                     <span class="mouseHover font-weight-bold">{{ comment.user.name }}</span> <span style="color: #657786">@{{ comment.user.username }}</span>
                   </RouterLink>
->>>>>>> develop
 
                   <span style="color: #657786"> ·</span> <span style="color: #657786">{{ tempoDesdeCriacao(comment.created_at) }}</span>
                 </div>
@@ -224,12 +197,8 @@ const idU = Number(sessionStorage.getItem('userId'));
           <form @submit.prevent="handleSubmit(data.id)">
             <div class="text-box">
               <div class="box-container">
-<<<<<<< HEAD
                 <textarea placeholder="Comentar" v-model="commentInput" aria-label="Add a comment" aria-required="true"></textarea>
 
-=======
-                <textarea placeholder="Comentar" v-model="commentInput"></textarea>
->>>>>>> develop
                 <div class="formatting">
                   <button type="submit" class="send" title="Send" aria-label="Send comment">
                     <svg fill="none" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -262,11 +231,7 @@ const idU = Number(sessionStorage.getItem('userId'));
         <v-card class="mt-4" outlined>
           <v-card-text>
             <div class="d-flex align-center">
-<<<<<<< HEAD
-              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50" aria-label="User avatar"></v-avatar>
-=======
-              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45"></v-avatar>
->>>>>>> develop
+              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar"></v-avatar>
               <div class="ml-3">
                 <div class="mouseHover font-weight-bold">{{ data.user.name }}</div>
                 <div class="text--secondary">@{{ data.user.username }}</div>
@@ -278,14 +243,8 @@ const idU = Number(sessionStorage.getItem('userId'));
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-<<<<<<< HEAD
         <v-btn color="blue darken-1" @click="retweetModal = false" aria-label="Cancel">Cancelar</v-btn>
-        <v-btn :loading="retweetLoading" color="blue darken-1"
-          @click="handleRetweetWithComment(data.id, comment)" aria-label="Retweet">Retweet</v-btn>
-=======
-        <v-btn color="blue darken-1" @click="retweetModal = false">Cancelar</v-btn>
-        <v-btn :loading="retweetLoading" color="blue darken-1" @click="handleRetweetWithComment(data.id, comment)">Retweet</v-btn>
->>>>>>> develop
+        <v-btn :loading="retweetLoading" color="blue darken-1" @click="handleRetweetWithComment(data.id, comment)" aria-label="Retweet">Retweet</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

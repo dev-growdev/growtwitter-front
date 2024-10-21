@@ -15,34 +15,32 @@ async function handleLogout() {
     router.push('/login');
   }
 
-
-
 }
 
 </script>
 
 <template>
 
-  <v-bottom-navigation mode="shift">
-    <v-btn to="/">
+  <v-bottom-navigation mode="shift" aria-label="Main Navigation">
+    <v-btn to="/" aria-label="Home">
       <v-icon>mdi-home</v-icon>
       <span>Home</span>
     </v-btn>
 
 
-    <v-btn to="/explore">
+    <v-btn to="/explore" aria-label="Explore">
       <v-icon>mdi-pound</v-icon>
 
       <span>Explorar</span>
     </v-btn>
 
-    <v-btn :to="`/profile/${userId}`">
+    <v-btn :to="`/profile/${userId}`" aria-label="Profile">
       <v-icon>mdi-account</v-icon>
 
       <span>Perfil</span>
     </v-btn>
 
-    <v-btn @click="handleLogout">
+    <v-btn @click="handleLogout" aria-label="Logout">
       <v-icon>mdi-logout</v-icon>
 
       <span>Logout</span>
