@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { configMyRequest } from './CookiesRequestService';
 import type { UserDataType } from '@/types/UserDataType';
+import { resetStorage } from './authentication';
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -110,7 +111,10 @@ export async function postTweet(content: string) {
     const config = await configMyRequest();
 
     const response = await client.post('/posts', { content }, config);
-
+    if (response.status != 201) {
+      alert('você não está logado');
+      resetStorage();
+    }
     return response;
   } catch (error) {
     return error;
@@ -179,7 +183,10 @@ export async function postRetweet(postId: number, content?: string) {
       content: content
     };
     const response = await client.post('/retweet', data, config);
-
+    if (response.status != 201) {
+      alert('você não está logado');
+      resetStorage();
+    }
     return response;
   } catch (error: any) {
     return error?.response;
@@ -232,7 +239,10 @@ export async function getHomeData(page: number) {
   try {
     const config = await configMyRequest();
     const response = await client.get('/home?page=' + page, config);
-
+    if (response.status != 200) {
+      alert('você não está logado');
+      resetStorage();
+    }
     return response;
   } catch (error: any) {
     return error?.response;
