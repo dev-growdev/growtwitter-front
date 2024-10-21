@@ -1,9 +1,19 @@
 import axios from 'axios';
 import { getUserToken } from './authentication';
 
+// export async function getCsfrToken() {
+//   // TODO: Mudar url para apontar para o banco utilizado
+//   await axios.get('https://growtwitter-api-a7e1ec26613a.herokuapp.com/sanctum/csrf-cookie', {
+//     headers: {
+//       Accept: 'application/json'
+//     },
+//     withCredentials: true
+//   });
+// }
+
 export async function getCsfrToken() {
   // TODO: Mudar url para apontar para o banco utilizado
-  await axios.get('https://growtwitter-api-a7e1ec26613a.herokuapp.com/sanctum/csrf-cookie', {
+  await axios.get('http://localhost:8000/sanctum/csrf-cookie', {
     headers: {
       Accept: 'application/json'
     },
