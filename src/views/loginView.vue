@@ -145,12 +145,12 @@ onMounted(async () => {
             <v-btn @click="handleLogin" :disabled="attemptsVerify" :class="theme"
               class="mb-2 btnBackground backgroundTextExplanation" size="large" variant="flat" block>Enviar</v-btn>
 
-            <v-card-text class="text-center">
+            <v-card-text class="text-center d-flex flex-column">
               <RouterLink to="/register" :class="theme" class="noAccessColor text-decoration-none"
                 style="border: none;">
                 Não tem uma conta? <v-icon icon="mdi-chevron-right"></v-icon>
               </RouterLink>
-              <RouterLink to="/forgot" class="text-blue text-decoration-none">
+              <RouterLink to="/forgot" :class="theme" class="noAccessColor text-decoration-none" style="border: none;">
                 Esqueceu sua senha? <v-icon icon="mdi-chevron-right"></v-icon>
               </RouterLink>
             </v-card-text>
