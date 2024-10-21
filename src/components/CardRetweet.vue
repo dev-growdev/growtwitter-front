@@ -7,6 +7,7 @@ import { ref } from 'vue';
 import CardTweet from './CardTweet.vue';
 import { deleteRetweet } from '@/services/api';
 import ModalSeeProfile from '@/components/ModalSeeProfile.vue';
+import { getUserId } from '@/services/authentication';
 
 interface TweetTypeProps {
   data: any;
@@ -14,7 +15,7 @@ interface TweetTypeProps {
 }
 
 const reTweetDrop = ref(false);
-const userID = Number(sessionStorage.getItem('userId'));
+const userID = getUserId();
 
 const props = defineProps<TweetTypeProps>();
 const cardToList = defineEmits(['toListCard']);
