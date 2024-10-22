@@ -146,8 +146,8 @@ onMounted(() => {
   <div class="card-principal rounded-0">
     <v-card-actions>
       <div class="profileModal d-block align-self-start">
-        <RouterLink :to="`/profile/${data.user.id}`">
-          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50"></v-avatar>
+        <RouterLink :to="`/profile/${data.user.id}`" aria-label="View profile of {{ data.user.name }}">
+          <v-avatar :image="data.user.avatar_url ?? default_avatar" size="50" aria-label="Avatar of {{ data.user.name }}"></v-avatar>
         </RouterLink>
         <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="props.data.user" />
       </div>
@@ -206,8 +206,8 @@ onMounted(() => {
           <div v-for="comment in localComments" :key="comment.id" class="d-flex flex-column pb-4">
             <div class="d-flex align-center w-100 mx-2">
               <div class="profileModal mx-2">
-                <RouterLink :to="`/profile/${comment.user.id}`">
-                  <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45"></v-avatar>
+                <RouterLink :to="`/profile/${comment.user.id}`" aria-label="View profile of {{ comment.user.name }}">
+                  <v-avatar :image="comment.user.avatar_url ?? default_avatar" size="45" aria-label="Avatar of {{ comment.user.name }}"></v-avatar>
                 </RouterLink>
                 <ModalSeeProfile class="profileModalChild" style="z-index: 9999" :data="comment.user" />
               </div>
@@ -263,7 +263,7 @@ onMounted(() => {
         <v-card class="mt-4" outlined>
           <v-card-text>
             <div class="d-flex align-center">
-              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" aria-label="User avatar" role="img"></v-avatar>
+              <v-avatar :image="data.user.avatar_url ?? default_avatar" size="45" :alt="`Avatar of ${data.user.name}`"></v-avatar>
               <div class="ml-3">
                 <div class="mouseHover font-weight-bold">{{ data.user.name }}</div>
                 <div class="text--secondary">@{{ data.user.username }}</div>
