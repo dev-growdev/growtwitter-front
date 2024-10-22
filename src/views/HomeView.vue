@@ -227,7 +227,7 @@ watch(dadosBtn, () => {
 
     <ApplicationBar class="d-flex d-lg-none" aria-label="Application Bar for Mobile"/>
 
-    <BackToTop aria-label="Back to Top" />
+    <BackToTop aria-label="Scroll to Top" />
 
     <div class="d-flex d-lg-none">
       <ButtonTweet @to-side-bar="receiveFromSideBar" aria-label="Add Tweet"/>

@@ -185,7 +185,7 @@ watch(
 
     <ApplicationBar class="d-flex d-lg-none" aria-label="Application Bar for Mobile" />
 
-    <BackToTop aria-label="Back to Top" />
+    <BackToTop aria-label="Scroll to top" />
 
     <div class="d-flex d-lg-none">
       <ButtonTweet @add-tweet="handleEmit" aria-label="Add Tweet" />
